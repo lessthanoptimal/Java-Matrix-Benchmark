@@ -1,0 +1,142 @@
+
+----- Version 0.10
+
+2013/10/29
+
+- Factories are not created until a the new VM is launched
+  * Avoids potentially contaminating the version info which is printed.  e.g. one library loads an older version first
+- Version information is printed into its own file now
+- Tweaked make file to build the application by default
+- Each library is fully described by a single LibraryDescription instead of spreading that information across several
+  locations
+- Refined small matrices to be up to 10.  Before it was only 4
+- New summary plots for runtime results
+
+
+----- Version 0.9
+
+2012/03/03
+
+- Combined stability and runtime factories in a single factory
+- Added La4j library
+
+----- Version 0.8
+
+2011/02/19
+
+- Can now truncate runtime data when creating plots.
+- Added a tool for comparing results from a library across different results directories.
+- To make it more future proof EvaluationTarget now refers to the libraries name instead of MatrixLibrary directly.
+- Can now query the library itself at runtime to determine its version
+- When resuming a trial it no longer overwrites the old log file and instead creates a new one.
+- Reworked memory benchmark to use unix specific tools to get a more accurate estimate
+- Improved runtime benchmark resume so that more of the old results are reused.
+- Added summary box and whisker plot.
+- Runtime now uses a CSV format for results.  More human readable and refactoring won't screw things up constantly now.
+- MTJ benchmark was accidentally using non-symmetric EVD
+- Checks user input to see if 'q' has been pressed and gracefully quits the benchmark.
+
+----- Version 0.7
+
+2010/08/08
+
+- Updated runtime memory allocations so that they are a more accurate prediction initially.
+- Libraries can configure themselves at runtime
+- Changed the way input matrices are created for runtime benchmark
+  * The same amount of benchmark overhead is now created for each library, making the test more fair.
+  * Total memory requirements should be reduced.
+- Totally dropping support for JScience since it does not provide a set(row,col) method as far as I can tell.
+- multTranA test is changed to multTranB test.  transposing A was arbitrary, but it created two scenarios where
+  a column major format had an advantage.  Might as well give one where a row major has an advantage.
+- Fixed bug where overhead was being measured in runtime benchmark
+- Made stability benchmark's accuracy criteria more rigid
+- Runtime benchmark now remembers how much memory that was been successfully used in the past and allocates at least that much
+  in the future.
+- Added stability test for SPD inverse.
+
+----- Version 0.6
+
+2010/04/28
+
+- Updated version of OjAlgo, ParallelColt, UJMP
+- Added JBlas to runtime and stability benchmarks
+- Turned off LU,QR, Cholesky decompositions from runtime performance test.  Not often used directly and
+  the functions which use them and are used directory (solve,inv,symm inv) are already included.
+- Turned off jscience by default since its weak and taking up room in the plots.
+- Flagged all libraries as using native code or not
+- For runtime performance plots, libraries can be filtered by using native code or not.
+- Added command line tool in jar file for launching other tools
+- Change the way the desired runtime of a test and the maximum allowed runtime for a test are handled to make
+  processing of larger matrices easier.
+- Can plot results from CSV file
+- Added the ability to turn on and off sanity checks in runtime benchmark
+- Logs slave command line arguments when a failure occurs.
+- EJML runtime benchmark now uses LinearSolver.
+- Added memory usage benchmark
+
+----- Version 0.5
+
+2010/02/23
+
+- Updated version of Parallel Colt (fixed bugs discovered with this benchmark)
+- Updated EJML and Commons-Math libraries
+- SVD overflow no longer creates matrices that have exactly the same singular values.
+  They are slightly perturbed from each other.   This was to make a more realistic test scenario.
+- Proved HTML tables. Thanks Anders Peterson for the suggestions.
+- Changed SVD accuracy so that an input matrix of zero can't be created
+- Modified MTJ, Colt, and Parallel COlt benchmarks so that do not overwrite input matrices.
+- Modified all runtime benchmark so that everything that can be predeclared is not done so inside of the timing area.
+- Can plot runtime results relative to the mean, median, max result now
+- Added sanity checks to runtime performance that makes sure the operations are producing meaningful results.
+- Changed how Commons-math creates matrices
+- Changed which matrices parallel colt uses
+- Changes tested operations in colt and parallel colt uses suggestions from Piotr Wendykier 
+- Added a converter for runtime results that change it into CSV format
+- Added specialized inverse performance test for symmetric positive definite matrices (covariance)
+- Added absolute time plots which show how long it takes to perform one operation
+- Added ability to resume old results by pointing runtime benchmark at a results directory
+
+----- Version 0.4
+
+2010/01/22
+
+- Can load XML based config files.
+- Adjusted OjAlgo benchmark to take in account its caching of previous results
+- Updated to the latest version of OjAlgo
+- New random seed for each trial in a block
+- First stability benchmark
+
+----- Version 0.3
+
+2009/11/29
+
+- Added Colt, Parallel Colt, UJMP, and ojAlgo.
+- Refactored benchmark tests into a single class for each library
+- computes more metrics. Mean, stdev, median, min, max.
+- Dynamically computes the memory for the slave
+- Better error recover.
+  * Creates an error log where it writes exceptions to instead of throwing an exception.
+- Broke solve benchmark up into two tests.  One for square and the other for non-square matrices.
+- Slave can exit if a library leaves a stray thread around.
+- each library saves its output into its own directory
+- To avoid accidental overloading, jars are now loaded at runtime.
+  * All benchmarks should be run from ant for now on since IDEs will load everything.
+- Detects if a slave is frozen and kills it.
+  * Also prints out messages every 60 seconds so it is easy to tell if the master is frozen
+- Added benchmark for eigen decomposition for symmetric matrices
+
+----- Version 0.2
+
+2009/11/10
+
+- Added QR decomposition benchmark.
+- Truncated partially finished runs to make nicer graphs.
+
+----- Version 0.1
+
+2009/10/26
+
+- First time I bothered keeping track of changes and set the version to 0.1
+- Added QR decomposition algorithms to benchmark
+- Slave will now output the library's name
+
