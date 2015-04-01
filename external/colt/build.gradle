@@ -1,0 +1,10 @@
+dependencies {
+    compile project(':main')
+    compile project(':external:ejml')
+}
+
+idea {
+    module {
+        name = "colt"
+    }
+}

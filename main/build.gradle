@@ -1,0 +1,10 @@
+dependencies {
+    compile group: 'org.ejml', name: 'all', version: '0.27-SNAPSHOT'
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.7'
+}
+
+idea {
+    module {
+        name = "JMatBench Main"
+    }
+}

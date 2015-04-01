@@ -1,0 +1,4 @@
+include 'main',
+        'external:mtj','external:la4j','external:jblas','external:commons-math',
+        'external:colt','external:ejml','external:jama','external:ojalgo','external:parallelcolt',
+        'external:ujmp'

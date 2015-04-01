@@ -1,0 +1,51 @@
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+
+    group = 'org.jmatbench'
+    version = '0.11-SNAPSHOT'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.6
+
+    javadoc.failOnError = false
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        maven {
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src'
+            }
+        }
+
+        test {
+            java {
+                srcDir 'test'
+            }
+        }
+    }
+
+    dependencies {
+        compile fileTree(dir: 'libs', include: '*.jar')
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+idea {
+    project {
+        jdkName = '1.8 (64bit)'
+        languageLevel = '1.8'
+    }
+}
