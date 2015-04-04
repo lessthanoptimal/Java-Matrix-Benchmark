@@ -24,6 +24,7 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
+import org.ejml.UtilEjml;
 import org.ejml.ops.EigenOps;
 import org.ejml.simple.SimpleEVD;
 import org.ejml.simple.SimpleMatrix;
@@ -344,5 +345,15 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
         out.numRows = m.getMatrix().numRows;
 
         return out;
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return UtilEjml.VERSION;
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 }

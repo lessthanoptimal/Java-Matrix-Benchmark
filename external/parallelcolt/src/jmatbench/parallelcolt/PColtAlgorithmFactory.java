@@ -476,6 +476,16 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
         return parallelColtToRowMajor(orig);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "0.9.4";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     public static cern.colt.matrix.tdouble.DoubleMatrix2D convertToParallelColt( RowMajorMatrix orig )
     {
         DenseDoubleMatrix2D mat = createMatrix(orig.numRows,orig.numCols);

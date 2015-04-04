@@ -27,6 +27,8 @@ import jmbench.matrix.RowMajorMatrix;
 import org.ujmp.core.Matrix;
 import org.ujmp.core.MatrixFactory;
 import org.ujmp.core.doublematrix.DenseDoubleMatrix2D;
+import org.ujmp.core.util.UJMPSettings;
+import org.ujmp.gui.UJMP;
 
 /**
  *
@@ -460,7 +462,17 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
         return ujmpToRowMajor(orig);
     }
 
-    public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
+	@Override
+	public String getLibraryVersion() {
+		return UJMP.UJMPVERSION;
+	}
+
+	@Override
+	public boolean isNative() {
+		return UJMPSettings.isUseJBlas();
+	}
+
+	public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
 		DenseDoubleMatrix2D ret = DenseDoubleMatrix2D.factory.zeros(orig
 				.getNumRows(), orig.getNumCols());
 

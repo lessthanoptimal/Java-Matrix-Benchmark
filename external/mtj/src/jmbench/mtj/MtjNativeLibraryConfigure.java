@@ -33,6 +33,7 @@ public class MtjNativeLibraryConfigure implements LibraryConfigure {
     @Override
     public void runtimeConfigure() {
 
+        MtjAlgorithmFactory.isNative = true;
         BLAS.getInstance();
         LAPACK.getInstance();
         ARPACK.getInstance();

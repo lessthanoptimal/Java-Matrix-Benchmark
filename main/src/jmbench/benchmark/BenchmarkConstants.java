@@ -5,4 +5,6 @@ package jmbench.benchmark;
  */
 public class BenchmarkConstants {
 	public static double SCALE = 2.5;
+
+	public static String DEFAULT_TEST_SET = "external/DefaultTestSet.txt";
 }

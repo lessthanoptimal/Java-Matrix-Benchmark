@@ -33,6 +33,7 @@ public class MtjLibraryConfigure implements LibraryConfigure {
     @Override
     public void runtimeConfigure() {
 
+        MtjAlgorithmFactory.isNative = false;
         System.setProperty("java.util.logging.config.file","logging.properties");
         System.setProperty("com.github.fommil.netlib.BLAS","com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK","com.github.fommil.netlib.F2jLAPACK");

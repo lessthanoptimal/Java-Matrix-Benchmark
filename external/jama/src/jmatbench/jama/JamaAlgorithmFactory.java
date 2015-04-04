@@ -463,6 +463,16 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
         return jamaToRowMajor(orig);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "1.0.3";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     public static Matrix convertToJama( RowMajorMatrix orig )
     {
         Matrix ret = new Matrix(orig.getNumRows(),orig.getNumCols());

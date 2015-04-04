@@ -51,4 +51,8 @@ public class RowMajorMatrix {
 		reshape(a.numRows,a.numCols);
 		System.arraycopy(a.data,0,data,0,a.getNumElements());
 	}
+
+	public void add(int row, int col, double value) {
+		data[row*numCols+col] += value;
+	}
 }

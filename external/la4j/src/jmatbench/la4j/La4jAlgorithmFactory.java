@@ -436,7 +436,17 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
         Matrix orig = input.getOriginal();
         return la4jToEjml(orig);
     }
-    
+
+    @Override
+    public String getLibraryVersion() {
+        return LinearAlgebra.VERSION;
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     public static Matrix ejmlToLa4j( RowMajorMatrix orig ) {
         Matrix m = new Basic2DMatrix(orig.numRows, orig.numCols);
 

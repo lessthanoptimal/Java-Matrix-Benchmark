@@ -411,6 +411,16 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
         return jblasToEjml(orig);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "1.2.3";
+    }
+
+    @Override
+    public boolean isNative() {
+        return true;
+    }
+
     public static DoubleMatrix convertToJBlas( RowMajorMatrix orig )
     {
         DoubleMatrix ret = new DoubleMatrix(orig.getNumRows(),orig.getNumCols());

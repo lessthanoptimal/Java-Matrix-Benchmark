@@ -134,4 +134,51 @@ public class RowMajorOps {
         }
         return ret;
     }
+
+    public static void mult( RowMajorMatrix a , RowMajorMatrix b , RowMajorMatrix c )
+    {
+        if( a == c || b == c )
+            throw new IllegalArgumentException("Neither 'a' or 'b' can be the same matrix as 'c'");
+        else if( a.numCols != b.numRows ) {
+            throw new RuntimeException("The 'a' and 'b' matrices do not have compatible dimensions");
+        } else if( a.numRows != c.numRows || b.numCols != c.numCols ) {
+            throw new RuntimeException("The results matrix does not have the desired dimensions");
+        }
+
+        if( a.numCols == 0 || a.numRows == 0 ) {
+            fill(c, 0);
+            return;
+        }
+        double valA;
+        int indexCbase= 0;
+        int endOfKLoop = b.numRows*b.numCols;
+
+        for( int i = 0; i < a.numRows; i++ ) {
+            int indexA = i*a.numCols;
+
+            // need to assign c.data to a value initially
+            int indexB = 0;
+            int indexC = indexCbase;
+            int end = indexB + b.numCols;
+
+            valA = a.get(indexA++);
+
+            while( indexB < end ) {
+                c.data[indexC++] = valA*b.get(indexB++);
+            }
+
+            // now add to it
+            while( indexB != endOfKLoop ) { // k loop
+                indexC = indexCbase;
+                end = indexB + b.numCols;
+
+                valA = a.get(indexA++);
+
+                while( indexB < end ) { // j loop
+                    c.data[indexC++] = valA*b.get(indexB++);
+                }
+            }
+            indexCbase += c.numCols;
+        }
+    }
 }

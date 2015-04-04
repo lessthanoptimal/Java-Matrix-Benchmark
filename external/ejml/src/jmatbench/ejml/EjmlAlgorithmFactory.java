@@ -25,6 +25,7 @@ import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
@@ -511,5 +512,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
         out.numRows = m.numRows;
 
         return out;
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return UtilEjml.VERSION;
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 }

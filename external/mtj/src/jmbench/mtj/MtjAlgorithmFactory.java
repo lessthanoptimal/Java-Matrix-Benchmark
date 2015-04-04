@@ -35,6 +35,8 @@ import no.uib.cipr.matrix.*;
  */
 public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
 
+    public static boolean isNative = false;
+
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
         return wrap(new DenseMatrix(numRows,numCols));
@@ -483,6 +485,16 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         DenseMatrix orig = input.getOriginal();
         return mtjToRowMajor(orig);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "1.0.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return isNative;
     }
 
     /**

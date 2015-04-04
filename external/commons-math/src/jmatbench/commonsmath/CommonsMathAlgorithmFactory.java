@@ -495,6 +495,16 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
         return realToEjml(mat);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "3.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     /**
      * Converts BenchmarkMatrix used in EML into a RealMatrix found in commons-math.
      *

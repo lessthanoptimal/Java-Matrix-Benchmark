@@ -467,6 +467,16 @@ public class ColtAlgorithmFactory implements RuntimePerformanceFactory {
         return coltToEjml(mat);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "1.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     public static DenseDoubleMatrix2D convertToColt( RowMajorMatrix orig )
     {
         DenseDoubleMatrix2D mat = new DenseDoubleMatrix2D(orig.numRows,orig.numCols);
