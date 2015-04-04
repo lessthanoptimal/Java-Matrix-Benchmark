@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':main')
+}
+
+idea {
+    module {
+        name = "ujmp"
+    }
+}

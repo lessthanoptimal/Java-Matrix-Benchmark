@@ -1,0 +1,14 @@
+<list>
+  <jmbench.libraries.LibraryStringInfo>
+    <factory>jmatbench.ejml.EjmlAlgorithmFactory</factory>
+    <nameFull>Efficient Java Matrix Library</nameFull>
+    <nameShort>EJML</nameShort>
+    <namePlot>EJML</namePlot>
+  </jmbench.libraries.LibraryStringInfo>
+  <jmbench.libraries.LibraryStringInfo>
+    <factory>jmatbench.ejml.EjmlSimpleAlgorithmFactory</factory>
+    <nameFull>EJML-SimpleMatrix</nameFull>
+    <nameShort>SimpleMatrix</nameShort>
+    <namePlot>SM</namePlot>
+  </jmbench.libraries.LibraryStringInfo>
+</list>
