@@ -4,7 +4,6 @@ import com.thoughtworks.xstream.XStream;
 import jmbench.benchmark.runtime.RuntimeBenchmarkConfig;
 import jmbench.libraries.LibraryDescription;
 import jmbench.libraries.LibraryStringInfo;
-import jmbench.libraries.LibraryTools;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -27,7 +26,7 @@ public class BenchmarkTools {
 	}
 
 	/**
-	 * Parses a testset file and looks up the LibraryDescriptions
+	 * Parses a test set file and looks up the LibraryDescriptions
 	 */
 	public static List<LibraryDescription> loadTestSet(  String filePath , List<LibraryDescription> all  ) {
 		try {
@@ -88,7 +87,7 @@ public class BenchmarkTools {
 	}
 
 	protected static List<LibraryDescription> parseDescription(File file) {
-		List<LibraryStringInfo> listString = LibraryTools.loadTests(file);
+		List<LibraryStringInfo> listString = loadLibraryInfo(file);
 
 		List<LibraryDescription> out = new ArrayList<LibraryDescription>();
 
@@ -150,5 +149,37 @@ public class BenchmarkTools {
 		BufferedWriter out = new BufferedWriter(new FileWriter(file));
 		out.write(string);
 		out.close();
+	}
+
+	public static void saveLibraryInfo(String directory, LibraryStringInfo... tests) throws IOException {
+		List<LibraryStringInfo> all = new ArrayList<>();
+
+		for( LibraryStringInfo l : tests ) {
+			all.add(l);
+		}
+
+		saveLibraryInfo(directory, all);
+	}
+
+	public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
+		XStream xstream = new XStream();
+		String string = xstream.toXML(tests);
+
+		BufferedWriter out = new BufferedWriter(new FileWriter("external/"+directory+"/TestSetInfo.txt"));
+		out.write(string);
+		out.close();
+	}
+
+	public static List<LibraryStringInfo> loadLibraryInfo(File file) {
+		XStream xstream = new XStream();
+		return (List<LibraryStringInfo>)xstream.fromXML(file);
+	}
+
+	/**
+	 * Loads an object using xml serialization
+	 */
+	public static <T>T loadObject( String fileName ) {
+		XStream xstream = new XStream();
+		return (T)xstream.fromXML(new File(fileName));
 	}
 }

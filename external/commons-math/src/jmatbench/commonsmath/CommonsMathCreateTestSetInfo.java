@@ -1,7 +1,7 @@
 package jmatbench.commonsmath;
 
+import jmbench.benchmark.BenchmarkTools;
 import jmbench.libraries.LibraryStringInfo;
-import jmbench.libraries.LibraryTools;
 
 import java.io.IOException;
 
@@ -16,6 +16,6 @@ public class CommonsMathCreateTestSetInfo {
         info.nameShort = "Commons";
         info.namePlot = "Commons";
 
-        LibraryTools.saveTests("commons-math",info);
+        BenchmarkTools.saveLibraryInfo("commons-math", info);
     }
 }

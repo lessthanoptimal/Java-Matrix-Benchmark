@@ -9,3 +9,5 @@ idea {
         name = "JMatBench Main"
     }
 }
+
+createRuntimeDirectory.enabled = false

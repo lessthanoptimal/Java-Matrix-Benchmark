@@ -1,7 +1,7 @@
 package jmatbench.ejml;
 
+import jmbench.benchmark.BenchmarkTools;
 import jmbench.libraries.LibraryStringInfo;
-import jmbench.libraries.LibraryTools;
 
 import java.io.IOException;
 
@@ -22,6 +22,6 @@ public class EjmlCreateTestSetInfo {
         infoB.nameShort = "SimpleMatrix";
         infoB.namePlot = "SM";
 
-        LibraryTools.saveTests("ejml",infoA,infoB);
+        BenchmarkTools.saveLibraryInfo("ejml", infoA, infoB);
     }
 }
