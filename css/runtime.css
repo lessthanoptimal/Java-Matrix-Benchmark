@@ -1,0 +1,32 @@
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: .5rem;
+  font-weight: bold;
+  line-height: 1.25;
+  color: #713131;
+  text-rendering: optimizeLegibility;
+}
+
+/* Tables */
+table {
+  margin-bottom: 1rem;
+  width: 60%;
+  border: 1px solid #a5a5a5;
+  border-collapse: collapse;
+  margin-left:auto; 
+  margin-right:auto;
+}
+td,
+th {
+  padding: .25rem .5rem;
+  border: 1px solid #a5a5a5;
+}
+th {
+    background-color: #337733;
+    color: white;
+}
+tbody tr:nth-child(odd) td,
+tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+

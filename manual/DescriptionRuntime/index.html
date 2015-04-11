@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Description of Runtime Performance Benchmark</title>
+  <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
+">
+
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/main.css">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/manual/DescriptionRuntime/">
+  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/feed.xml" />
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/syntax.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/jmatbench.css" >
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/Java-Matrix-Benchmark-Test/">Java Matrix Benchmark</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/Java-Matrix-Benchmark-Test/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Description of Runtime Performance Benchmark</h1>
+  </header>
+
+  <article class="post-content">
+    <h1 id="introduction">Introduction</h1>
+
+<p>This page discusses which operations were tested and how to understand the results for the runtime performance benchmark.  The tested operations were primarily selected based on how commonly they are used or to show off the potential advantages or disadvantages of library design issues.  Results are shown using relative runtime plots.  For a discussion of the techniques and reasoning behind testing procedures see [Methodology_RuntimeBenchmark].</p>
+
+<h1 id="understanding-summary-plots">Understanding Summary Plots</h1>
+
+<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeCorei7M620_2011_02.attach/summary.png" alt="" /></p>
+
+<p><strong>Summary box-and-whisker plots are an attempt to provide an overview of performance for all the libaries tested in a single plot.  Higher numbers and more compact distributions represent better performance and more consistent performance across all operations, respectively.</strong></p>
+
+<p>The three bars represents performance across all matrix sizes, only the largest matrices, and only the smallest matrices.  These Box-and-Whisker show the distribution relative of performance across all operations in a concise fashion.  The thick rectangle in the middle contain the percentile results between 25% and 75%, the bar in the middle is the median, the dot is the mean, t-bar bounds the min and max values without the outliers, and dots represent outliers.  The meaning of the triangles/arrows above and below is not known, JFreeChart does not specify, but it is suspected that they indicate more extreme outliers.  If anyone knows what those triangles mean feel free to leave a comment below.</p>
+
+<p>Weighted results are shown to place a heavier emphasis on operations that are more computationally expensive.  This is justified because slower operations are often the bottle neck in an application.  The weight is computed using the following procedure:</p>
+
+<ul>
+  <li>For each matrix size find SLOWEST_BY_SIZE: the runtime of the operation whose fastest library has the longest processing time.</li>
+  <li>For each operation in each matrix size compute N_OP:</li>
+</ul>
+<pre>
+N_OP = MAX_SAMPLES*(fastest library runtime) / SLOWEST_BY_SIZE
+</pre>
+<ul>
+  <li>Then for each operation in each library add its runtime performance to the bin N_OP times.</li>
+</ul>
+
+<p>MAX_SAMPLES is arbitrarily set to 100.  For example: if EJML ran at 75% of the speed of the fastest library for addition for a matrix of size 10 and addition took 12% of the time to complete compared to the slowest operation for a matrix of size 10, then 0.75 would be added to EJML’s bin 12 times.  The distribution of each library’s bin are what the bar and whiskers plot is computed from.</p>
+
+<h1 id="understanding-relative-runtime-plots">Understanding Relative Runtime Plots</h1>
+
+<p>Results are presented primarily using relative runtime plots.  These plots show how fast one library runs relative to another library across a range of matrix sizes for a single operation.  An example of such a plot is shown below:</p>
+
+<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeQ9400_2010_02.attach/mult.png" alt="" /></p>
+
+<p><em>Higher numbers are better and represent more operations per second relative to other libraries.  The scale is normalized against the fastest library at each matrix size.  This formating is much succinct that standard FLOPS plots.</em></p>
+
+<p>The x-axis is input matrix size and the y-axis shows the relative runtime.  In general matrix size refers to the width and height of the input matrix/matrices, e.g. 100 on the axis refers to a 100 by 100 matrix with 1,000 elements.  However there are some operations which use non-square matrices, see below.  The reference library is the fastest library for each matrix size.  Therefore one library always has a value of one.  Larger the y-axis value is the faster the library is.  If a plot ends prematurely for a library that means that it either became too slow or a fatal error occurred and the test was stopped.</p>
+
+<p>By viewing these plots it is easy to tell how fast a particular library runs relative to any other library.  Since these plots show the results as a function of matrix size it is often easy to see when CPU cache size starts adversely effecting one algorithm or when a library switches to a multi-threaded approach.</p>
+
+<p>The benchmark also produces plots which show the absolute runtime.  These have not been posted online for take of simplicity.  Absolute runtime plots are in general more useful for understanding the behavior of an individual library and not for comparing performance across several libraries.</p>
+
+<h1 id="absolute-runtime-plots">Absolute Runtime Plots</h1>
+<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimePerformanceBenchmark.attach/absoluteScale.jpg" alt="" /></p>
+
+<p>** Absolute runtime plots show how long each operations takes.  Unlike all the previous plots, lower numbers are better here. **</p>
+
+<p>In addition to relative runtime plots, plots of the absolute runtime are computed.  These plots show on a log log scale how long each operation takes to run for each library.  It is easier to see how the performance of each library changes as a function of time and how CPU caches affect it.  However it is harder to see how much faster or slower each library is and these plots require more room to be clear.</p>
+
+<p><em>For sake of simplicity absolute runtime plots are NOT included in the results pages.  However they are automatically generated by the benchmark application.</em></p>
+
+<h2 id="evaluated-operations">Evaluated Operations</h2>
+
+<p>Three primary types of operations are tested; basic, solving, and decompositions.  If a library did not support one of the operations it was simply omitted from that test.</p>
+
+<h2 id="basic-operations">Basic Operations</h2>
+
+<p>The following are several common operations used in linear algebra.  There are many different permutations on these that some libraries support.  For sake of brevity, only a few have been tested.</p>
+
+<p>The transpose then multiply test is included to allow libraries that do not do a physical transpose to demonstrate their transpose performance.  In general square matrices are used to avoid biasing the results towards an internal row-major or column-major format due to cpu caching issues.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Description</th>
+      <th>Matrix Dimension</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>C = α * B</td>
+      <td>Scaling</td>
+      <td>B = (m x m)</td>
+    </tr>
+    <tr>
+      <td>C = A + B</td>
+      <td>Addition</td>
+      <td>A = (m x m), B=(m x m)</td>
+    </tr>
+    <tr>
+      <td>C = A * B</td>
+      <td>Matrix multiplication.</td>
+      <td>A = (m x m), B=(m x m)</td>
+    </tr>
+    <tr>
+      <td>C = A<sup>T</sup> * B</td>
+      <td>Transpose then multiplication</td>
+      <td>A = (m x m), B=(m x m)</td>
+    </tr>
+    <tr>
+      <td>det(A)</td>
+      <td>Determinant</td>
+      <td>A = (m x m)</td>
+    </tr>
+    <tr>
+      <td>C = A<sup>T</sup></td>
+      <td>Physical transpose.</td>
+      <td>A = (m x m)</td>
+    </tr>
+    <tr>
+      <td>C = inv(A)</td>
+      <td>Invert.</td>
+      <td>A = (m x m)</td>
+    </tr>
+    <tr>
+      <td>C = symmInv(A)</td>
+      <td>Invert a symmetric matrix</td>
+      <td>A = (m x m)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="linear-solving">Linear Solving</h1>
+
+<p>Most libraries provided ways to solve for linear systems.  Typically there are different algorithms used when a square system is being solved for versus an overdetermined system.  Thus there are two benchmarks.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Description</th>
+      <th>Matrix Dimension</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>x = A<sup>-1</sup>b where m=n</td>
+      <td>Solving for x when A is a square non-singular matrix.</td>
+      <td>A = (m x m), b = (m x 2m)</td>
+    </tr>
+    <tr>
+      <td>x = A<sup>-1</sup>b where m&gt;n</td>
+      <td>Solving for x when it is an overdetermined system.</td>
+      <td>A = (3m x m), b = (3m x 2m</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="decompositions">Decompositions</h1>
+
+<p>For each of these operations the library is requested to perform the specified decomposition. Singular value and eigenvalue decompositions have the additional task of extracting the decomposed matrices.  This additional task is done since for these decompositions the decomposed matrices are often of value to the user.  In the other libraries raw matrices are used to solve or invert a system of equations.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SVD</td>
+      <td>Square matrix</td>
+    </tr>
+    <tr>
+      <td>Eigen</td>
+      <td>Symmetric square matrix</td>
+    </tr>
+  </tbody>
+</table>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Java Matrix Benchmark</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Java Matrix Benchmark</li>
+          <li><a href="mailto:peter.abeles@gmail.com">peter.abeles@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lessthanoptimal">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">lessthanoptimal</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/NotSoOptimal">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">NotSoOptimal</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

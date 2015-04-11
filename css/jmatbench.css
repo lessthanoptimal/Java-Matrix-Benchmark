@@ -1,0 +1,26 @@
+/*
+table, th, td {
+   border: 1px solid black;
+}
+*/
+/* Tables */
+table {
+  margin-bottom: 1rem;
+  width: 100%;
+  border: 1px solid #a5a5a5;
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: .25rem .5rem;
+  border: 1px solid #a5a5a5;
+}
+th {
+    background-color: green;
+    color: white;
+}
+tbody tr:nth-child(odd) td,
+tbody tr:nth-child(odd) th {
+  background-color: #f9f9f9;
+}
+

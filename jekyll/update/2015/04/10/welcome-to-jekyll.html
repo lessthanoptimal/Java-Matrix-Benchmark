@@ -6,12 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Java Matrix Benchmark</title>
-  <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
-">
+  <title>Welcome to Jekyll!</title>
+  <meta name="description" content="You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different wa...">
 
   <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/main.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/jekyll/update/2015/04/10/welcome-to-jekyll.html">
   <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/syntax.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark-Test/css/jmatbench.css" >
@@ -59,117 +58,32 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <h1 id="java-matrix-benchmark">Java Matrix Benchmark</h1>
+        <div class="post">
 
-<p>Java Matrix Benchmark (JMatBench) is a tool for evaluating Java  <a href="http://en.wikipedia.org/wiki/Linear_algebra">linear algebra</a> libraries for speed, stability, and memory usage.  This tool can be used by users to select the best library for their application and by developers for identifying bugs and weaknesses.  Its goal is to help improve the state of high performance computing on the Java platform.</p>
+  <header class="post-header">
+    <h1 class="post-title">Welcome to Jekyll!</h1>
+    <p class="post-meta">Apr 10, 2015</p>
+  </header>
 
-<p>JMatBench rigorously tests performance across a wide range of matrix sizes and linear algebra operations.  The runtime performance benchmark measures how fast each library can run under optimal conditions.  It generates accurate results by taking in account JavaVM runtime optimizations, dynamically adjusts to the platform it is run on, and uses well established good benchmarking techniques.  The stability benchmark evaluates several standard linear algebra operations for their accuracy, sensitivity, and ability to handle overflow/underflow conditions.  Memory benchmark determines the minimum amount of memory required to perform different tasks.  For more information see the <a href="/manual/Approach">approach</a> page.</p>
+  <article class="post-content">
+    <p>You’ll find this post in your <code>_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code>jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
 
-<p>Understanding benchmark pages:</p>
+<p>To add new posts, simply add a file in the <code>_posts</code> directory that follows the convention <code>YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
 
-<ul>
-  <li><a href="/Java-Matrix-Benchmark-Test/manual/DescriptionRuntime">Runtime Performance</a></li>
-  <li><a href="/Java-Matrix-Benchmark-Test/manual/DescriptionMemory">Memory</a></li>
-  <li><a href="/Java-Matrix-Benchmark-Test/manual/DescriptionStability">Stability</a></li>
-</ul>
+<p>Jekyll also offers powerful support for code snippets:</p>
 
-<p>The <a href="manual">manual</a> provides instructions on how to use the benchmark.
-To understand how the runtime performance is benchmarked see the <a href="/Java-Matrix-Benchmark-Test/manual/MethodologyRuntimeBenchmark">methodology page</a>.</p>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="s2">&quot;Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
+<span class="n">print_hi</span><span class="p">(</span><span class="s1">&#39;Tom&#39;</span><span class="p">)</span>
+<span class="c1">#=&gt; prints &#39;Hi, Tom&#39; to STDOUT.</span></code></pre></div>
 
-<p>Runtime Performance Results:</p>
+<p>Check out the <a href="http://jekyllrb.com">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://github.com/jekyll/jekyll-help">Jekyll’s dedicated Help repository</a>.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Speed</th>
-      <th>Num Threads</th>
-      <th>Bits</th>
-      <th>Year Made</th>
-      <th>Processor/Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><em>2013.10</em></td>
-      <td>3.4 GHz</td>
-      <td>4 (8)</td>
-      <td>64</td>
-      <td>2011</td>
-      <td><a href="/Java-Matrix-Benchmark-Test/runtime/2013_10_Corei7v2600/">Core i7-2600</a></td>
-    </tr>
-    <tr>
-      <td>2011.01.18</td>
-      <td>720 MHz</td>
-      <td>1</td>
-      <td>32</td>
-      <td>2010</td>
-      <td><a href="/Java-Matrix-Benchmark-Test/runtime/2011_01_ArmA8/">Arm Cortex-A8</a></td>
-    </tr>
-  </tbody>
-</table>
 
-<p>Memory Usage Results:</p>
+  </article>
 
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>JavaVM</th>
-      <th>OS</th>
-      <th>Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><em>2013.10</em></td>
-      <td>1.7.0_17</td>
-      <td>Linux Mint 14</td>
-      <td><a href="/Java-Matrix-Benchmark-Test/memory/2013_10/">2013-10</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Stability Results:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>JavaVM</th>
-      <th>OS</th>
-      <th>Link</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><em>2013.10</em></td>
-      <td>1.7.0_17</td>
-      <td>Linux Mint 14</td>
-      <td><a href="/Java-Matrix-Benchmark-Test/stability/2013_10/">2013-13</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>For older benchmark results see <a href="/Java-Matrix-Benchmark-Test/results/HistoryOfResults/">History Of Results</a>.</p>
-
-<p>Tested Libraries:</p>
-
-<ul>
-  <li><a href="http://dsd.lbl.gov/~hoschek/colt/">Colt</a></li>
-  <li><a href="http://commons.apache.org/math/userguide/linear.html">Commons Math</a></li>
-  <li><a href="http://code.google.com/p/efficient-java-matrix-library">Efficient Java Matrix Library</a> (EJML)</li>
-  <li><a href="http://math.nist.gov/javanumerics/jama/">Jama</a></li>
-  <li><a href="http://jblas.org/">jblas</a></li>
-  <li><a href="http://jscience.org/">JScience</a> (Older benchmarks only)</li>
-  <li><a href="https://github.com/fommil/matrix-toolkits-java">Matrix Toolkit Java </a>(MTJ)</li>
-  <li><a href="http://ojalgo.org/">OjAlgo</a></li>
-  <li><a href="http://sites.google.com/site/piotrwendykier/software/parallelcolt">Parallel Colt</a></li>
-  <li><a href="http://www.ujmp.org/">Universal Java Matrix Package</a> (UJMP)</li>
-  <li><a href="http://code.google.com/p/la4j/">Elegant Linear Algebra for Java</a> (la4j)</li>
-</ul>
-
-<p>If you wish to ask a question consider posting to the <a href="http://groups.google.com/group/java-matrix-benchmark-discuss">discussion group</a>, or if it is specific to a particular wikipage post a comment on the wikipage itself.</p>
+</div>
 
       </div>
     </div>
