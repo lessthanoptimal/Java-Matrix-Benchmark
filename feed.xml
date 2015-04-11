@@ -4,10 +4,10 @@
     <title>Java Matrix Benchmark</title>
     <description>Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
 </description>
-    <link>http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/</link>
-    <atom:link href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 11 Apr 2015 13:36:25 -0700</pubDate>
-    <lastBuildDate>Sat, 11 Apr 2015 13:36:25 -0700</lastBuildDate>
+    <link>http://lessthanoptimal.github.io/Java-Matrix-Benchmark/</link>
+    <atom:link href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sat, 11 Apr 2015 13:46:32 -0700</pubDate>
+    <lastBuildDate>Sat, 11 Apr 2015 13:46:32 -0700</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -28,8 +28,8 @@
 
 </description>
         <pubDate>Fri, 10 Apr 2015 14:42:01 -0700</pubDate>
-        <link>http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/jekyll/update/2015/04/10/welcome-to-jekyll.html</link>
-        <guid isPermaLink="true">http://lessthanoptimal.github.io/Java-Matrix-Benchmark-Test/jekyll/update/2015/04/10/welcome-to-jekyll.html</guid>
+        <link>http://lessthanoptimal.github.io/Java-Matrix-Benchmark/jekyll/update/2015/04/10/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://lessthanoptimal.github.io/Java-Matrix-Benchmark/jekyll/update/2015/04/10/welcome-to-jekyll.html</guid>
         
         
         <category>jekyll</category>
