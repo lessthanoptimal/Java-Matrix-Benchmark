@@ -6,12 +6,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Memory: October 2013</title>
+  <title>Runtime: ARM Cortex-A8 Processor</title>
   <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
 ">
 
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main_runtime.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/memory/2013_10/">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/runtime/2011_01_ArmCortexA8/">
   <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/runtime.css" >
@@ -61,65 +61,66 @@
       <div class="wrapper">
         <div class="post">
   			<header class="post-header">
-  			  <h1 class="post-title">Memory: October 2013</h1>
+  			  <h1 class="post-title">Runtime: ARM Cortex-A8 Processor</h1>
   			</header>
 
   			<article class="post-content">
-   			 <h2 id="comments">Comments</h2>
+   			 <p>Comments:</p>
 
 <ul>
-  <li>Updated: MTJ, la4j, JBlas, CommonsMath, ojAlgo, EJML, UJMP, Jama</li>
-  <li>MTJ now includes a native version (MTJ-N) and has many internal changes</li>
-  <li>Removed UJMP-Native since the version on the website doesn’t contain native code apparently</li>
-  <li>Summary results now define a small matrix as having a width/height of 10 instead of 4</li>
-  <li>For MTJ-N to have the performance shown here, be sure to use optimized native libraries.
+  <li>A quick run using mostly the libraries from August 2010 but with slightly newer versions of OjAlgo and EJML</li>
+  <li>No native code was run since nothing had hard precompiled</li>
+</ul>
+
+<p>Links to the results:</p>
+
+<ul>
+  <li><a href="#Pure Java Results">Pure Java Results</a>
     <ul>
-      <li><a href="https://github.com/fommil/netlib-java/">https://github.com/fommil/netlib-java/</a></li>
+      <li><a href="#Java: Basic Operation Results">Basic Operations</a></li>
+      <li><a href="#Java: Solving Linear Systems">Solving Linear Systems</a></li>
+      <li><a href="#Java: Matrix Decompositions">Matrix Decompositions</a></li>
     </ul>
   </li>
 </ul>
 
-<h2 id="results">Results</h2>
-
-<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/1000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/2000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/3000.png" alt="" /></p>
-
-<h2 id="test-setup">Test Setup</h2>
+<h1 id="test-environment">Test Environment</h1>
 
 <table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>2011/01</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
-      <td>Date</td>
-      <td>2013 / 10</td>
-    </tr>
-    <tr>
       <td>OS</td>
-      <td>Mint 14 64bit</td>
+      <td>Linux 32bit</td>
     </tr>
     <tr>
       <td>Kernel</td>
-      <td>3.5.0-17-Generic</td>
+      <td>2.6.32</td>
     </tr>
     <tr>
       <td>CPU</td>
-      <td>Core i7-2600 3.4 GHz - 4 cores - 8 threads</td>
+      <td>OMAP 3530 ARM Cortex-A8 - 720 MHz - 1 core</td>
     </tr>
     <tr>
       <td>RAM</td>
-      <td>11 G</td>
+      <td>256 MB</td>
     </tr>
     <tr>
       <td>CPU Cache</td>
-      <td>8194 KB</td>
+      <td> </td>
     </tr>
     <tr>
       <td>JVM</td>
-      <td>Java HotSpot(TM) 64-Bit Server 1.7.0_17</td>
+      <td>Java HotSpot(TM) 64-Bit Client VM 1.6.0_21</td>
     </tr>
     <tr>
       <td>Benchmark</td>
-      <td>0.10</td>
+      <td>0.8 pre</td>
     </tr>
   </tbody>
 </table>
@@ -138,31 +139,23 @@
     </tr>
     <tr>
       <td>Commons Math</td>
-      <td>3.2</td>
+      <td>2.1</td>
     </tr>
     <tr>
       <td>EJML</td>
-      <td>0.23</td>
+      <td>0.15 pre</td>
     </tr>
     <tr>
       <td>Jama</td>
-      <td>1.0.3</td>
-    </tr>
-    <tr>
-      <td>JBlas</td>
-      <td>1.2.3</td>
-    </tr>
-    <tr>
-      <td>la4j</td>
-      <td>0.4.5</td>
+      <td>1.0.2</td>
     </tr>
     <tr>
       <td>MTJ</td>
-      <td>0.9.13</td>
+      <td>0.9.12</td>
     </tr>
     <tr>
       <td>OjAlgo</td>
-      <td>34.8</td>
+      <td>29.31</td>
     </tr>
     <tr>
       <td>Parallel Colt</td>
@@ -170,10 +163,60 @@
     </tr>
     <tr>
       <td>UJMP</td>
-      <td>0.2.5</td>
+      <td>0.2.5 with 3rd party</td>
     </tr>
   </tbody>
 </table>
+
+<h1 id="a-namepure-java-results-pure-java-libraries"><a name="Pure Java Results"></a> Pure Java Libraries</h1>
+
+<p>These results show the performance of libraries that have code written entirely in Java.</p>
+
+<h2 id="a-namejava-basic-operation-results-java-basic-operation-results"><a name="Java: Basic Operation Results"></a> Java: Basic Operation Results</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/add.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/scale.png" alt="" /></td>
+    </tr>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/mult.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/multTranB.png" alt="" /></td>
+    </tr>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/det.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/tranSq.png" alt="" /></td>
+    </tr>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/inv.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/invSymmPosDef.png" alt="" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="a-name--java-solving-linear-systemsjava-solving-linear-systems"><a name="Java: Solving Linear Systems"></a>Java: Solving Linear Systems</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/solveEq.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/solveOver.png" alt="" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="a-name--java-matrix-decompositionsjava-matrix-decompositions"><a name="Java: Matrix Decompositions"></a>Java: Matrix Decompositions</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/svd.png" alt="" /></td>
+      <td><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/RuntimeArmA8_2011_01.attach/EigSymm.png" alt="" /></td>
+    </tr>
+  </tbody>
+</table>
+
 
   			</article>
 		</div>

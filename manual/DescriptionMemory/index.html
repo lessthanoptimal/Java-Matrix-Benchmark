@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+  <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Memory: October 2013</title>
+  <title>Description of Memory Usage Benchmark</title>
   <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
 ">
 
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main_runtime.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/memory/2013_10/">
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main.css">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/manual/DescriptionMemory/">
   <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/runtime.css" >
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/jmatbench.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css">
 </head>
+
 
   <body>
 
@@ -60,123 +61,51 @@
     <div class="page-content">
       <div class="wrapper">
         <div class="post">
-  			<header class="post-header">
-  			  <h1 class="post-title">Memory: October 2013</h1>
-  			</header>
 
-  			<article class="post-content">
-   			 <h2 id="comments">Comments</h2>
+  <header class="post-header">
+    <h1 class="post-title">Description of Memory Usage Benchmark</h1>
+  </header>
 
-<ul>
-  <li>Updated: MTJ, la4j, JBlas, CommonsMath, ojAlgo, EJML, UJMP, Jama</li>
-  <li>MTJ now includes a native version (MTJ-N) and has many internal changes</li>
-  <li>Removed UJMP-Native since the version on the website doesn’t contain native code apparently</li>
-  <li>Summary results now define a small matrix as having a width/height of 10 instead of 4</li>
-  <li>For MTJ-N to have the performance shown here, be sure to use optimized native libraries.
-    <ul>
-      <li><a href="https://github.com/fommil/netlib-java/">https://github.com/fommil/netlib-java/</a></li>
-    </ul>
-  </li>
-</ul>
+  <article class="post-content">
+    <p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2011_02.attach/3000.png" alt="" /></p>
 
-<h2 id="results">Results</h2>
+<p class="center"><em>Plot showing relative memory usage for each library in different mathematical operations.</em></p>
 
-<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/1000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/2000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/3000.png" alt="" /></p>
+<h1 id="introduction">Introduction</h1>
 
-<h2 id="test-setup">Test Setup</h2>
+<p>As the size of a matrix grows how memory efficient a library is becomes more and more important.  For many problems (e.g. machine learning or data mining) the problems can be so large that they exceed the total memory available in the computer.  Often times memory usage is traded for speed and data abstraction.  What might allow a library to run faster can make it unusable for other problems by using up too much memory.</p>
 
-<table>
-  <tbody>
-    <tr>
-      <td>Date</td>
-      <td>2013 / 10</td>
-    </tr>
-    <tr>
-      <td>OS</td>
-      <td>Mint 14 64bit</td>
-    </tr>
-    <tr>
-      <td>Kernel</td>
-      <td>3.5.0-17-Generic</td>
-    </tr>
-    <tr>
-      <td>CPU</td>
-      <td>Core i7-2600 3.4 GHz - 4 cores - 8 threads</td>
-    </tr>
-    <tr>
-      <td>RAM</td>
-      <td>11 G</td>
-    </tr>
-    <tr>
-      <td>CPU Cache</td>
-      <td>8194 KB</td>
-    </tr>
-    <tr>
-      <td>JVM</td>
-      <td>Java HotSpot(TM) 64-Bit Server 1.7.0_17</td>
-    </tr>
-    <tr>
-      <td>Benchmark</td>
-      <td>0.10</td>
-    </tr>
-  </tbody>
-</table>
+<p>Measuring the amount of memory each library uses in Java is not a trivial task.  Even when the exact same code is called it can vary depending on the run.  Garbage collectors (GC) might decide to postpone freeing memory for performance reasons. Memory usage can vary with time, making how often it is sampled important.  What this benchmark is attempts to measure is the minimum amount of memory required by each library to accomplish some task.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Libraries</th>
-      <th>Version</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Colt</td>
-      <td>1.2</td>
-    </tr>
-    <tr>
-      <td>Commons Math</td>
-      <td>3.2</td>
-    </tr>
-    <tr>
-      <td>EJML</td>
-      <td>0.23</td>
-    </tr>
-    <tr>
-      <td>Jama</td>
-      <td>1.0.3</td>
-    </tr>
-    <tr>
-      <td>JBlas</td>
-      <td>1.2.3</td>
-    </tr>
-    <tr>
-      <td>la4j</td>
-      <td>0.4.5</td>
-    </tr>
-    <tr>
-      <td>MTJ</td>
-      <td>0.9.13</td>
-    </tr>
-    <tr>
-      <td>OjAlgo</td>
-      <td>34.8</td>
-    </tr>
-    <tr>
-      <td>Parallel Colt</td>
-      <td>0.9.4</td>
-    </tr>
-    <tr>
-      <td>UJMP</td>
-      <td>0.2.5</td>
-    </tr>
-  </tbody>
-</table>
+<p>At the top of this page is an example of a relative memory usage plot.  For each operation how much memory is used by each library relative to each other is shown.  Taller bars indicate that more memory was used relative to other libraries.</p>
 
-  			</article>
-		</div>
+<p>To run the benchmark, use the following command:</p>
+<pre>
+java -jar build/jar/benchmark_app.jar memory
+</pre>
+
+<h1 id="procedure">Procedure</h1>
+
+<p>For each test a new JVM is spawned and a large amount of memory is allocated to the JVM using -Xms and -Xmx.  Memory usage is monitored using “/proc/PID/status”. While this approach is operating system (OS) specific. it produces better an more accurate results than an easier cross platform strategy used before.  After memory has been measured once using this procedure, the same test is performed again.  However, this time the amount of memory allocated to JVM is amount which was measured previously.  This is repeated until memory usage converges or out of memory errors are thrown.</p>
+
+<p>By changing the JVM’s heap size the GC is forced to free memory sooner, allowing the minimum memory usage to be measured.  The JVM’s overhead is measured in the beginning by running the procedure mentioned above with no library or operation being called.  This is done several times. The reported memory used to create the plots for each library is the minimum amount observed minus overhead.</p>
+
+<p>Matrices of the same size are used for operations.  If possible square matrices are used, if a rectangular matrix is required the the reported size is the size of the smallest side.  Each operation is tested several times and the variability across all these trials is recorded.</p>
+
+<h1 id="old-procedures">Old Procedures</h1>
+
+<p><em>THIS IS NOT HOW MEMORY IS MEASURED ANY MORE</em></p>
+
+<p>For historical purposes (and to prevent people from suggesting this technique in the future) the following is a description of how memory was initially measured.</p>
+
+<p>For each test a new virtual machine is created with a different amount of memory.  The amount of memory is specified using -Xms and -Xmx flags.  Most of the time if there is not enough memory an out of memory exception is thrown.  If there is just barely enough memory then the operation will take an excessive amount of time to finish.  In the later case a time out is used to detect it and is treated as if an out of memory exception was thrown.</p>
+
+<p>The problem with this approach is that all the libraries seemed to converge to within the same block of memory.  Libraries that were known to use more memory by design didn’t take up any extra memory.</p>
+
+  </article>
+
+</div>
+
       </div>
     </div>
 

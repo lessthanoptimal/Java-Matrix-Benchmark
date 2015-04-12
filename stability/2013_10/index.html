@@ -14,7 +14,8 @@
   <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/stability/2013_10/">
   <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/runtime.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/stability.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css" >
 </head>
 
   <body>
@@ -65,7 +66,7 @@
 
   			<article class="post-content">
    			 <h2 id="documentation">Documentation</h2>
-<p>Before attempting to understand the charts below, please take a look at the <a href="/Java-Matrix-Benchmarkmanual/DescriptionStability/">Stability Benchmark manual</a>.</p>
+<p>Before attempting to understand the charts below, please take a look at the <a href="/Java-Matrix-Benchmark/manual/DescriptionStability/">Stability Benchmark manual</a>.</p>
 
 <h2 id="quick-links">Quick Links</h2>
 
@@ -113,7 +114,7 @@
   </tbody>
 </table>
 
-<table>
+<table style="width: 150px;">
   <thead>
     <tr>
       <th>Libraries</th>
@@ -166,7 +167,7 @@
 
 <p>Test Configuration.  Matrix size.</p>
 
-<table>
+<table style="width: 150px;">
   <thead>
     <tr>
       <th> </th>
@@ -192,7 +193,7 @@
 
 <h2 id="linear-solve">Linear Solve</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -209,7 +210,7 @@
 <tr><th>la4j</th><td>1.0e+308</td><td>Infinity</td><td>Infinity</td><td> 76.7%</td><td> 11.1%</td><td></td><td> 12.2%</td><td></td><td> 1.0e-14</td><td> 1.0e-14</td><td> 1.0e-14</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 <tr><th>ojAlgo</th><td>1.0e+308</td><td>Infinity</td><td>Infinity</td><td> 76.7%</td><td> 11.1%</td><td></td><td> 12.2%</td><td></td><td>1.0e-319</td><td>1.0e-315</td><td>1.0e-314</td><td>  4.2%</td><td></td><td></td><td> 95.8%</td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th><th colspan="8"> Nearly Singular </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -229,7 +230,7 @@
 
 <p>== Least Squares Solve ==</p>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -246,7 +247,7 @@
 <tr><th>la4j</th><td>Infinity</td><td>Infinity</td><td>Infinity</td><td> 95.4%</td><td>  4.6%</td><td></td><td></td><td></td><td> 1.0e-14</td><td> 1.0e-14</td><td> 1.0e-14</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 <tr><th>ojAlgo</th><td>Infinity</td><td>Infinity</td><td>Infinity</td><td> 93.4%</td><td>  6.6%</td><td></td><td></td><td></td><td>1.0e-316</td><td>1.0e-314</td><td>1.0e-314</td><td>  0.1%</td><td></td><td></td><td> 99.9%</td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th><th colspan="8"> Nearly Singular </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -264,9 +265,9 @@
 <tr><th>ojAlgo</th><td> 1.1e-16</td><td> 2.7e-16</td><td> 5.0e-16</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td> 8.0e-09</td><td> 4.3e-08</td><td> 1.2e-07</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
 
-<p>== Symmetric Positive Definite Inverse ==</p>
+<h2 id="symmetric-positive-definite-inverse">Symmetric Positive Definite Inverse</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -283,7 +284,7 @@
 <tr><th>la4j</th><td> 5.6e-17</td><td> 1.7e-16</td><td> 2.5e-16</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 <tr><th>ojAlgo</th><td> 1.3e-16</td><td> 2.2e-16</td><td> 3.1e-16</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -301,9 +302,9 @@
 <tr><th>ojAlgo</th><td>Infinity</td><td>Infinity</td><td>Infinity</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td>1.0e-309</td><td>1.0e-309</td><td>1.0e-309</td><td></td><td> 100.0%</td><td></td><td></td><td></td></tr>
 </table>
 
-<p>== Singular Value Decomposition ==</p>
+<h2 id="singular-value-decomposition">Singular Value Decomposition</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -320,7 +321,7 @@
 <tr><th>la4j</th><td> 1.6e-16</td><td> 4.2e-16</td><td> 9.2e-16</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 <tr><th>ojAlgo</th><td> 1.2e-16</td><td> 4.0e-16</td><td> 9.2e-16</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -338,9 +339,9 @@
 <tr><th>ojAlgo</th><th colspan="8"> TIMED OUT </th><td>1.0e-314</td><td>1.0e-283</td><td>1.0e-283</td><td>  0.2%</td><td></td><td></td><td> 99.8%</td><td></td></tr>
 </table>
 
-<p>== Symmetric Eigenvalue Decomposition ==</p>
+<h2 id="symmetric-eigenvalue-decomposition">Symmetric Eigenvalue Decomposition</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -357,7 +358,7 @@
 <tr><th>la4j</th><td> 2.3e-16</td><td> 2.6e-01</td><td> 4.7e-01</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 <tr><th>ojAlgo</th><td> 2.1e-16</td><td> 7.6e-16</td><td> 1.1e-15</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -375,11 +376,11 @@
 <tr><th>ojAlgo</th><td>1.0e+155</td><td>1.0e+155</td><td>1.0e+308</td><td>  7.7%</td><td>  1.8%</td><td> 90.5%</td><td></td><td></td><td>1.0e-314</td><td>1.0e-158</td><td>1.0e-158</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
 
-<p>= Large Matrices =</p>
+<h1 id="large-matrices">Large Matrices</h1>
 
-<p>== Linear Solve ==</p>
+<h2 id="linear-solve-1">Linear Solve</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -396,7 +397,7 @@
 <tr><th>la4j</th><td>1.0e+307</td><td>1.0e+307</td><td>1.0e+307</td><td></td><td> 100.0%</td><td></td><td></td><td></td><td> 1.0e-14</td><td> 1.0e-14</td><td> 1.0e-14</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 <tr><th>ojAlgo</th><td>1.0e+307</td><td>1.0e+307</td><td>1.0e+307</td><td></td><td> 100.0%</td><td></td><td></td><td></td><td> 1.0e-14</td><td> 1.0e-14</td><td> 1.0e-14</td><td></td><td> 100.0%</td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th><th colspan="8"> Nearly Singular </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -414,9 +415,9 @@
 <tr><th>ojAlgo</th><td> 1.6e-14</td><td> 1.9e-14</td><td> 2.3e-14</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td> 3.9e-08</td><td> 2.9e-07</td><td> 4.4e-07</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
 
-<p>== Least Squares Solve ==</p>
+<h2 id="least-squares-solve">Least Squares Solve</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -433,7 +434,7 @@
 <tr><th>la4j</th><td>1.0e+308</td><td>1.0e+308</td><td>1.0e+308</td><td></td><td> 100.0%</td><td></td><td></td><td></td><td> 1.0e-14</td><td> 1.0e-14</td><td> 1.0e-14</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 <tr><th>ojAlgo</th><td>1.0e+308</td><td>1.0e+308</td><td>1.0e+308</td><td></td><td> 100.0%</td><td></td><td></td><td></td><td>1.0e-313</td><td>1.0e-313</td><td>1.0e-313</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th><th colspan="8"> Nearly Singular </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -451,9 +452,9 @@
 <tr><th>ojAlgo</th><td> 2.3e-15</td><td> 2.4e-15</td><td> 2.6e-15</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td> 1.2e-08</td><td> 7.3e-08</td><td> 1.2e-07</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
 
-<p>== Symmetric Positive Definite Inverse ==</p>
+<h2 id="symmetric-positive-definite-inverse-1">Symmetric Positive Definite Inverse</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -470,7 +471,7 @@
 <tr><th>la4j</th><th colspan="8"> TIMED OUT </th></tr>
 <tr><th>ojAlgo</th><td> 4.1e-15</td><td> 4.6e-15</td><td> 5.6e-15</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -488,9 +489,9 @@
 <tr><th>ojAlgo</th><td>Infinity</td><td>Infinity</td><td>Infinity</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td>1.0e-309</td><td>1.0e-309</td><td>1.0e-309</td><td></td><td> 100.0%</td><td></td><td></td><td></td></tr>
 </table>
 
-<p>== Singular Value Decomposition ==</p>
+<h2 id="singular-value-decomposition-1">Singular Value Decomposition</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -507,7 +508,7 @@
 <tr><th>la4j</th><td> 4.1e-15</td><td> 9.8e-15</td><td> 1.3e-14</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 <tr><th>ojAlgo</th><td> 2.6e-15</td><td> 6.2e-15</td><td> 7.1e-15</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>
@@ -525,9 +526,9 @@
 <tr><th>ojAlgo</th><td>Infinity</td><td>Infinity</td><td>Infinity</td><td> 100.0%</td><td></td><td></td><td></td><td></td><td>1.0e-283</td><td>1.0e-283</td><td>1.0e-283</td><td></td><td></td><td></td><td> 100.0%</td><td></td></tr>
 </table>
 
-<p>== Symmetric Eigenvalue Decomposition ==</p>
+<h2 id="symmetric-eigenvalue-decomposition-1">Symmetric Eigenvalue Decomposition</h2>
 
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Accuracy </th></tr>
 
 <tr><th /><th colspan="3"> Accuracy </th><th colspan="5"> Unexpected Error </th></tr>
@@ -544,7 +545,7 @@
 <tr><th>la4j</th><th colspan="8"> TIMED OUT </th></tr>
 <tr><th>ojAlgo</th><td> 6.6e-15</td><td> 6.8e-15</td><td> 7.1e-15</td><td> 100.0%</td><td></td><td></td><td></td><td></td></tr>
 </table>
-<table border="1" cellpadding="5">
+<table>
 <tr><th></th><th colspan="8"> Overflow </th><th colspan="8"> Underflow </th></tr>
 
 <tr><th /><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th><th colspan="3"> Scaling Factor </th><th colspan="5"> Stopping Condition </th></tr>

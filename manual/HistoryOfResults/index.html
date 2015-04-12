@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+  <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Memory: October 2013</title>
+  <title>History of Results</title>
   <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
 ">
 
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main_runtime.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/memory/2013_10/">
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main.css">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/manual/HistoryOfResults/">
   <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/runtime.css" >
-  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/jmatbench.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css">
 </head>
+
 
   <body>
 
@@ -60,123 +61,67 @@
     <div class="page-content">
       <div class="wrapper">
         <div class="post">
-  			<header class="post-header">
-  			  <h1 class="post-title">Memory: October 2013</h1>
-  			</header>
 
-  			<article class="post-content">
-   			 <h2 id="comments">Comments</h2>
+  <header class="post-header">
+    <h1 class="post-title">History of Results</h1>
+  </header>
 
-<ul>
-  <li>Updated: MTJ, la4j, JBlas, CommonsMath, ojAlgo, EJML, UJMP, Jama</li>
-  <li>MTJ now includes a native version (MTJ-N) and has many internal changes</li>
-  <li>Removed UJMP-Native since the version on the website doesn’t contain native code apparently</li>
-  <li>Summary results now define a small matrix as having a width/height of 10 instead of 4</li>
-  <li>For MTJ-N to have the performance shown here, be sure to use optimized native libraries.
-    <ul>
-      <li><a href="https://github.com/fommil/netlib-java/">https://github.com/fommil/netlib-java/</a></li>
-    </ul>
-  </li>
-</ul>
+  <article class="post-content">
+    <p>Here’s a list of previous results.  The first benchmark took place in January 2010 everything prior to 2013 has been discarded due to the move from code.google.com.</p>
 
-<h2 id="results">Results</h2>
-
-<p><img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/1000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/2000.png" alt="" />
-<img src="http://java-matrix-benchmark.googlecode.com/svn/wiki/MemoryResults_2013_10.attach/3000.png" alt="" /></p>
-
-<h2 id="test-setup">Test Setup</h2>
-
-<table>
-  <tbody>
-    <tr>
-      <td>Date</td>
-      <td>2013 / 10</td>
-    </tr>
-    <tr>
-      <td>OS</td>
-      <td>Mint 14 64bit</td>
-    </tr>
-    <tr>
-      <td>Kernel</td>
-      <td>3.5.0-17-Generic</td>
-    </tr>
-    <tr>
-      <td>CPU</td>
-      <td>Core i7-2600 3.4 GHz - 4 cores - 8 threads</td>
-    </tr>
-    <tr>
-      <td>RAM</td>
-      <td>11 G</td>
-    </tr>
-    <tr>
-      <td>CPU Cache</td>
-      <td>8194 KB</td>
-    </tr>
-    <tr>
-      <td>JVM</td>
-      <td>Java HotSpot(TM) 64-Bit Server 1.7.0_17</td>
-    </tr>
-    <tr>
-      <td>Benchmark</td>
-      <td>0.10</td>
-    </tr>
-  </tbody>
-</table>
+<h1 id="runtime">Runtime</h1>
 
 <table>
   <thead>
     <tr>
-      <th>Libraries</th>
-      <th>Version</th>
+      <th>Date</th>
+      <th>Link</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Colt</td>
-      <td>1.2</td>
+      <td>2013.10</td>
+      <td><a href="/Java-Matrix-Benchmark/runtime/2013_10_Corei7v2600/">Core i7-2600</a></td>
     </tr>
     <tr>
-      <td>Commons Math</td>
-      <td>3.2</td>
-    </tr>
-    <tr>
-      <td>EJML</td>
-      <td>0.23</td>
-    </tr>
-    <tr>
-      <td>Jama</td>
-      <td>1.0.3</td>
-    </tr>
-    <tr>
-      <td>JBlas</td>
-      <td>1.2.3</td>
-    </tr>
-    <tr>
-      <td>la4j</td>
-      <td>0.4.5</td>
-    </tr>
-    <tr>
-      <td>MTJ</td>
-      <td>0.9.13</td>
-    </tr>
-    <tr>
-      <td>OjAlgo</td>
-      <td>34.8</td>
-    </tr>
-    <tr>
-      <td>Parallel Colt</td>
-      <td>0.9.4</td>
-    </tr>
-    <tr>
-      <td>UJMP</td>
-      <td>0.2.5</td>
+      <td>2011.01</td>
+      <td><a href="/Java-Matrix-Benchmark/runtime/2011_01_ArmCortexA8/">Arm Cortex-A8</a></td>
     </tr>
   </tbody>
 </table>
 
-  			</article>
-		</div>
+<h1 id="memory">Memory</h1>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><a href="/Java-Matrix-Benchmark/memory/2013_10/">2013-10</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h1 id="stability">Stability</h1>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><a href="/Java-Matrix-Benchmark/stability/2013_10/">2013-10</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+  </article>
+
+</div>
+
       </div>
     </div>
 

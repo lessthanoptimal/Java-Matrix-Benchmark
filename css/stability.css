@@ -1,0 +1,24 @@
+
+table {
+  border-collapse: collapse;
+  color: #66b;
+}
+
+th,td {
+  border-collapse: collapse;
+  padding: 0.25rem;
+}
+
+td {
+  border: 1px solid black;
+  color: black;
+}
+
+tbody tr:nth-child(odd) td {
+  background-color: #f9f9f9;
+}
+
+tr:first-child th {
+  font-size: 120%;
+  color: black;
+}

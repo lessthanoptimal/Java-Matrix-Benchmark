@@ -1,0 +1,10 @@
+/* text formatting */
+.center {
+     text-align: center;
+}
+
+.table_center {
+  margin-left:auto; 
+  margin-right:auto;
+}
+

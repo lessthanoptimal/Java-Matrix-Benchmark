@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Description of Numerical Stability Benchmark</title>
+  <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
+">
+
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main_runtime.css">
+  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/manual/DescriptionStability/">
+  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/stability.css" >
+  <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css" >
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/Java-Matrix-Benchmark/">Java Matrix Benchmark</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/Java-Matrix-Benchmark/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+  			<header class="post-header">
+  			  <h1 class="post-title">Description of Numerical Stability Benchmark</h1>
+  			</header>
+
+  			<article class="post-content">
+   			 <p>Stability and accuracy are two very important issues in computational linear algebra.  Stability deals with how sensitive a system is to small perbations or how well it performs under certain stressing conditions.  Accuracy provides a metric how different the computed answer is from the true answer.</p>
+
+<p>To evaluate the quality of different linear algebra libraries, tests are performed on several important decomposition algorithms and linear solvers in each library.  Three types of tests are performed for all algorithms; accuracy, overflow, and underflow.  A fourth type of test is also done for linear solvers that test their ability to handle nearly singular systems.  Accuracy tests the ability to accurately decompose or solve a well formed system.  Overflow and underflow test their ability to handle very large and small numbers respectively.</p>
+
+<p>This benchmark does not claim to test for every possible type of error.  It is entirely possible for a library to pass all of these tests and still produce poor results in a different application.  The tests were selected to provide a general feel for a libraries accuracy and expose some common problems.</p>
+
+<h1 id="testing-procedure">Testing Procedure</h1>
+
+<p>Each test is performed several times using randomly generated matrices.  The tests are also performed across a range of matrix sizes.  Randomly generated matrices are used to provide a good range of tests.  The disadvantage of this approach is that particularly stressing cases might be missed.    In general the specialized stressing cases are specific for a particular algorithm/implementation and are not included since this is a general purpose benchmark.  It is possible for an algorithm to perform very well in these tests, but perform poorly for a particular application.</p>
+
+<p>There are two reason for testing different sizes of matrices.  Some libraries switch between different algorithms depending on the size and some errors become more noticeable for larger matrices.  The size of each matrix is specified on the results page.</p>
+
+<h2 id="metrics">Metrics</h2>
+
+<p>Depending on the test different metrics are used.  Accuracy is measured as the frobenius norm of the difference between the expected and found results.  The specifics for how this is computed for each solver/decomposition is provided below.  Overflow/underflow tests work by scaling up or down a matrix until a stopping condition is encountered.  For overflow tests larger numbers are better with infinity being the best.  For underflow small numbers are better.</p>
+
+<h3 id="trial-stopping-condition">Trial Stopping Condition</h3>
+
+<p>There are special different reasons for an individual test to stop, which are shown below:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Finished</td>
+      <td>The test finished with no error.</td>
+    </tr>
+    <tr>
+      <td>Large Error</td>
+      <td>The difference from the expected result was too large.</td>
+    </tr>
+    <tr>
+      <td>Uncountable</td>
+      <td>A matrix was returned with at least one element that was not a countable number (infinity or NaN)</td>
+    </tr>
+    <tr>
+      <td>Exception</td>
+      <td>An unexpected exception was thrown.  For example a null pointer exception would be unexpected</td>
+    </tr>
+    <tr>
+      <td>Detected</td>
+      <td>The algorithm detected that it has failed. For example, a SingularMatrix exception could be thrown or value of false could be returned.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>On the results page the fraction of times that each of these stopping conditions was encountered is listed.</p>
+
+<h3 id="fatal-test-errors">Fatal Test Errors</h3>
+
+<p>A fatal error for a test is an error that prevents results from being generated.  There are two types of fatal errors; froze and memory.  A test is declared frozen is some significant amount of time passes and no results are generated.  Memory indicates that not enough memory was allocated for the test to run.  This can be caused by the library requiring much more than the expected amount or the system not having enough memory.</p>
+
+<p>It is possible for a frozen test to not really be frozen, it could just be running very slowly.  Unfortunately it is impossible to tell the difference between the two.  As a general rule for small and medium matrix tests if it times out then it is a bug in the algorithm.  For large matrices it might just be slow but it could also be frozen.</p>
+
+<h3 id="understanding-overflowunderflow-and-nearly-singular-results">Understanding Overflow/Underflow and Nearly Singular Results</h3>
+
+<table>
+<tr><th></th><th colspan="8"> Overflow </th></tr>
+<tr><th /><th>Fatal</th><th>Metric 10%</th><th>Metric 50%</th><th>Metric 90%</th><th>Uncountable</th><th>Exception</th><th>Large Error</th><th>Detected</th></tr>
+<tr><th>Lib A</th><td>TIME</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Lib B</th><td /><td>Infinity</td><td>Infinity</td><td>Infinity</td><td></td><td></td><td></td><td></td></tr>
+<tr><th>Lib C</th><td /><td> 1.0e+85</td><td> 1.0e+85</td><td>1.0e+155</td><td> 37.2%</td><td> 62.8%</td><td></td><td></td></tr>
+<tr><th>Lib D</th><td /><td> 1.0e+00</td><td> 1.0e+00</td><td> 1.0e+00</td><td> 52.7%</td><td></td><td> 30.8%</td><td> 16.5%</td></tr>
+<tr><th>Lib E</th><td /><td /><td /><td /><td /><td /><td /><td /></tr>
+</table>
+
+<p>The above table is an example of what results from the overflow/underflow benchmark might look like.</p>
+
+<ul>
+  <li>First column indicates the library.</li>
+  <li>“Fatal” column indicates if a fatal error occurred and what it was if one did. If a fatal error happens there are no results.</li>
+  <li>Next three columns are the percentile statics for the computed metric.  For example 10% indicates that 10% of the trials had a metric score less than the specified value.</li>
+  <li>“Uncountable” column shows the percent of time a trial returned a matrix that was uncountable.</li>
+  <li>“Exception” column shows the percent of time a trial returned threw an unexpected exception..</li>
+  <li>“Large Error” column shows the percent of time a trial returned a matrix that had an excessively large error.</li>
+  <li>“Detected” column shows the percent of time a trial the algorithm detected an error and stopped gracefully.</li>
+</ul>
+
+<p>The metric being shown is the size of the scaling factor or size of the smallest singular value at the time the test stopped, for overflow/underflow and nearly singular tests respectively. A value of infinity for overflow or zero for underflow indicates that a terminating condition was never encountered before the scaling factor exceeded its numerical limits.  This is the best that an algorithm can possibly perform.  For sake of brevity the percent of the time in which an algorithm finished without error is not shown.  As a result the percentages do not always add up to one.</p>
+
+<p>Notice how “Lib E” has no results.  This is because the library did not support the particular operation being evaluated.</p>
+
+<h3 id="understanding-accuracy-results">Understanding Accuracy Results</h3>
+
+<table>
+<tr><th></th><th colspan="8"> Accuracy </th></tr>
+<tr><th /><th>Fatal</th><th>Metric 10%</th><th>Metric 50%</th><th>Metric 90%</th><th>Uncountable</th><th>Exception</th><th>Large Error</th><th>Detected</th></tr>
+<tr><th>Lib A</th><td /><td> 5.1e-16</td><td> 1.2e-15</td><td> 1.6e-15</td><td></td><td>5%</td><td></td><td></td></tr>
+<tr><th>Lib B</th><td /><td /><td /><td /><td /><td /><td /><td /></tr>
+</table>
+
+<p>The above table is an example of what the results from an accuracy benchmark might look like.  This table is similar to the overflow/underflow charts.  The metric being evaluated is accuracy.  If a trial failed then a value of NaN was recorded as the result.</p>
+
+<p>One major difference is the meaning of error columns.  Instead of indicating a terminating condition they show how often a specific type of error occurred.  For example, if an unexpected exception was thrown, then it produced no result and NaN was recorded as the metric.</p>
+
+<h2 id="raw-results">Raw Results</h2>
+
+<p>The raw results contains more information than is presented on the website.  Of interest to library developers is the list of exceptions that were thrown.  A link is provided</p>
+
+<h1 id="benchmarks">Benchmarks</h1>
+
+<h2 id="solve-linear-and-least-squares">Solve: Linear and Least Squares</h2>
+
+<p>Both linear and least squares problems are described by the following equation:
+Ax = y
+where A is m by n, x is n by 1 and y is m by 1.  For linear equations m = n and for least squares m &gt; n.  The matrix x is unknown and solved for.</p>
+
+<p>Accuracy is computed with:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>error =</td>
+      <td>y-Ax</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>All tests start with a randomly generated matrix whose singular values are all one.  Such matrices can be easily solved for.  For the accuracy test this matrix is used as is, for overflow/underflow tests it is scaled up/down.  In the nearly singular test one singular value is randomly selected and scaled down.  The smaller the singular value is before the algorithm breaks the better.</p>
+
+<h2 id="singular-value-decomposition">Singular Value Decomposition</h2>
+
+<p>The accuracy of SVD is computed with:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>error =</td>
+      <td>A-USV<sup>T</sup></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>where U,S, and V is the SVD of A.  It is tested against randomly generated matrices that have a singular value of one.</p>
+
+<p>To ensure reasonable scaling the test matrices have all have singular values of one initially.
+<em>NOTE: Change this to nearly one to avoid an unrealistic pathological case</em></p>
+
+<h2 id="eigenvalue-decomposition">Eigenvalue Decomposition</h2>
+
+<p>The accuracy of an Eigenvalue decomposition is computed with:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>error =</td>
+      <td>AV - LV</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>where V is a matrix composed of the eigenvectors and L is a matrix composed of the eigenvalues.  If the eigenvalues are all positive then it is a diagonal matrix.</p>
+
+<p>Currently only symmetric matrices are tested.  This problem is important in many engineering and scientific applications and has a solution contained in the real domain.  The general eigenvalue problem involves imaginary numbers, which goes beyond the scale of this benchmark.</p>
+
+<p>To ensure reasonable scaling the test matrices have all have singular values of one initially.
+<em>NOTE: Change this to nearly one to avoid an unrealistic pathological case</em></p>
+
+<h1 id="discussion">Discussion</h1>
+
+<p>How practical and realistic are these tests?  That depends on the test.  The overflow/underflow tests take each library well beyond the typical range.  Accuracy tests provide an idea of how accurate an algorithm is when processing very well formed matrices.  For the linear and least-squares solvers nearly singular systems are not uncommon, but in many cases one would use SVD instead if it was likely that a singular or nearly singular system was being processed.</p>
+
+<p>The overflow and underflow tests are extreme cases and it is unlikely that any real world engineering problem would produce numbers that large or small.  In fact prescaling of each matrix before processing would mitigate this issue.  However, the test do expose potential problems in an algorithm and indicate how careful a user needs to be when using the library.</p>
+
+  			</article>
+		</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Java Matrix Benchmark</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>Java Matrix Benchmark</li>
+          <li><a href="mailto:peter.abeles@gmail.com">peter.abeles@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/lessthanoptimal">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">lessthanoptimal</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/NotSoOptimal">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">NotSoOptimal</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text">Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
