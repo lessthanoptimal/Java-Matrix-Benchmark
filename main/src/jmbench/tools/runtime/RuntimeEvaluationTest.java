@@ -19,6 +19,7 @@
 
 package jmbench.tools.runtime;
 
+import jmbench.impl.DoNothingSpecialConfigure;
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -114,7 +115,10 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         LibraryConfigure configure;
         try {
             factory = (RuntimePerformanceFactory)Class.forName(classFactory).newInstance();
-            configure = (LibraryConfigure)Class.forName(classConfigure).newInstance();
+            if( classConfigure == null )
+                configure = new DoNothingSpecialConfigure();
+            else
+                configure = (LibraryConfigure)Class.forName(classConfigure).newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {

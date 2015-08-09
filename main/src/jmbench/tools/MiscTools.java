@@ -14,20 +14,23 @@ import java.util.List;
  * @author Peter Abeles
  */
 public class MiscTools {
-    public static void saveTests( LibraryStringInfo test ) throws IOException {
 
-        List<LibraryStringInfo> tests = new ArrayList<LibraryStringInfo>();
-        tests.add(test);
-        saveTests(tests);
-    }
-
-    public static void saveTests( List<LibraryStringInfo> tests ) throws IOException {
+    public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
         XStream xstream = new XStream();
         String string = xstream.toXML(tests);
 
-        BufferedWriter out = new BufferedWriter(new FileWriter("TestSetInfo.txt"));
+        File f = new File("external/"+directory+"/TestSetInfo.txt");
+        BufferedWriter out = new BufferedWriter(new FileWriter(f));
         out.write(string);
         out.close();
+    }
+
+    public static void saveLibraryInfo(String directory, LibraryStringInfo... tests) throws IOException {
+        List<LibraryStringInfo> list = new ArrayList<>();
+        for( LibraryStringInfo info : tests ) {
+            list.add(info);
+        }
+        saveLibraryInfo(directory,list);
     }
 
     public static List<LibraryStringInfo> loadTests( File file ) {

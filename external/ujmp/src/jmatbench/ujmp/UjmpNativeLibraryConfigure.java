@@ -19,7 +19,7 @@
 
 package jmatbench.ujmp;
 
-import jmbench.libraries.LibraryConfigure;
+import jmbench.impl.LibraryConfigure;
 import org.ujmp.core.util.UJMPSettings;
 
 /**

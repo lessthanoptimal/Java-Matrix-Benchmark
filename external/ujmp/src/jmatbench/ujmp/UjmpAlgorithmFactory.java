@@ -19,11 +19,11 @@
 
 package jmatbench.ujmp;
 
-import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
+import jmbench.tools.BenchmarkConstants;
 import org.ujmp.core.Matrix;
 import org.ujmp.core.MatrixFactory;
 import org.ujmp.core.doublematrix.DenseDoubleMatrix2D;
@@ -379,7 +379,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 			long prev = System.nanoTime();
 
 			for (long i = 0; i < numTrials; i++) {
-				DenseDoubleMatrix2D.timesScalar.calc(matA,BenchmarkConstants.SCALE, result);
+				DenseDoubleMatrix2D.timesScalar.calc(matA, BenchmarkConstants.SCALE, result);
 			}
 
 			long elapsedTime = System.nanoTime() - prev;

@@ -41,28 +41,6 @@ subprojects {
         compile fileTree(dir: 'libs', include: '*.jar')
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
-<<<<<<< HEAD
-=======
-
-    // Create a directory with all the required files needed to run this library, minus anything related to :main
-    task createRuntimeDirectory( dependsOn: jar) << {
-
-        // strip away all the libraries in the main project since they will be included automatically
-        ext.mainAll = files(project(":main").configurations.compile) +
-                files(project(":main").tasks.jar.archivePath)
-        ext.listExternal = files(configurations.compile) - ext.mainAll
-        ext.listInternal = files(tasks.jar.archivePath)
-
-        file('runtimeLibs').deleteDir()
-        file('runtimeLibs').mkdir()
-
-        copy {
-            from ext.listExternal
-            from ext.listInternal
-            into 'runtimeLibs'
-        }
-    }
->>>>>>> ef28f8dcfa6df6b2ab3157e13ed1ea3820065e58
 }
 
 idea {

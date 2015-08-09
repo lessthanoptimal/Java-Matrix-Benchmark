@@ -22,7 +22,7 @@ package jmbench.mtj;
 import com.github.fommil.netlib.ARPACK;
 import com.github.fommil.netlib.BLAS;
 import com.github.fommil.netlib.LAPACK;
-import jmbench.libraries.LibraryConfigure;
+import jmbench.impl.LibraryConfigure;
 
 /**
  * Configuration to force MTJ to use pure java code

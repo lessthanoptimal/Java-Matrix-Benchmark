@@ -19,7 +19,7 @@
 
 package jmatbench.ujmp;
 
-import jmbench.libraries.LibraryConfigure;
+import jmbench.impl.LibraryConfigure;
 import org.ujmp.core.util.UJMPSettings;
 
 /**
@@ -28,7 +28,6 @@ import org.ujmp.core.util.UJMPSettings;
  * @author Peter Abeles
  */
 public class UjmpLibraryConfigure implements LibraryConfigure {
-
 
     @Override
     public void runtimeConfigure() {

@@ -19,11 +19,11 @@
 
 package jmatbench.jblas;
 
-import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
+import jmbench.tools.BenchmarkConstants;
 import org.jblas.*;
 
 

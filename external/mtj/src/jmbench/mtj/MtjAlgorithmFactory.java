@@ -19,7 +19,6 @@
 
 package jmbench.mtj;
 
-import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -27,6 +26,7 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
+import jmbench.tools.BenchmarkConstants;
 import no.uib.cipr.matrix.*;
 
 

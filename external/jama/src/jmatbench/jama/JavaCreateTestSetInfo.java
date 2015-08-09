@@ -1,7 +1,8 @@
 package jmatbench.jama;
 
-import jmbench.benchmark.BenchmarkTools;
-import jmbench.libraries.LibraryStringInfo;
+
+import jmbench.impl.LibraryStringInfo;
+import jmbench.tools.MiscTools;
 
 import java.io.IOException;
 
@@ -16,6 +17,6 @@ public class JavaCreateTestSetInfo {
         info.nameShort = "Jama";
         info.namePlot = "Jama";
 
-        BenchmarkTools.saveLibraryInfo("jama", info);
+        MiscTools.saveLibraryInfo("jama", info);
     }
 }

@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main')
+    compile group: 'org.ojalgo', name: 'ojalgo', version: '38.1'
 }
 
 idea {

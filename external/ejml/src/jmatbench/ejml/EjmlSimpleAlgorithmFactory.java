@@ -19,11 +19,11 @@
 
 package jmatbench.ejml;
 
-import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
+import jmbench.tools.BenchmarkConstants;
 import org.ejml.UtilEjml;
 import org.ejml.ops.EigenOps;
 import org.ejml.simple.SimpleEVD;
@@ -262,11 +262,7 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-<<<<<<< HEAD
-                result = matA.scale(ScaleGenerator.SCALE);
-=======
                 result = matA.scale(BenchmarkConstants.SCALE);
->>>>>>> ef28f8dcfa6df6b2ab3157e13ed1ea3820065e58
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -313,36 +309,7 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
     public MatrixProcessorInterface transpose() {
         return new Transpose();
     }
-
-<<<<<<< HEAD
-    @Override
-    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
-        SimpleMatrix out = new SimpleMatrix(input.numRows,input.numCols);
-
-        for (int row = 0; row < input.numRows; row++) {
-            for (int col = 0; col < input.numCols; col++) {
-                out.set(row,col,input.get(row,col));
-            }
-        }
-
-        return new EjmlBenchmarkMatrix(out.getMatrix());
-    }
-
-    @Override
-    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
-        DenseMatrix64F m = input.getOriginal();
-
-        RowMajorMatrix out = new RowMajorMatrix(1,1);
-        out.data = m.data;
-        out.numCols = m.numCols;
-        out.numRows = m.numRows;
-
-        return out;
-    }
-
-=======
->>>>>>> ef28f8dcfa6df6b2ab3157e13ed1ea3820065e58
-    public static class Transpose implements MatrixProcessorInterface {
+        public static class Transpose implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             SimpleMatrix matA = inputs[0].getOriginal();

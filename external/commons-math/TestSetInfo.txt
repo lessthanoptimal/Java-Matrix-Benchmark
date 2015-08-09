@@ -1,8 +1,8 @@
 <list>
-  <jmbench.libraries.LibraryStringInfo>
+  <jmbench.impl.LibraryStringInfo>
     <factory>jmatbench.commonsmath.CommonsMathAlgorithmFactory</factory>
     <nameFull>Commons-Math</nameFull>
     <nameShort>Commons</nameShort>
     <namePlot>Commons</namePlot>
-  </jmbench.libraries.LibraryStringInfo>
+  </jmbench.impl.LibraryStringInfo>
 </list>

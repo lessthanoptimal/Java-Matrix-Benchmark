@@ -1,12 +1,11 @@
 package jmbench.misc;
 
-import jmbench.benchmark.BenchmarkTools;
-import jmbench.libraries.LibraryDescription;
+import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.List;
 
 /**
  * Gets the version of a library by launching a separate JVM to avoid corruption
@@ -62,8 +61,9 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
 
 	public static void main(String[] args) {
 
-		List<LibraryDescription> libs = BenchmarkTools.loadAllLibraries();
-		LibraryDescription target = BenchmarkTools.lookup("ejml",libs);
+		LibraryManager manager = new LibraryManager();
+
+		LibraryDescription target = manager.lookup("ejml");
 
 		LibraryVersionExtractor app = new LibraryVersionExtractor(target);
 

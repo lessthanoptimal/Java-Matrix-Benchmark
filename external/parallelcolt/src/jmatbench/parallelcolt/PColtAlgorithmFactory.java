@@ -25,7 +25,6 @@ import cern.colt.matrix.tdouble.algo.DenseDoubleAlgebra;
 import cern.colt.matrix.tdouble.algo.decomposition.*;
 import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix2D;
 import cern.jet.math.tdouble.DoubleFunctions;
-import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -33,6 +32,7 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
+import jmbench.tools.BenchmarkConstants;
 
 
 /**

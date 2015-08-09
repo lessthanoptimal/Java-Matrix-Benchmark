@@ -2,3 +2,4 @@ include 'main',
         'external:mtj','external:la4j','external:jblas','external:commons-math',
         'external:colt','external:ejml','external:jama','external:parallelcolt',
         'external:ujmp'
+//        'external:ojalgo'

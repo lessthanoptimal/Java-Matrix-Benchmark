@@ -1,7 +1,7 @@
 package jmatbench.colt;
 
-import jmbench.benchmark.BenchmarkTools;
-import jmbench.libraries.LibraryStringInfo;
+import jmbench.impl.LibraryStringInfo;
+import jmbench.tools.MiscTools;
 
 import java.io.IOException;
 
@@ -16,6 +16,6 @@ public class ColtCreateTestSetInfo {
         info.nameShort = "Colt";
         info.namePlot = "Colt";
 
-        BenchmarkTools.saveLibraryInfo("colt", info);
+        MiscTools.saveLibraryInfo("colt", info);
     }
 }
