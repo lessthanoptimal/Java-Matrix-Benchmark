@@ -377,7 +377,7 @@ public class RuntimeBenchmarkLibrary {
                 if( r != null && r.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
                     // have it run again, which will up the memory
                     System.out.println("  Not enough memory given to slave. Attempt "+attempts);
-                    logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op name = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemory()+" mb");
+                    logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op name = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb");
                 } else {
                     return null;
                 }
@@ -431,8 +431,8 @@ public class RuntimeBenchmarkLibrary {
             r = tools.runTestNoSpawn(test);
 
         if( r == null ) {
-            logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemory()+" mb duration = "+tools.getDurationMilli());
-            String param[] = tools.getParams();
+            logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
+            String param[] = tools.getArguments();
             logStream.println("Command line arguments:");
             for( int i = 0; i < param.length; i++ ) {
                 logStream.println("["+i+"]   "+param[i]);
@@ -448,10 +448,10 @@ public class RuntimeBenchmarkLibrary {
                 System.out.println("    error message: "+r.detailedError);
                 System.exit(0);
             } else if( r.failed == EvaluatorSlave.FailReason.TOO_SLOW ) {
-                logStream.println("    Case was too slow: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemory()+" mb");
+                logStream.println("    Case was too slow: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb");
                 tooSlow = true;
             } else {
-                logStream.println("    Case failed: reason = "+r.failed+" op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemory()+" mb duration = "+tools.getDurationMilli());
+                logStream.println("    Case failed: reason = "+r.failed+" op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
                 if( r.detailedError != null ) {
                     logStream.println(r.detailedError);
                 }
@@ -470,7 +470,7 @@ public class RuntimeBenchmarkLibrary {
                 RuntimeMeasurement rm = (RuntimeMeasurement)tr;
 
                 if( rm.error != null ) {
-                    String message = "    Case failed Slave: op = "+e.getOpName()+" reason "+rm.error+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemory()+" mb";
+                    String message = "    Case failed Slave: op = "+e.getOpName()+" reason "+rm.error+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb";
                     logStream.println(message);
                     System.out.println(message);
                     caseFailed = true;

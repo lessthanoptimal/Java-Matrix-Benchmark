@@ -9,3 +9,22 @@ idea {
         name = "JMatBench Main"
     }
 }
+
+// Create a jar which contains all the applications
+task benchmarkJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Java Matrix Benchmark',
+                'Implementation-Version': version,
+                'Main-Class': 'jmbench.tools.BenchmarkToolsMasterApp'
+    }
+    archiveName = '../benchmark.jar'
+
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+
+    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+
+    doLast {
+        archivePath.renameTo(file(archiveName))
+    }
+}

@@ -148,7 +148,7 @@ public class RuntimeBenchmarkMaster {
         boolean failed = false;
         boolean configFileSpecified = false;
 
-        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig(manager.getAll());
+        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig(manager.getDefaults());
 
         System.out.println("** Parsing Command Line **");
         System.out.println();

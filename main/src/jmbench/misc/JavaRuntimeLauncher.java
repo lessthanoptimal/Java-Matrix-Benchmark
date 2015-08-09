@@ -1,10 +1,10 @@
 package jmbench.misc;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class for launching JVMs.  Monitors the status and kills frozen threads.  Keeps track of execution time and
@@ -20,30 +20,25 @@ public class JavaRuntimeLauncher {
 	// if the process doesn't finish in this number of milliesconds it's considered frozen and killed
 	long frozenTime = 60*1000;
 
-	// amount of time it actually took to execute
-	long duration;
+	// amount of time it actually took to execute in milliseconds
+	long durationMilli;
+
+	// save for future debugging
+	String[] jvmArgs;
 
 	/**
 	 * Constructor.  Configures which library it is to be launching a class from/related to
-	 * @param libraryDirectory directory name of library in external/
+	 * @param pathJars List of paths to all the jars
 	 */
-	public JavaRuntimeLauncher( String libraryDirectory ) {
-		File libs = new File(libraryDirectory+"/runtimeLibs");
-
-		if( !libs.exists())
-			throw new RuntimeException("Directory "+libs.getPath()+" does not exist");
-
-		classPath = System.getProperty("java.class.path");
+	public JavaRuntimeLauncher( List<String> pathJars ) {
 
 		String sep = System.getProperty("path.separator");
 
-		File[] files = libs.listFiles();
-		if( files != null ) {
-			for (File f : files ) {
-				if( f.getName().endsWith(".jar") ) {
-//					System.out.println("Found jar "+f.getPath());
-					classPath = classPath + sep + f.getPath();
-				}
+		if( pathJars != null ) {
+			classPath = "";
+
+			for( String s : pathJars ) {
+				classPath = classPath + sep + s;
 			}
 		}
 	}
@@ -68,8 +63,8 @@ public class JavaRuntimeLauncher {
 	/**
 	 * Returns how long the operation took to complete. In milliseconds
 	 */
-	public long getDuration() {
-		return duration;
+	public long getDurationMilli() {
+		return durationMilli;
 	}
 
 	/**
@@ -78,9 +73,9 @@ public class JavaRuntimeLauncher {
 	 * @param args it's arugments
 	 * @return true if successful or false if it ended on error
 	 */
-	public boolean launch( Class mainClass , String ...args ) {
+	public Exit launch( Class mainClass , String ...args ) {
 
-		String[] jvmArgs = configureArguments(mainClass,args);
+		jvmArgs = configureArguments(mainClass,args);
 
 		try {
 			Runtime rt = Runtime.getRuntime();
@@ -95,12 +90,12 @@ public class JavaRuntimeLauncher {
 
 			// print the output from the slave
 			if( !monitorSlave(pr, input, error) )
-				return false;
+				return Exit.FROZEN;
 
 			if( pr.exitValue() != 0 ) {
-				return false;
+				return Exit.RETURN_NOT_ZERO;
 			} else {
-				return true;
+				return Exit.NORMAL;
 			}
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
@@ -111,7 +106,7 @@ public class JavaRuntimeLauncher {
 	 * Prints out the standard out and error from the slave and checks its health.  Exits if
 	 * the slave has finished or is declared frozen.
 	 *
-	 * @return true if successful or false if it was forced to kill the slave
+	 * @return true if successful or false if it was forced to kill the slave because it was frozen
 	 */
 	private boolean monitorSlave(Process pr,
 								 BufferedReader input, BufferedReader error)
@@ -161,7 +156,7 @@ public class JavaRuntimeLauncher {
 				}
 			}
 		}
-		duration = System.currentTimeMillis()-startTime;
+		durationMilli = System.currentTimeMillis()-startTime;
 		return !frozen;
 	}
 
@@ -200,5 +195,37 @@ public class JavaRuntimeLauncher {
 			out[7+i] = args[i];
 		}
 		return out;
+	}
+
+	public String getClassPath() {
+		return classPath;
+	}
+
+	public long getAllocatedMemoryInMB() {
+		return memoryInMB;
+	}
+
+	public long getFrozenTime() {
+		return frozenTime;
+	}
+
+	public String[] getArguments() {
+		return jvmArgs;
+	}
+
+	public enum Exit
+	{
+		/**
+		 * Exited normally.
+		 */
+		NORMAL,
+		/**
+		 * Did not finish in the required amount of time
+		 */
+		FROZEN,
+		/**
+		 * exited with a non zero return value
+		 */
+		RETURN_NOT_ZERO,
 	}
 }

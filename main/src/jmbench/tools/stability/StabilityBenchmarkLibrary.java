@@ -75,7 +75,7 @@ public class StabilityBenchmarkLibrary {
 
 
         tools = new BenchmarkTools(1,config.baseMemory,config.scaleMemory,target.listOfJarFilePaths());
-        tools.setFrozenDefaultTime(config.maxProcessingTime);
+        tools.setFrozenTime(config.maxProcessingTime);
 
         if( directorySave != null ) {
             setupOutputDirectory();
@@ -310,7 +310,7 @@ public class StabilityBenchmarkLibrary {
 
             tools.setMemoryScale(attempts+1);
             EvaluatorSlave.Results results = spawnChild ? tools.runTest(e) : tools.runTestNoSpawn(e);
-            slaveMemoryMegaBytes = tools.getAllocatedMemory();
+            slaveMemoryMegaBytes = tools.getAllocatedMemoryInMB();
 
             if( results == null ) {
                 logStream.println("*** WTF runTest returned null = "+e.getTestName());
@@ -323,7 +323,7 @@ public class StabilityBenchmarkLibrary {
                 System.exit(0);
             } else if( results.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
                 System.out.println("  Not enough memory given to slave. Attempt "+attempts);
-                logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op = "+e.getTestName()+" memory "+tools.getAllocatedMemory());
+                logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
                 // have it run again, which will up the memory
                 continue;
             } else {
@@ -335,7 +335,7 @@ public class StabilityBenchmarkLibrary {
                         logStream.println("    Slave: Frozen = "+e.getTestName());
                         fatalError = FatalError.FROZE;
                     } else {
-                        logStream.println("    Slave: Case failed = "+results.failed+" op = "+e.getTestName()+" memory "+tools.getAllocatedMemory());
+                        logStream.println("    Slave: Case failed = "+results.failed+" op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
                         if( results.detailedError != null ) {
                             logStream.println(results.detailedError);
                         }

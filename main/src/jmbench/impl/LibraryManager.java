@@ -2,7 +2,7 @@ package jmbench.impl;
 
 import jmbench.tools.MiscTools;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class LibraryManager {
     }
 
     protected List<LibraryDescription> parseDescription(File file) {
-        List<LibraryStringInfo> listString = MiscTools.loadTests(file);
+        List<LibraryStringInfo> listString = MiscTools.loadLibraryInfo(file);
 
         List<LibraryDescription> out = new ArrayList<LibraryDescription>();
 
@@ -95,6 +95,33 @@ public class LibraryManager {
 
             System.out.println("Library "+l.nameFull+"  in directory "+all.get(i).directory);
         }
+    }
+
+    public List<LibraryDescription> getDefaults() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("external/DefaultTestSet.txt"));
+            String line = reader.readLine();
+
+            List<LibraryDescription> defaults = new ArrayList<>();
+
+            while( line != null ) {
+                LibraryDescription found = lookup(line);
+                if( found != null ) {
+                    defaults.add(found);
+                } else {
+                    throw new RuntimeException("Couldn't find default! "+line );
+                }
+
+                line = reader.readLine();
+            }
+
+            return defaults;
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public List<LibraryDescription> getAll() {

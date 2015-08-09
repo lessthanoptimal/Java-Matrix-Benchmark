@@ -22,7 +22,7 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
 	String version;
 
 	public LibraryVersionExtractor(LibraryDescription library) {
-		super(library.directory);
+		super(library.listOfJarFilePaths());
 
 		this.library = library;
 	}
@@ -34,11 +34,12 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
 	 */
 	public String getVersion() {
 		version = "";
-		if( launch(VersionSlave.class,library.info.getFactory()) ) {
-			return version;
-		} else {
-			errorStream.println("Failed to get version information for "+library.directory);
-			return "Version Failed";
+		switch( launch(VersionSlave.class,library.info.getFactory()) ) {
+			case NORMAL:
+				return version;
+			default:
+				errorStream.println("Failed to get version information for "+library.directory);
+				return "Version Failed";
 		}
 	}
 

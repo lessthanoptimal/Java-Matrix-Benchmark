@@ -33,7 +33,7 @@ public class MiscTools {
         saveLibraryInfo(directory,list);
     }
 
-    public static List<LibraryStringInfo> loadTests( File file ) {
+    public static List<LibraryStringInfo> loadLibraryInfo(File file) {
         XStream xstream = new XStream();
         return (List<LibraryStringInfo>)xstream.fromXML(file);
     }
