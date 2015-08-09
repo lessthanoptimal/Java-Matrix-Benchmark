@@ -19,8 +19,8 @@
 
 package jmbench.tools.memory;
 
-import jmbench.impl.FactoryLibraryDescriptions;
 import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
@@ -37,6 +37,8 @@ import java.util.List;
 public class MemoryBenchmark {
 
     String directorySave;
+
+    LibraryManager manager = new LibraryManager();
 
     public MemoryBenchmark() {
         directorySave = "results/"+System.currentTimeMillis();
@@ -78,7 +80,7 @@ public class MemoryBenchmark {
         System.out.println("  elapsed time "+(stopTime-startTime)+" (ms) "+((stopTime-startTime)/(60*60*1000.0))+" hrs");
     }
 
-    private void processLibraries( List<LibraryDescription> libs, MemoryConfig config , long overhead ) {
+    private void processLibraries( List<String> libs, MemoryConfig config , long overhead ) {
 
         for( int i = 0; i < config.matrixSizes.length; i++ ) {
 
@@ -89,9 +91,12 @@ public class MemoryBenchmark {
             f.mkdirs();
             saveMatrixSize(directorySave+"/"+size+"/size.txt",size);
 
-            for(  LibraryDescription desc : libs ) {
+            for( String name : libs ) {
+
+                LibraryDescription desc = manager.lookup(name);
+
                 // run the benchmark
-                String libOutputDir = directorySave+"/"+size+"/"+desc.location.getSaveDirName();
+                String libOutputDir = directorySave+"/"+size+"/"+desc.directory;
 
                 MemoryBenchmarkLibrary bench = new MemoryBenchmarkLibrary(config,desc,libOutputDir,size,overhead);
 
@@ -116,11 +121,11 @@ public class MemoryBenchmark {
     /**
      * Save the description so that where this came from can be easily extracted
      */
-    public static void saveLibraryDescriptions( String directorySave , List<LibraryDescription> libs )
+    public static void saveLibraryDescriptions( String directorySave , List<String> libs )
     {
-        for( LibraryDescription desc : libs ) {
+        for( String desc : libs ) {
 
-            String outputFile = directorySave+"/"+desc.location.getSaveDirName()+".xml";
+            String outputFile = directorySave+"/"+desc+".xml";
             UtilXmlSerialization.serializeXml(desc,outputFile);
         }
     }
@@ -152,15 +157,15 @@ public class MemoryBenchmark {
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = FactoryLibraryDescriptions.find(splits[1]);
-                if( match == null ) {
-                    failed = true;
-                    System.out.println("Can't find library.  See list below:");
-                    FactoryLibraryDescriptions.printAllNames();
-                    break;
-                }
-                config.libraries.clear();
-                config.libraries.add(match);
+//                LibraryDescription match = FactoryLibraryDescriptions.find(splits[1]);
+//                if( match == null ) {
+//                    failed = true;
+//                    System.out.println("Can't find library.  See list below:");
+//                    FactoryLibraryDescriptions.printAllNames();
+//                    break;
+//                }
+//                config.libraries.clear();
+//                config.libraries.add(match);
             } else {
                 failed = true;
             }

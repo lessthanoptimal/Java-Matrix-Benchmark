@@ -22,6 +22,7 @@ package jmatbench.ejml;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.EigenOps;
@@ -309,6 +310,31 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
         return new Transpose();
     }
 
+    @Override
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
+        SimpleMatrix out = new SimpleMatrix(input.numRows,input.numCols);
+
+        for (int row = 0; row < input.numRows; row++) {
+            for (int col = 0; col < input.numCols; col++) {
+                out.set(row,col,input.get(row,col));
+            }
+        }
+
+        return new EjmlBenchmarkMatrix(out.getMatrix());
+    }
+
+    @Override
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
+        DenseMatrix64F m = input.getOriginal();
+
+        RowMajorMatrix out = new RowMajorMatrix(1,1);
+        out.data = m.data;
+        out.numCols = m.numCols;
+        out.numRows = m.numRows;
+
+        return out;
+    }
+
     public static class Transpose implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
@@ -327,16 +353,5 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
             }
             return elapsedTime;
         }
-    }
-
-    @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
-        return new EjmlSimpleBenchmarkMatrix(SimpleMatrix.wrap(input));
-    }
-
-    @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
-        SimpleMatrix orig = input.getOriginal();
-        return orig.getMatrix();
     }
 }

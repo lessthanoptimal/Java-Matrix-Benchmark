@@ -19,8 +19,6 @@
 
 package jmbench.tools.stability;
 
-import jmbench.impl.LibraryLocation;
-
 import java.io.File;
 import java.util.*;
 
@@ -101,12 +99,12 @@ public abstract class TablesCommon {
         for( Map.Entry<String,List> e : entries ) {
             List<StabilityTrialResults> l = e.getValue();
 
-            for( StabilityTrialResults s : l ) {
-                LibraryLocation lib = LibraryLocation.lookup(s.getLibraryName());
-                
-                if( !names.contains(lib.getPlotName()) )
-                    names.add(lib.getPlotName());
-            }
+//            for( StabilityTrialResults s : l ) {
+//                LibraryLocation lib = LibraryLocation.lookup(s.getLibraryName());
+//
+//                if( !names.contains(lib.getPlotName()) )
+//                    names.add(lib.getPlotName());
+//            }
         }
 
         // sort the names to ensure the order is consistent and not arbitrary
@@ -118,27 +116,27 @@ public abstract class TablesCommon {
     protected Data findByName(List<StabilityTrialResults> l , String name )
     {
         for( StabilityTrialResults s : l ) {
-            LibraryLocation lib = LibraryLocation.lookup(s.getLibraryName());
-
-            if( name.compareTo(lib.getPlotName()) == 0 ) {
-                Data d = new Data();
-
-                List<Double> breaking = s.getBreakingPoints();
-                int totalTrials = breaking.size();
-
-                d.fatalError = s.fatalError;
-                if( d.fatalError == null ) {
-                    d.per50 = StabilityBenchmark.computePercent(breaking,0.5);
-                    d.per10 = StabilityBenchmark.computePercent(breaking,0.10);
-                    d.per90 = StabilityBenchmark.computePercent(breaking,0.90);
-                    d.fracUncount = (double)(s.numUncountable)/(double)totalTrials;
-                    d.fracUnexpected = (double)(s.numUnexpectedException)/(double)totalTrials;
-                    d.fracLargeError = (double)(s.numLargeError)/(double)totalTrials;
-                    d.fracDetected = (double)(s.numGraceful)/(double)totalTrials;
-                }
-
-                return d;
-            }
+//            LibraryLocation lib = LibraryLocation.lookup(s.getLibraryName());
+//
+//            if( name.compareTo(lib.getPlotName()) == 0 ) {
+//                Data d = new Data();
+//
+//                List<Double> breaking = s.getBreakingPoints();
+//                int totalTrials = breaking.size();
+//
+//                d.fatalError = s.fatalError;
+//                if( d.fatalError == null ) {
+//                    d.per50 = StabilityBenchmark.computePercent(breaking,0.5);
+//                    d.per10 = StabilityBenchmark.computePercent(breaking,0.10);
+//                    d.per90 = StabilityBenchmark.computePercent(breaking,0.90);
+//                    d.fracUncount = (double)(s.numUncountable)/(double)totalTrials;
+//                    d.fracUnexpected = (double)(s.numUnexpectedException)/(double)totalTrials;
+//                    d.fracLargeError = (double)(s.numLargeError)/(double)totalTrials;
+//                    d.fracDetected = (double)(s.numGraceful)/(double)totalTrials;
+//                }
+//
+//                return d;
+//            }
         }
         return null;
     }

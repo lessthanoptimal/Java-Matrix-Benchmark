@@ -21,15 +21,14 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.convertToEjml;
 import static jmbench.misc.RandomizeMatrices.randomize;
 
 
@@ -38,7 +37,7 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class SvdGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F A;
+    RowMajorMatrix A;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -50,7 +49,7 @@ public class SvdGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
 
         if( checkResults ) {
-            A = convertToEjml(inputs[0]);
+            A = new RowMajorMatrix(inputs[0]);
         }
 
         return inputs;
@@ -62,16 +61,17 @@ public class SvdGenerator implements InputOutputGenerator {
             return OutputError.MISC;
         }
 
-        SimpleMatrix U = SimpleMatrix.wrap(convertToEjml(output[0]));
-        SimpleMatrix W = SimpleMatrix.wrap(convertToEjml(output[1]));
-        SimpleMatrix Vt = SimpleMatrix.wrap(convertToEjml(output[2])).transpose();
+        RowMajorMatrix U = new RowMajorMatrix(output[0]);
+        RowMajorMatrix W = new RowMajorMatrix(output[1]);
+        RowMajorMatrix V = new RowMajorMatrix(output[2]);
 
-        SimpleMatrix A_found = U.mult(W).mult(Vt);
+        RowMajorMatrix UW = RowMajorOps.mult(U, W, null);
+        RowMajorMatrix A_found = RowMajorOps.multTransB(UW, V, null);
 
-        if( A_found.hasUncountable() )
+        if( RowMajorOps.hasUncountable(A_found) )
             return OutputError.UNCOUNTABLE;
 
-        double error = StabilityBenchmark.residualError(A_found.getMatrix(),A);
+        double error = StabilityBenchmark.residualError(A_found,A);
         if( error > tol ) {
             return OutputError.LARGE_ERROR;
         }

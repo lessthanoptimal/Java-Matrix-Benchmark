@@ -19,13 +19,12 @@
 
 package jmbench.tools.stability;
 
-import jmbench.impl.FactoryLibraryDescriptions;
 import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.memory.MemoryBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.NormOps;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,13 +37,17 @@ import java.util.List;
  */
 public class StabilityBenchmark {
 
+    LibraryManager libraryManager;
     String directorySave;
 
-    public StabilityBenchmark() {
+    public StabilityBenchmark( LibraryManager libraryManager ) {
         directorySave = "results/"+System.currentTimeMillis();
+        this.libraryManager = libraryManager;
     }
 
-    public StabilityBenchmark( String directory ) {
+    public StabilityBenchmark( LibraryManager libraryManager ,
+                               String directory ) {
+        this.libraryManager = libraryManager;
         this.directorySave = directory;
     }
 
@@ -65,14 +68,14 @@ public class StabilityBenchmark {
         MemoryBenchmark.saveLibraryDescriptions(directorySave,config.targets);
 
         long timeBefore = System.currentTimeMillis();
-        processLibraries(config.targets,config);
+        processLibraries(config.targets, config);
         long timeAfter = System.currentTimeMillis();
 
         System.out.println();
-        System.out.println("Done with stability benchmark. Processing time "+(timeAfter-timeBefore)+" (ms)");
+        System.out.println("Done with stability benchmark. Processing time " + (timeAfter - timeBefore) + " (ms)");
     }
 
-    private void processLibraries( List<LibraryDescription> libs, StabilityBenchmarkConfig config ) {
+    private void processLibraries( List<String> libs, StabilityBenchmarkConfig config ) {
 
         benchmarkLibraries(libs, config, "small",config.smallSizeMin,config.smallSizeMax,
                     config.trialsSmallSolve,config.trialsSmallSvd );
@@ -84,13 +87,14 @@ public class StabilityBenchmark {
                 config.trialsLargeSolve,config.trialsLargeSvd );
     }
 
-    private void benchmarkLibraries(List<LibraryDescription> libs,
+    private void benchmarkLibraries(List<String> libs,
                                     StabilityBenchmarkConfig config,
                                     String dirSize ,
                                     int sizeMin , int sizeMax ,
                                     int numTrialsSolve , int numTrialsSvd) {
-        for( LibraryDescription desc : libs ) {
-            String libOutputDir = directorySave+"/"+dirSize+"/"+desc.location.getSaveDirName();
+        for( String name : libs ) {
+            LibraryDescription desc = libraryManager.lookup(name);
+            String libOutputDir = directorySave+"/"+dirSize+"/"+desc.directory;
 
             StabilityBenchmarkLibrary benchmark = new StabilityBenchmarkLibrary(
                     libOutputDir,config,desc,sizeMin,sizeMax,
@@ -100,64 +104,31 @@ public class StabilityBenchmark {
         }
     }
 
-    public static DenseMatrix64F createMatrix( DenseMatrix64F U , DenseMatrix64F V , double []sv ) {
-        DenseMatrix64F S = CommonOps.diagR(U.numRows,V.numRows,sv);
-
-        DenseMatrix64F tmp = new DenseMatrix64F(U.numRows,V.numRows);
-        CommonOps.mult(U,S,tmp);
-        CommonOps.multTransB(tmp,V,S);
-
-        return S;
-    }
-
     public static double computePercent( List<Double> results , double percent ) {
         Collections.sort(results);
 
-        return results.get((int)(results.size()*percent));
+        return results.get((int) (results.size() * percent));
     }
 
-    public double residualNorm(DenseMatrix64F A , DenseMatrix64F x  , DenseMatrix64F b ) {
-        DenseMatrix64F r = new DenseMatrix64F(b.numRows,b.numCols);
 
-        CommonOps.mult(A,x,r);
-        CommonOps.sub(b,r,r);
+    public static double residualErrorMetric(RowMajorMatrix A , RowMajorMatrix x  , RowMajorMatrix b ) {
+        RowMajorMatrix y = new RowMajorMatrix(b.numRows,b.numCols);
 
-        return NormOps.normP2(r);
-    }
-
-    public static double residualErrorMetric(DenseMatrix64F A , DenseMatrix64F x  , DenseMatrix64F b ) {
-        DenseMatrix64F y = new DenseMatrix64F(b.numRows,b.numCols);
-
-        CommonOps.mult(A,x,y);
+        RowMajorOps.mult(A,x,y);
 
         return residualError(y,b);
     }
 
-    public static double residualError( DenseMatrix64F foundA , DenseMatrix64F expectedA )
+    public static double residualError( RowMajorMatrix foundA , RowMajorMatrix expectedA )
     {
-        DenseMatrix64F r = new DenseMatrix64F(foundA.numRows,foundA.numCols);
+        RowMajorMatrix r = new RowMajorMatrix(foundA.numRows,foundA.numCols);
 
-        CommonOps.sub(foundA,expectedA,r);
+        RowMajorOps.subtract(foundA, expectedA, r);
 
-        double top = NormOps.normF(r);
-        double bottom = NormOps.normF(expectedA);
+        double top = RowMajorOps.normF(r);
+        double bottom = RowMajorOps.normF(expectedA);
 
         return top/bottom;
-    }
-
-    public double errorMetric( DenseMatrix64F A , DenseMatrix64F x  , DenseMatrix64F b )
-    {
-        DenseMatrix64F r = new DenseMatrix64F(b.numRows,b.numCols);
-
-        CommonOps.mult(A,x,r);
-        CommonOps.sub(b,r,r);
-
-        double left = NormOps.conditionP2(A);
-        double right = NormOps.normP2(r)/NormOps.normP2(b);
-
-//        System.out.println("residual error = "+NormOps.normP2(r));
-
-        return left*right;
     }
 
 //    public static void main( String args[] ) throws IOException, InterruptedException {
@@ -187,6 +158,8 @@ public class StabilityBenchmark {
 
         StabilityBenchmarkConfig config = StabilityBenchmarkConfig.createDefault();
 
+        LibraryManager libraryManager = new LibraryManager();
+
         System.out.println("** Parsing Command Line **");
         System.out.println();
         for( int i = 0; i < args.length; i++ ) {
@@ -207,15 +180,15 @@ public class StabilityBenchmark {
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = FactoryLibraryDescriptions.find(splits[1]);
+                LibraryDescription match = libraryManager.lookup(splits[1]);
                 if( match == null ) {
                     failed = true;
                     System.out.println("Can't find library.  See list below:");
-                    FactoryLibraryDescriptions.printAllNames();
+                    libraryManager.printAllNames();
                     break;
                 }
                 config.targets.clear();
-                config.targets.add(match);
+                config.targets.add(splits[1]);
             } else {
                 System.out.println("Unknown flag: "+flag);
                 failed = true;
@@ -225,7 +198,7 @@ public class StabilityBenchmark {
         System.out.println("\n** Done parsing command line **\n");
 
         if( !failed ) {
-            StabilityBenchmark master = new StabilityBenchmark();
+            StabilityBenchmark master = new StabilityBenchmark(libraryManager);
             master.performBenchmark(config);
         } else {
             printHelp();

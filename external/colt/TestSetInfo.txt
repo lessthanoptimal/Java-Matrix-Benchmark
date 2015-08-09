@@ -1,0 +1,9 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.colt.ColtAlgorithmFactory</factory>
+    <configure>jmbench.impl.DoNothingSpecialConfigure</configure>
+    <nameFull>Colt</nameFull>
+    <nameShort>Colt</nameShort>
+    <namePlot>Colt</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

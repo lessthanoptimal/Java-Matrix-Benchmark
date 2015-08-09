@@ -44,7 +44,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
     private String nameAlgorithm;
     private int dimen;
-    private Class<RuntimePerformanceFactory> classFactory;
+    private String classFactory;
     private InputOutputGenerator generator;
     // how long it should try to run the tests for in milliseconds
     private long goalRuntime;
@@ -66,7 +66,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     private volatile long estimatedTrials;
 
     // used to configure the library at runtime
-    private Class<LibraryConfigure> classConfigure;
+    private String classConfigure;
 
     /**
      * Creates a new evaluation test.
@@ -80,8 +80,8 @@ public class RuntimeEvaluationTest extends EvaluationTest {
      */
     public RuntimeEvaluationTest( int numTrials,
                                   int dimen ,
-                                  Class<LibraryConfigure> classConfigure,
-                                  Class<RuntimePerformanceFactory> classFactory,
+                                  String classConfigure,
+                                  String classFactory,
                                   String nameAlgorithm ,
                                   InputOutputGenerator generator ,
                                   boolean sanityCheck ,
@@ -113,11 +113,13 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     public void init() {
         LibraryConfigure configure;
         try {
-            factory = classFactory.newInstance();
-            configure = classConfigure.newInstance();
+            factory = (RuntimePerformanceFactory)Class.forName(classFactory).newInstance();
+            configure = (LibraryConfigure)Class.forName(classConfigure).newInstance();
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -239,19 +241,19 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         }
     }
 
-    public Class<RuntimePerformanceFactory> getClassFactory() {
+    public String getClassFactory() {
         return classFactory;
     }
 
-    public void setClassFactory(Class<RuntimePerformanceFactory> classFactory) {
+    public void setClassFactory(String classFactory) {
         this.classFactory = classFactory;
     }
 
-    public Class<LibraryConfigure> getClassConfigure() {
+    public String getClassConfigure() {
         return classConfigure;
     }
 
-    public void setClassConfigure(Class<LibraryConfigure> classConfigure) {
+    public void setClassConfigure(String classConfigure) {
         this.classConfigure = classConfigure;
     }
 

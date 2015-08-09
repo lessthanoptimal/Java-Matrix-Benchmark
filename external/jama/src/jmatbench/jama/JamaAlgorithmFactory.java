@@ -20,13 +20,13 @@
 package jmatbench.jama;
 
 import Jama.*;
-import jmbench.impl.wrapper.EjmlBenchmarkMatrix;
+import jmatbench.ejml.EjmlBenchmarkMatrix;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -453,17 +453,17 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new JamaBenchmarkMatrix(convertToJama(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         Matrix orig = input.getOriginal();
-        return jamaToEjml(orig);
+        return jamaToRowMajor(orig);
     }
 
-    public static Matrix convertToJama( DenseMatrix64F orig )
+    public static Matrix convertToJama( RowMajorMatrix orig )
     {
         Matrix ret = new Matrix(orig.getNumRows(),orig.getNumCols());
 
@@ -476,12 +476,12 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
         return ret;
     }
 
-    public static DenseMatrix64F jamaToEjml( Matrix orig )
+    public static RowMajorMatrix jamaToRowMajor(Matrix orig)
     {
         if( orig == null )
             return null;
 
-        DenseMatrix64F ret = new DenseMatrix64F(orig.getRowDimension(),orig.getColumnDimension());
+        RowMajorMatrix ret = new RowMajorMatrix(orig.getRowDimension(),orig.getColumnDimension());
 
         for( int i = 0; i < ret.numRows; i++ ) {
             for( int j = 0; j < ret.numCols; j++ ) {

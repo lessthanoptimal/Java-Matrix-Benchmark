@@ -19,17 +19,13 @@
 
 package jmbench.tools.runtime;
 
-import jmbench.impl.FactoryLibraryDescriptions;
-import jmbench.impl.LibraryConfigure;
 import jmbench.impl.LibraryDescription;
-import jmbench.impl.LibraryLocation;
-import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.impl.LibraryStringInfo;
 import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluationTest;
 import jmbench.tools.EvaluatorSlave;
 import jmbench.tools.TestResults;
 import jmbench.tools.runtime.evaluation.RuntimeResultsCsvIO;
-import jmbench.tools.version.PrintLibraryVersion;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -93,12 +89,7 @@ public class RuntimeBenchmarkLibrary {
     // is it too slow to continue testing
     private boolean tooSlow;
 
-    private Class<LibraryConfigure> classConfigure;
-    private Class<RuntimePerformanceFactory> classFactory;
-
     private BenchmarkTools tools;
-
-    private LibraryLocation libraryType;
 
     private RuntimeBenchmarkConfig config;
 
@@ -108,12 +99,12 @@ public class RuntimeBenchmarkLibrary {
     // should it spawn a slave to run the benchmark or do it in the same java instance as this class
     private static final boolean SPAWN_SLAVE = true;
 
+    LibraryStringInfo info;
+
     public RuntimeBenchmarkLibrary( String outputDir , LibraryDescription desc ,
                                     RuntimeBenchmarkConfig config )
     {
         this.config = config;
-
-
         this.directorySave = outputDir;
 
         File d = new File(directorySave);
@@ -124,26 +115,15 @@ public class RuntimeBenchmarkLibrary {
         } else if( !d.isDirectory())
             throw new IllegalArgumentException("The output directory already exists and is not a directory");
 
-        this.classConfigure = desc.configure;
-        this.classFactory = desc.factoryRuntime;
+        this.info = desc.info;
 
         // create the random seeds for each block
         this.rand = new Random(config.seed);
         this.randSeedTrials = rand.nextLong();
 
         tools = new BenchmarkTools(config.numBlockTrials,config.memorySlaveBase,config.memorySlaveScale,
-                desc.location.listOfJarFilePaths());
+                desc.listOfJarFilePaths());
         tools.setVerbose(false);
-
-        this.libraryType = desc.location;
-
-        PrintLibraryVersion printVersion = new PrintLibraryVersion(outputDir);
-        try {
-            printVersion.printVersion(desc);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);        }
     }
 
     /**
@@ -153,7 +133,7 @@ public class RuntimeBenchmarkLibrary {
         setupLog();
 
         List<RuntimeEvaluationCase> cases =
-                new FactoryRuntimeEvaluationCase(classConfigure,classFactory,config).createCases();
+                new FactoryRuntimeEvaluationCase(info.configure,info.factory,config).createCases();
 
         List<CaseState> states = createCaseList(cases);
 
@@ -296,7 +276,7 @@ public class RuntimeBenchmarkLibrary {
 
         RuntimeEvaluationMetrics score[] = state.score;
 
-        System.out.println("#### "+libraryType.getPlotName()+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" numTrials "+state.results.size()+"  ####");
+        System.out.println("#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" numTrials "+state.results.size()+"  ####");
 
         RuntimeResults r = computeResults(e, state.matrixIndex , randSeedTrials , score , state.results);
 
@@ -349,8 +329,7 @@ public class RuntimeBenchmarkLibrary {
             score[matrixIndex] = new RuntimeEvaluationMetrics(rawResults);
         }
 
-        RuntimeResults results = new RuntimeResults(e.getOpName(),
-                libraryType.getPlotName(),e.getDimens(),score);
+        RuntimeResults results = new RuntimeResults(e.getOpName(),info.namePlot,e.getDimens(),score);
 
         return results;
     }
@@ -538,10 +517,10 @@ public class RuntimeBenchmarkLibrary {
         if( !f.exists() )
             if( !f.mkdir() ) throw new RuntimeException("Crap");
 
-        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig();
-
-        RuntimeBenchmarkLibrary master = new RuntimeBenchmarkLibrary("results/temp",
-                FactoryLibraryDescriptions.createEJML(),config);
-        master.performBenchmark();
+//        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig();
+//
+//        RuntimeBenchmarkLibrary master = new RuntimeBenchmarkLibrary("results/temp",
+//                FactoryLibraryDescriptions.createEJML(),config);
+//        master.performBenchmark();
     }
 }

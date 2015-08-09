@@ -21,23 +21,22 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.misc.RandomizeMatrices;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.*;
+import static jmbench.misc.RandomizeMatrices.convertToBm;
+import static jmbench.misc.RandomizeMatrices.randomize;
 
 
 /**
  * @author Peter Abeles
  */
 public class SolveOverGenerator implements InputOutputGenerator {
-    DenseMatrix64F X;
+    RowMajorMatrix X;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -50,11 +49,11 @@ public class SolveOverGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
 
         // make sure an exact solution exists
-        DenseMatrix64F A = convertToEjml(inputs[0]);
-        DenseMatrix64F B = new DenseMatrix64F(3*size,1);
-        DenseMatrix64F X = RandomMatrices.createRandom(size,1,-1,1,rand);
+        RowMajorMatrix A = new RowMajorMatrix(inputs[0]);
+        RowMajorMatrix B = new RowMajorMatrix(3*size,1);
+        RowMajorMatrix X = RowMajorOps.createRandom(size, 1, -1, 1, rand);
 
-        CommonOps.mult(A,X,B);
+        RowMajorOps.mult(A,X,B);
 
         convertToBm(B,inputs[1]);
 
@@ -67,7 +66,7 @@ public class SolveOverGenerator implements InputOutputGenerator {
 
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        DenseMatrix64F o = RandomizeMatrices.convertToEjml(output[0]);
+        RowMajorMatrix o = new RowMajorMatrix(output[0]);
 
         return ResultsChecking.checkResult(o,X,tol);
     }

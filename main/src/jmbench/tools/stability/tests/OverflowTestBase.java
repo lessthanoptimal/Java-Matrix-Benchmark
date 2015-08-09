@@ -24,11 +24,10 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityTestBase;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
 
 
 /**
@@ -41,8 +40,8 @@ public abstract class OverflowTestBase extends StabilityTestBase
     protected int minLength;
     protected int maxLength;
 
-    protected volatile DenseMatrix64F A;
-    protected volatile DenseMatrix64F Ascaled;
+    protected volatile RowMajorMatrix A;
+    protected volatile RowMajorMatrix Ascaled;
     private volatile double scaling;
 
     private volatile BreakingPointBinarySearch search;
@@ -96,9 +95,9 @@ public abstract class OverflowTestBase extends StabilityTestBase
     public boolean check( int testPoint ) {
         double scale = Math.pow(scaling,testPoint);
         Ascaled.set(A);
-        CommonOps.scale(scale,Ascaled);
+        RowMajorOps.scale(scale, Ascaled);
 
-        DenseMatrix64F inputs[] = new DenseMatrix64F[]{Ascaled};
+        RowMajorMatrix inputs[] = new RowMajorMatrix[]{Ascaled};
         BenchmarkMatrix[] inputsB = new BenchmarkMatrix[inputs.length];
         BenchmarkMatrix[] outputB = new BenchmarkMatrix[getNumOutputs()];
 
@@ -124,12 +123,12 @@ public abstract class OverflowTestBase extends StabilityTestBase
             return false;
         }
 
-        DenseMatrix64F results[] = new DenseMatrix64F[outputB.length];
+        RowMajorMatrix results[] = new RowMajorMatrix[outputB.length];
         for( int i = 0; i < results.length; i++ )
             results[i] = factory.convertToRowMajor(outputB[i]);
 
-        for( DenseMatrix64F R : results ) {
-            if( MatrixFeatures.hasUncountable(R)){
+        for( RowMajorMatrix R : results ) {
+            if( RowMajorOps.hasUncountable(R)){
                 reason = OutputError.UNCOUNTABLE;
                 return false;
             }
@@ -138,7 +137,7 @@ public abstract class OverflowTestBase extends StabilityTestBase
         return checkResults(results);
     }
 
-    protected abstract boolean checkResults(DenseMatrix64F results[]);
+    protected abstract boolean checkResults(RowMajorMatrix results[]);
 
     protected abstract int getNumOutputs();
 

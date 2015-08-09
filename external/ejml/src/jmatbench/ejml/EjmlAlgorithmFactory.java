@@ -19,7 +19,11 @@
 
 package jmatbench.ejml;
 
-import jmbench.interfaces.*;
+import jmbench.interfaces.BenchmarkMatrix;
+import jmbench.interfaces.DetectedException;
+import jmbench.interfaces.MatrixProcessorInterface;
+import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;

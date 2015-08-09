@@ -19,11 +19,9 @@
 
 package jmbench.tools.runtime.generator;
 
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.NormOps;
 
 
 /**
@@ -33,24 +31,23 @@ public class ResultsChecking {
 
 
 
-    public static OutputError checkResult( DenseMatrix64F found , DenseMatrix64F expected , double tol )
+    public static OutputError checkResult( RowMajorMatrix found , RowMajorMatrix expected , double tol )
     {
         if( found == null ) {
             return OutputError.MISC;
         }
 
         // see if the found output has uncountable numbers in it
-        if( MatrixFeatures.hasUncountable(found)) {
+        if( RowMajorOps.hasUncountable(found)) {
             return OutputError.UNCOUNTABLE;
         }
 
-        DenseMatrix64F residual = new DenseMatrix64F(expected.numRows,expected.numCols);
+        RowMajorMatrix residual = new RowMajorMatrix(expected.numRows,expected.numCols);
 
+        RowMajorOps.subtract(found, expected, residual);
 
-        CommonOps.sub(found,expected,residual);
-
-        double top = NormOps.normF(residual);
-        double bottom = NormOps.normF(expected);
+        double top = RowMajorOps.normF(residual);
+        double bottom = RowMajorOps.normF(expected);
 
         if( bottom == 0 )
             return OutputError.ZERO_INPUT;

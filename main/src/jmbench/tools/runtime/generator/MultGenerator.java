@@ -21,14 +21,13 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.convertToEjml;
 import static jmbench.misc.RandomizeMatrices.randomize;
 
 
@@ -37,8 +36,7 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class MultGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F C;
-
+    RowMajorMatrix C;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -52,11 +50,11 @@ public class MultGenerator implements InputOutputGenerator {
         randomize(inputs[1],-1,1,rand);
 
         if( checkResults ) {
-            DenseMatrix64F A = convertToEjml(inputs[0]);
-            DenseMatrix64F B = convertToEjml(inputs[1]);
+            RowMajorMatrix A = new RowMajorMatrix(inputs[0]);
+            RowMajorMatrix B = new RowMajorMatrix(inputs[1]);
 
-            C = new DenseMatrix64F(A.numRows,A.numCols);
-            CommonOps.mult(A,B,C);
+            C = new RowMajorMatrix(A.numRows,A.numCols);
+            RowMajorOps.mult(A,B,C);
         }
 
         return inputs;
@@ -64,7 +62,7 @@ public class MultGenerator implements InputOutputGenerator {
 
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        return ResultsChecking.checkResult(convertToEjml(output[0]),C,tol);
+        return ResultsChecking.checkResult(new RowMajorMatrix(output[0]),C,tol);
     }
 
     @Override

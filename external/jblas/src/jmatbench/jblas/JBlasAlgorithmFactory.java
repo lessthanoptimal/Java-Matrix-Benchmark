@@ -22,8 +22,8 @@ package jmatbench.jblas;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.data.DenseMatrix64F;
 import org.jblas.*;
 
 
@@ -401,17 +401,17 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new JBlasBenchmarkMatrix(convertToJBlas(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         DoubleMatrix orig = input.getOriginal();
         return jblasToEjml(orig);
     }
 
-    public static DoubleMatrix convertToJBlas( DenseMatrix64F orig )
+    public static DoubleMatrix convertToJBlas( RowMajorMatrix orig )
     {
         DoubleMatrix ret = new DoubleMatrix(orig.getNumRows(),orig.getNumCols());
 
@@ -424,12 +424,12 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
         return ret;
     }
 
-    public static DenseMatrix64F jblasToEjml( DoubleMatrix orig )
+    public static RowMajorMatrix jblasToEjml( DoubleMatrix orig )
     {
         if( orig == null )
             return null;
 
-        DenseMatrix64F ret = new DenseMatrix64F(orig.getRows(),orig.getColumns());
+        RowMajorMatrix ret = new RowMajorMatrix(orig.getRows(),orig.getColumns());
 
         for( int i = 0; i < ret.numRows; i++ ) {
             for( int j = 0; j < ret.numCols; j++ ) {

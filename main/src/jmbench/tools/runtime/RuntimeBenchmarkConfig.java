@@ -19,7 +19,6 @@
 
 package jmbench.tools.runtime;
 
-import jmbench.impl.FactoryLibraryDescriptions;
 import jmbench.impl.LibraryDescription;
 
 import java.io.Serializable;
@@ -95,7 +94,7 @@ public class RuntimeBenchmarkConfig implements Serializable {
      *
      * @return The config.
      */
-    public static RuntimeBenchmarkConfig createAllConfig() {
+    public static RuntimeBenchmarkConfig createAllConfig( List<LibraryDescription> targets ) {
         RuntimeBenchmarkConfig config = new RuntimeBenchmarkConfig();
 
         config.seed = 0xDEADBEEF;//new Random().nextLong();
@@ -130,7 +129,7 @@ public class RuntimeBenchmarkConfig implements Serializable {
         config.solveOver = true;
         config.transposeSquare = true;
 
-        config.targets = FactoryLibraryDescriptions.createDefault();
+        config.targets = targets;
 
         return config;
     }

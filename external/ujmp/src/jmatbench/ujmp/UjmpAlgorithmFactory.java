@@ -22,8 +22,8 @@ package jmatbench.ujmp;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.data.DenseMatrix64F;
 import org.ujmp.core.Matrix;
 import org.ujmp.core.MatrixFactory;
 import org.ujmp.core.doublematrix.DenseDoubleMatrix2D;
@@ -451,17 +451,17 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 	}
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new UjmpBenchmarkMatrix(convertToUjmp(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         DenseDoubleMatrix2D orig = input.getOriginal();
-        return ujmpToEjml(orig);
+        return ujmpToRowMajor(orig);
     }
 
-    public static DenseDoubleMatrix2D convertToUjmp(DenseMatrix64F orig) {
+    public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
 		DenseDoubleMatrix2D ret = DenseDoubleMatrix2D.factory.zeros(orig
 				.getNumRows(), orig.getNumCols());
 
@@ -474,11 +474,11 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 		return ret;
 	}
 
-	public static DenseMatrix64F ujmpToEjml(Matrix orig) {
+	public static RowMajorMatrix ujmpToRowMajor(Matrix orig) {
 		if (orig == null)
 			return null;
 
-		DenseMatrix64F ret = new DenseMatrix64F((int) orig.getRowCount(),
+		RowMajorMatrix ret = new RowMajorMatrix((int) orig.getRowCount(),
 				(int) orig.getColumnCount());
 
 		for (int i = 0; i < ret.numRows; i++) {

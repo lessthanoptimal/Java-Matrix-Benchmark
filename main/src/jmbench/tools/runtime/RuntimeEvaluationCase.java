@@ -19,9 +19,6 @@
 
 package jmbench.tools.runtime;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
-
 import java.io.Serializable;
 
 
@@ -34,9 +31,9 @@ public class RuntimeEvaluationCase implements Serializable {
     // the different matrix sizes that can be evaluated
     private int dimens[];
     // configures the library's runtime environment
-    private Class<LibraryConfigure> classConfigure;
+    private String classConfigure;
     // used to create perform tests
-    private Class<RuntimePerformanceFactory> classFactory;
+    private String classFactory;
     // list of algorithms it it can run
     private String nameAlgorithm;
     // what creates the matrices it processes
@@ -45,8 +42,8 @@ public class RuntimeEvaluationCase implements Serializable {
     private volatile RuntimeEvaluationTest theTest = new RuntimeEvaluationTest();
 
     public RuntimeEvaluationCase( String opName , String nameAlgorithm , int dimens[] ,
-                                  Class<LibraryConfigure> classConfigure ,
-                                  Class<RuntimePerformanceFactory> classFactory ,
+                                  String classConfigure ,
+                                  String classFactory ,
                                   InputOutputGenerator generator )
     {
         this.opName = opName;
@@ -83,11 +80,11 @@ public class RuntimeEvaluationCase implements Serializable {
         this.nameAlgorithm = nameAlgorithm;
     }
 
-    public Class<RuntimePerformanceFactory> getClassFactory() {
+    public String getClassFactory() {
         return classFactory;
     }
 
-    public void setClassFactory(Class<RuntimePerformanceFactory> classFactory) {
+    public void setClassFactory(String classFactory) {
         this.classFactory = classFactory;
     }
 
@@ -115,11 +112,11 @@ public class RuntimeEvaluationCase implements Serializable {
         this.generator = generator;
     }
 
-    public Class<LibraryConfigure> getClassConfigure() {
+    public String getClassConfigure() {
         return classConfigure;
     }
 
-    public void setClassConfigure(Class<LibraryConfigure> classConfigure) {
+    public void setClassConfigure(String classConfigure) {
         this.classConfigure = classConfigure;
     }
 }

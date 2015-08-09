@@ -24,12 +24,10 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -39,8 +37,8 @@ public class SolverSingular extends SolverCommon
         implements BreakingPointBinarySearch.Processor
 {
 
-    private volatile DenseMatrix64F U;
-    private volatile DenseMatrix64F V;
+    private volatile RowMajorMatrix U;
+    private volatile RowMajorMatrix V;
     private volatile double []sv;
     private volatile double svMag = 1;
     private volatile int whichSV;
@@ -107,8 +105,8 @@ public class SolverSingular extends SolverCommon
     }
 
     private void evaluateNearlySingular(int m, int n) {
-        U = RandomMatrices.createOrthogonal(m,m,rand);
-        V = RandomMatrices.createOrthogonal(n,n,rand);
+        U = RowMajorOps.createOrthogonal(m, m, rand);
+        V = RowMajorOps.createOrthogonal(n,n,rand);
 
         int o = Math.min(m,n);
 
@@ -117,10 +115,10 @@ public class SolverSingular extends SolverCommon
             sv[i] = svMag;
 
         A = createMatrix(U,V,sv);
-        DenseMatrix64F x = RandomMatrices.createRandom(n,1,rand);
-        b = new DenseMatrix64F(m,1);
+        RowMajorMatrix x = RowMajorOps.createRandom(n,1,rand);
+        b = new RowMajorMatrix(m,1);
 
-        CommonOps.mult(A,x,b);
+        RowMajorOps.mult(A,x,b);
 
         reason = OutputError.NO_ERROR;
         int point = search.findCriticalPoint(-1,findMaxPow(0.9)+1);
@@ -131,7 +129,7 @@ public class SolverSingular extends SolverCommon
     public boolean check(int testPoint) {
         sv[whichSV] = Math.pow(0.9,testPoint)*svMag;
 
-        DenseMatrix64F A_adj = createMatrix(U,V,sv);
+        RowMajorMatrix A_adj = createMatrix(U,V,sv);
 
         BenchmarkMatrix[] inputsB = new BenchmarkMatrix[2];
         BenchmarkMatrix[] outputB = new BenchmarkMatrix[1];
@@ -157,14 +155,14 @@ public class SolverSingular extends SolverCommon
             return false;
         }
 
-        DenseMatrix64F results[] = new DenseMatrix64F[outputB.length];
+        RowMajorMatrix results[] = new RowMajorMatrix[outputB.length];
         for( int i = 0; i < results.length; i++ )
             results[i] = factory.convertToRowMajor(outputB[i]);
 
-        DenseMatrix64F x = results[0];
+        RowMajorMatrix x = results[0];
 
 
-        if(MatrixFeatures.hasUncountable(x)) {
+        if(RowMajorOps.hasUncountable(x)) {
             reason = OutputError.UNCOUNTABLE;
             return false;
         }

@@ -21,14 +21,13 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.convertToEjml;
 import static jmbench.misc.RandomizeMatrices.randomize;
 
 
@@ -39,8 +38,7 @@ public class ScaleGenerator implements InputOutputGenerator {
 
     public static double SCALE = 2.5;
 
-    DenseMatrix64F C;
-
+    RowMajorMatrix C;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -52,8 +50,8 @@ public class ScaleGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
 
         if( checkResults ) {
-            C = convertToEjml(inputs[0]);
-            CommonOps.scale(SCALE,C);
+            C = new RowMajorMatrix(inputs[0]);
+            RowMajorOps.scale(SCALE, C);
         }
 
         return inputs;
@@ -61,7 +59,7 @@ public class ScaleGenerator implements InputOutputGenerator {
     
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        return ResultsChecking.checkResult(convertToEjml(output[0]),C,tol);
+        return ResultsChecking.checkResult(new RowMajorMatrix(output[0]),C,tol);
     }
 
     @Override

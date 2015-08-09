@@ -22,15 +22,15 @@ package jmatbench.la4j;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.data.DenseMatrix64F;
 import org.la4j.LinearAlgebra;
+import org.la4j.Matrix;
+import org.la4j.Vector;
 import org.la4j.decomposition.MatrixDecompositor;
 import org.la4j.inversion.MatrixInverter;
 import org.la4j.linear.LinearSystemSolver;
-import org.la4j.matrix.Matrix;
 import org.la4j.matrix.dense.Basic2DMatrix;
-import org.la4j.vector.Vector;
 
 /**
  * Wrapper around la4j
@@ -39,6 +39,7 @@ import org.la4j.vector.Vector;
  * @author Vladimir Kostyukov
  */
 public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
+
     @Override
     public MatrixProcessorInterface chol() {
         return new Chol();
@@ -426,17 +427,17 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new La4jBenchmarkMatrix(ejmlToLa4j(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         Matrix orig = input.getOriginal();
         return la4jToEjml(orig);
     }
     
-    public static Matrix ejmlToLa4j( DenseMatrix64F orig ) {
+    public static Matrix ejmlToLa4j( RowMajorMatrix orig ) {
         Matrix m = new Basic2DMatrix(orig.numRows, orig.numCols);
 
         for( int i = 0; i < orig.numRows; i++ ) {
@@ -448,8 +449,8 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
         return m;
     }
 
-    public static DenseMatrix64F la4jToEjml( Matrix orig ) {
-        DenseMatrix64F m = new DenseMatrix64F(orig.rows(),orig.columns());
+    public static RowMajorMatrix la4jToEjml( Matrix orig ) {
+        RowMajorMatrix m = new RowMajorMatrix(orig.rows(),orig.columns());
 
         for( int i = 0; i < m.numRows; i++ ) {
             for( int j = 0; j < m.numCols; j++ ) {

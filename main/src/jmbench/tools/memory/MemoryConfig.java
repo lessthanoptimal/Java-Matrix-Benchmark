@@ -19,9 +19,6 @@
 
 package jmbench.tools.memory;
 
-import jmbench.impl.FactoryLibraryDescriptions;
-import jmbench.impl.LibraryDescription;
-
 import java.util.List;
 
 
@@ -34,7 +31,7 @@ public class MemoryConfig {
     public long seed;
 
     // list of all the libraries being tested
-    public List<LibraryDescription> libraries;
+    public List<String> libraries;
 
     // maximum amount of time it allows for any test
     public long maxTestTimeMilli;
@@ -80,7 +77,7 @@ public class MemoryConfig {
     public static MemoryConfig createDefault() {
         MemoryConfig ret = new MemoryConfig();
 
-        ret.libraries = FactoryLibraryDescriptions.createDefault();
+//        ret.libraries = FactoryLibraryDescriptions.createDefault(); // todo probably should do something here
 
         ret.seed = 234234;
 
@@ -103,11 +100,11 @@ public class MemoryConfig {
         return ret;
     }
 
-    public List<LibraryDescription> getLibraries() {
+    public List<String> getLibraries() {
         return libraries;
     }
 
-    public void setLibraries(List<LibraryDescription> libraries) {
+    public void setLibraries(List<String> libraries) {
         this.libraries = libraries;
     }
 

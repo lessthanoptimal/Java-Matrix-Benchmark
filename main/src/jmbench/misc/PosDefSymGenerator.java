@@ -20,8 +20,8 @@
 package jmbench.misc;
 
 import jmbench.interfaces.MatrixGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 
 import java.util.Random;
 
@@ -42,12 +42,12 @@ public class PosDefSymGenerator implements MatrixGenerator
     public PosDefSymGenerator(){}
 
     @Override
-    public DenseMatrix64F createMatrix(int numRows, int numCols) {
+    public RowMajorMatrix createMatrix(int numRows, int numCols) {
         if( numRows != numCols ) {
             throw new RuntimeException("Must be square");
         }
 
-        return RandomMatrices.createSymmPosDef(numRows,rand);
+        return RowMajorOps.createSymmPosDef(numRows,rand);
     }
 
     @Override

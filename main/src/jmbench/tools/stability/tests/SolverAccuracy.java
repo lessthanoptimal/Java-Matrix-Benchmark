@@ -24,10 +24,10 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
 
 
 /**
@@ -99,13 +99,13 @@ public class SolverAccuracy extends SolverCommon {
             return;
         }
 
-        DenseMatrix64F results[] = new DenseMatrix64F[outputB.length];
+        RowMajorMatrix results[] = new RowMajorMatrix[outputB.length];
         for( int i = 0; i < results.length; i++ )
             results[i] = factory.convertToRowMajor(outputB[i]);
 
-        DenseMatrix64F x = results[0];
+        RowMajorMatrix x = results[0];
 
-        if( MatrixFeatures.hasUncountable(x) ) {
+        if( RowMajorOps.hasUncountable(x) ) {
             reason = OutputError.UNCOUNTABLE;
             return;
         }

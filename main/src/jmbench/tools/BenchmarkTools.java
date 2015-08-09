@@ -45,7 +45,7 @@ public class BenchmarkTools {
     // used to increase or decrease the added memory
     long memoryScale = 8;
     // jar that need to be added
-    String extraJars = "";
+    String classPath = "";
 
     // if no estimated processing time is provided it should wait this long before
     // declaring the process to be frozen
@@ -78,10 +78,10 @@ public class BenchmarkTools {
         String sep = System.getProperty("path.separator");
 
         if( jarNames != null ) {
-            extraJars = "";
+            classPath = "";
 
             for( String s : jarNames ) {
-                extraJars = extraJars + sep + s;
+                classPath = classPath + sep + s;
             }
         }
     }
@@ -100,10 +100,6 @@ public class BenchmarkTools {
 
     public void setMemoryScale(long memoryScale) {
         this.memoryScale = memoryScale;
-    }
-
-    public String getClassPath() {
-        return System.getProperty("java.class.path")+extraJars;
     }
 
     public void setFrozenDefaultTime(long frozenDefaultTime) {
@@ -185,12 +181,12 @@ public class BenchmarkTools {
      * Writes out an xml file that tells the slave what to run and puts together the runtime
      * parameters that are passed on to it.
      */
-    public String[] setupJvmParam(EvaluationTest test) {
+    public String[] setupJvmParam(EvaluationTest test ) {
         // write out a file describing what the slave should process.
         UtilXmlSerialization.serializeXml(test, "case.xml");
 
         // grab the current classpath and add some additional jars
-        String classPath = getClassPath();
+        String classPath = this.classPath;
         String app = System.getProperty("java.home")+"/bin/java";
 
         // compute required memory in mega bytes
@@ -314,6 +310,10 @@ public class BenchmarkTools {
                 // see if the user terminated the slave
                 ret = UtilXmlSerialization.deserializeXml("slave_results.xml");
                 if( ret == null || ret.getRequestID() != requestID ) {
+                    if( ret == null )
+                        errorStream.println("UtilXmlSerialization.deserializeXml returned null");
+                    else
+                        errorStream.println("ret.getRequestID() does not match");
                     ret = null;
                 }
             } else {
@@ -390,5 +390,9 @@ public class BenchmarkTools {
      */
     public String[] getParams() {
         return params;
+    }
+
+    public String getClassPath() {
+        return classPath;
     }
 }

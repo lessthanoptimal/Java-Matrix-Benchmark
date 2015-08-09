@@ -26,11 +26,9 @@ import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluatorSlave;
 import jmbench.tools.TestResults;
 import jmbench.tools.stability.tests.*;
-import jmbench.tools.version.PrintLibraryVersion;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +74,7 @@ public class StabilityBenchmarkLibrary {
         this.directorySave = outputDir;
 
 
-        tools = new BenchmarkTools(1,config.baseMemory,config.scaleMemory,target.location.listOfJarFilePaths());
+        tools = new BenchmarkTools(1,config.baseMemory,config.scaleMemory,target.listOfJarFilePaths());
         tools.setFrozenDefaultTime(config.maxProcessingTime);
 
         if( directorySave != null ) {
@@ -85,7 +83,7 @@ public class StabilityBenchmarkLibrary {
         }
 
         this.config = config;
-        this.libraryName = target.location.getPlotName();
+        this.libraryName = target.info.getNamePlot();
         
         this.sizeMin = sizeMin;
         this.sizeMax = sizeMax;
@@ -93,17 +91,8 @@ public class StabilityBenchmarkLibrary {
         this.numSolve = numSolve;
         this.numSvd = numSvd;
 
-        createOperationsList(target.configure,target.factoryRuntime);
+        createOperationsList(target.info.getLibraryConfigure(),target.info.getFactoryConfigure());
 
-        // print the library's version to a file
-        PrintLibraryVersion printVersion = new PrintLibraryVersion(directorySave);
-        try {
-            printVersion.printVersion(target);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void setupOutputDirectory() {

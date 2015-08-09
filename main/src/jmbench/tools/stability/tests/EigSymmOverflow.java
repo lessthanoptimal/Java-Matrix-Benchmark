@@ -21,11 +21,10 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -33,8 +32,8 @@ import org.ejml.ops.RandomMatrices;
  */
 public class EigSymmOverflow extends OverflowTestBase
 {
-    protected volatile DenseMatrix64F L;
-    protected volatile DenseMatrix64F R;
+    protected volatile RowMajorMatrix L;
+    protected volatile RowMajorMatrix R;
 
     public EigSymmOverflow(long randomSeed,
                            Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> factory,
@@ -47,11 +46,11 @@ public class EigSymmOverflow extends OverflowTestBase
 
     @Override
     protected void createMatrix( int m , int n ) {
-        A = RandomMatrices.createSymmetric(m,-1,1,rand);
-        Ascaled = new DenseMatrix64F(m,m);
+        A = RowMajorOps.createSymmetric(m, -1, 1, rand);
+        Ascaled = new RowMajorMatrix(m,m);
 
-        L = new DenseMatrix64F(m,m);
-        R = new DenseMatrix64F(m,m);
+        L = new RowMajorMatrix(m,m);
+        R = new RowMajorMatrix(m,m);
     }
 
     @Override
@@ -60,12 +59,12 @@ public class EigSymmOverflow extends OverflowTestBase
     }
 
     @Override
-    protected boolean checkResults(DenseMatrix64F[] results) {
-        DenseMatrix64F D = results[0];
-        DenseMatrix64F V = results[1];
+    protected boolean checkResults(RowMajorMatrix[] results) {
+        RowMajorMatrix D = results[0];
+        RowMajorMatrix V = results[1];
 
-        CommonOps.mult(Ascaled,V,L);
-        CommonOps.mult(V,D,R);
+        RowMajorOps.mult(Ascaled,V,L);
+        RowMajorOps.mult(V,D,R);
 
         double error = StabilityBenchmark.residualError(L,R);
 

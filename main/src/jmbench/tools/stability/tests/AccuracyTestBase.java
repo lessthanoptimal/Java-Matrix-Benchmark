@@ -24,9 +24,9 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityTestBase;
-import org.ejml.data.DenseMatrix64F;
 
 
 /**
@@ -70,7 +70,7 @@ public abstract class AccuracyTestBase extends StabilityTestBase {
         reason = OutputError.NO_ERROR;
         foundResult = Double.NaN;
 
-        DenseMatrix64F inputs[] = createInputs();
+        RowMajorMatrix inputs[] = createInputs();
   
         BenchmarkMatrix[] inputsB = new BenchmarkMatrix[inputs.length];
         BenchmarkMatrix[] outputB = new BenchmarkMatrix[getNumOutputs()];
@@ -97,7 +97,7 @@ public abstract class AccuracyTestBase extends StabilityTestBase {
             return;
         }
 
-        DenseMatrix64F results[] = new DenseMatrix64F[outputB.length];
+        RowMajorMatrix results[] = new RowMajorMatrix[outputB.length];
         for( int i = 0; i < results.length; i++ )
             results[i] = factory.convertToRowMajor(outputB[i]);
 
@@ -106,11 +106,11 @@ public abstract class AccuracyTestBase extends StabilityTestBase {
 
     protected abstract void createMatrix( int m , int n );
 
-    protected abstract DenseMatrix64F[] createInputs();
+    protected abstract RowMajorMatrix[] createInputs();
     
     protected abstract int getNumOutputs();
 
-    protected abstract void processResults(DenseMatrix64F[] inputs, DenseMatrix64F[] results);
+    protected abstract void processResults(RowMajorMatrix[] inputs, RowMajorMatrix[] results);
 
     public int getMinLength() {
         return minLength;

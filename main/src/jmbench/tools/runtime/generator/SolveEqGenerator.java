@@ -21,15 +21,14 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.simple.SimpleMatrix;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.convertToEjml;
 import static jmbench.misc.RandomizeMatrices.randomize;
 
 
@@ -38,8 +37,8 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class SolveEqGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F A;
-    DenseMatrix64F B;
+    RowMajorMatrix A;
+    RowMajorMatrix B;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -53,8 +52,8 @@ public class SolveEqGenerator implements InputOutputGenerator {
         randomize(inputs[1],-1,1,rand);
 
         if( checkResults ) {
-            A = convertToEjml(inputs[0]);
-            B = convertToEjml(inputs[1]);
+            A = new RowMajorMatrix(inputs[0]);
+            B = new RowMajorMatrix(inputs[1]);
         }
 
         return inputs;
@@ -66,16 +65,16 @@ public class SolveEqGenerator implements InputOutputGenerator {
             return OutputError.MISC;
         }
 
-        SimpleMatrix X = SimpleMatrix.wrap(convertToEjml(output[0]));
+        RowMajorMatrix X = new RowMajorMatrix(output[0]);
 
-        if( X.hasUncountable() ) {
+        if(RowMajorOps.hasUncountable(X) ) {
             return OutputError.UNCOUNTABLE;
         }
 
-        SimpleMatrix B_found = SimpleMatrix.wrap(A).mult(X);
+        RowMajorMatrix B_found = RowMajorOps.mult(A, X, null);
 
 
-        double error = StabilityBenchmark.residualError(B_found.getMatrix(),B);
+        double error = StabilityBenchmark.residualError(B_found,B);
         if( error > tol ) {
 //            P.print();
             return OutputError.LARGE_ERROR;

@@ -19,6 +19,8 @@
 
 package jmbench.interfaces;
 
+import jmbench.matrix.RowMajorMatrix;
+
 import java.io.Serializable;
 
 

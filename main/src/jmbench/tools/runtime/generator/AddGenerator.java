@@ -21,11 +21,11 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.misc.RandomizeMatrices;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 
 import java.util.Random;
 
@@ -35,7 +35,7 @@ import java.util.Random;
  */
 public class AddGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F C;
+    RowMajorMatrix C;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -49,11 +49,11 @@ public class AddGenerator implements InputOutputGenerator {
         RandomizeMatrices.randomize(inputs[1],-1,1,rand);
 
         if( checkResults ) {
-            DenseMatrix64F A = RandomizeMatrices.convertToEjml(inputs[0]);
-            DenseMatrix64F B = RandomizeMatrices.convertToEjml(inputs[1]);
+            RowMajorMatrix A = new RowMajorMatrix(inputs[0]);
+            RowMajorMatrix B =  new RowMajorMatrix(inputs[1]);
 
-            C = new DenseMatrix64F(A.numRows,A.numCols);
-            CommonOps.add(A,B,C);
+            C = new RowMajorMatrix(A.numRows,A.numCols);
+            RowMajorOps.add(A, B, C);
         }
 
         return inputs;
@@ -62,7 +62,7 @@ public class AddGenerator implements InputOutputGenerator {
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
 
-        DenseMatrix64F o = RandomizeMatrices.convertToEjml(output[0]);
+        RowMajorMatrix o = new RowMajorMatrix(output[0]);
 
         return ResultsChecking.checkResult(o,C,tol);
     }

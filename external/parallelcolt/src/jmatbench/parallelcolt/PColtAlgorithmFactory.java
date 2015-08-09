@@ -25,13 +25,13 @@ import cern.colt.matrix.tdouble.algo.DenseDoubleAlgebra;
 import cern.colt.matrix.tdouble.algo.decomposition.*;
 import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix2D;
 import cern.jet.math.tdouble.DoubleFunctions;
-import jmbench.impl.wrapper.EjmlBenchmarkMatrix;
+import jmatbench.ejml.EjmlBenchmarkMatrix;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.SpecializedOps;
 
 
@@ -466,17 +466,17 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new PColtBenchmarkMatrix(convertToParallelColt(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         cern.colt.matrix.tdouble.DoubleMatrix2D orig = input.getOriginal();
-        return parallelColtToEjml(orig);
+        return parallelColtToRowMajor(orig);
     }
 
-    public static cern.colt.matrix.tdouble.DoubleMatrix2D convertToParallelColt( DenseMatrix64F orig )
+    public static cern.colt.matrix.tdouble.DoubleMatrix2D convertToParallelColt( RowMajorMatrix orig )
     {
         DenseDoubleMatrix2D mat = createMatrix(orig.numRows,orig.numCols);
 
@@ -489,12 +489,12 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
         return mat;
     }
 
-    public static DenseMatrix64F parallelColtToEjml( cern.colt.matrix.tdouble.DoubleMatrix2D orig )
+    public static RowMajorMatrix parallelColtToRowMajor(cern.colt.matrix.tdouble.DoubleMatrix2D orig)
     {
         if( orig == null )
             return null;
 
-        DenseMatrix64F mat = new DenseMatrix64F(orig.rows(),orig.columns());
+        RowMajorMatrix mat = new RowMajorMatrix(orig.rows(),orig.columns());
 
         for( int i = 0; i < mat.numRows; i++ ) {
             for( int j = 0; j < mat.numCols; j++ ) {

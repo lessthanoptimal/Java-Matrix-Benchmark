@@ -19,7 +19,6 @@
 
 package jmbench.tools.runtime.evaluation;
 
-import jmbench.impl.LibraryLocation;
 import jmbench.plots.OperationsVersusSizePlot;
 import jmbench.plots.OverallRelativeAreaPlot;
 import jmbench.plots.SummaryWhiskerPlot;
@@ -357,9 +356,10 @@ public class RuntimeResultPlotter {
                 }
             }
 
-            LibraryLocation lib = LibraryLocation.lookup(ops.getLibraryName());
-            splot.addResults(matDimen,results,lib.getPlotName(),numMatrixSizes,
-                    lib.getPlotLineType());
+//            LibraryLocation lib = LibraryLocation.lookup(ops.getLibraryName());
+//            splot.addResults(matDimen,results,lib.getPlotName(),numMatrixSizes,
+//                    lib.getPlotLineType());
+            throw new RuntimeException("Implement");
         }
 
         if( savePDF )

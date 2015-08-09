@@ -21,12 +21,10 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -36,9 +34,9 @@ import org.ejml.ops.RandomMatrices;
  */
 public class InvSymmAccuracy extends AccuracyTestBase {
 
-    protected volatile DenseMatrix64F A;
-    protected volatile DenseMatrix64F I_found;
-    protected volatile DenseMatrix64F I;
+    protected volatile RowMajorMatrix A;
+    protected volatile RowMajorMatrix I_found;
+    protected volatile RowMajorMatrix I;
 
     public InvSymmAccuracy(long randomSeed,
                            Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> classFactory,
@@ -51,15 +49,15 @@ public class InvSymmAccuracy extends AccuracyTestBase {
 
     @Override
     protected void createMatrix( int m , int n ) {
-        A = RandomMatrices.createSymmPosDef(m,rand);
+        A = RowMajorOps.createSymmPosDef(m, rand);
 
-        I_found = new DenseMatrix64F(m,m);
-        I = CommonOps.identity(m);
+        I_found = new RowMajorMatrix(m,m);
+        I = RowMajorOps.identity(m);
     }
 
     @Override
-    protected DenseMatrix64F[] createInputs() {
-        return  new DenseMatrix64F[]{A};
+    protected RowMajorMatrix[] createInputs() {
+        return  new RowMajorMatrix[]{A};
     }
 
     @Override
@@ -68,15 +66,15 @@ public class InvSymmAccuracy extends AccuracyTestBase {
     }
 
     @Override
-    protected void processResults(DenseMatrix64F[] inputs, DenseMatrix64F[] results) {
-        DenseMatrix64F A_inv = results[0];
+    protected void processResults(RowMajorMatrix[] inputs, RowMajorMatrix[] results) {
+        RowMajorMatrix A_inv = results[0];
 
-        if(MatrixFeatures.hasUncountable(A_inv) ) {
+        if(RowMajorOps.hasUncountable(A_inv) ) {
             reason = OutputError.UNCOUNTABLE;
             return;
         }
 
-        CommonOps.mult(A,A_inv,I_found);
+        RowMajorOps.mult(A,A_inv,I_found);
 
         foundResult = StabilityBenchmark.residualError(I_found,I);
     }

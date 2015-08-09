@@ -21,11 +21,10 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -35,8 +34,8 @@ import org.ejml.ops.RandomMatrices;
  */
 public class InvSymmOverflow extends OverflowTestBase {
 
-    protected volatile DenseMatrix64F I_found;
-    protected volatile DenseMatrix64F I;
+    protected volatile RowMajorMatrix I_found;
+    protected volatile RowMajorMatrix I;
 
     public InvSymmOverflow(long randomSeed, Class<LibraryConfigure> classConfigure ,
                            Class<RuntimePerformanceFactory> classFactory, String nameOperation, int totalTrials,
@@ -49,10 +48,10 @@ public class InvSymmOverflow extends OverflowTestBase {
 
     @Override
     protected void createMatrix(int m, int n) {
-        A = RandomMatrices.createSymmPosDef(m,rand);
-        Ascaled = new DenseMatrix64F(m,m);
-        I_found = new DenseMatrix64F(m,m);
-        I = CommonOps.identity(m);
+        A = RowMajorOps.createSymmPosDef(m, rand);
+        Ascaled = new RowMajorMatrix(m,m);
+        I_found = new RowMajorMatrix(m,m);
+        I = RowMajorOps.identity(m);
     }
 
     @Override
@@ -61,10 +60,10 @@ public class InvSymmOverflow extends OverflowTestBase {
     }
 
     @Override
-    protected boolean checkResults(DenseMatrix64F[] results) {
-        DenseMatrix64F A_inv = results[0];
+    protected boolean checkResults(RowMajorMatrix[] results) {
+        RowMajorMatrix A_inv = results[0];
 
-        CommonOps.mult(Ascaled,A_inv,I_found);
+        RowMajorOps.mult(Ascaled,A_inv,I_found);
 
         double error = StabilityBenchmark.residualError(I_found,I);
 

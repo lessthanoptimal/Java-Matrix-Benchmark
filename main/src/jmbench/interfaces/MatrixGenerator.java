@@ -19,7 +19,7 @@
 
 package jmbench.interfaces;
 
-import org.ejml.data.DenseMatrix64F;
+import jmbench.matrix.RowMajorMatrix;
 
 import java.io.Serializable;
 
@@ -38,7 +38,7 @@ public interface MatrixGenerator extends Serializable {
      * @param numCols Number of columns in the new matrix.
      * @return A new instance of the matrix.
      */
-    public DenseMatrix64F createMatrix( int numRows , int numCols );
+    public RowMajorMatrix createMatrix( int numRows , int numCols );
 
     /**
      * If a random matrix is created the seed for the RNG should be changed here.

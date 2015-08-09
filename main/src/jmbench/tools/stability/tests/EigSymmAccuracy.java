@@ -21,12 +21,10 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -34,9 +32,9 @@ import org.ejml.ops.RandomMatrices;
  */
 public class EigSymmAccuracy extends AccuracyTestBase {
 
-    protected volatile DenseMatrix64F A;
-    protected volatile DenseMatrix64F L;
-    protected volatile DenseMatrix64F R;
+    protected volatile RowMajorMatrix A;
+    protected volatile RowMajorMatrix L;
+    protected volatile RowMajorMatrix R;
 
     public EigSymmAccuracy(long randomSeed,
                            Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> classFactory,
@@ -49,15 +47,15 @@ public class EigSymmAccuracy extends AccuracyTestBase {
 
     @Override
     protected void createMatrix( int m , int n ) {
-        A = RandomMatrices.createSymmetric(m,-1,1,rand);
+        A = RowMajorOps.createSymmetric(m, -1, 1, rand);
 
-        L = new DenseMatrix64F(m,m);
-        R = new DenseMatrix64F(m,m);
+        L = new RowMajorMatrix(m,m);
+        R = new RowMajorMatrix(m,m);
     }
 
     @Override
-    protected DenseMatrix64F[] createInputs() {
-        return new DenseMatrix64F[]{A};
+    protected RowMajorMatrix[] createInputs() {
+        return new RowMajorMatrix[]{A};
     }
 
     @Override
@@ -66,18 +64,18 @@ public class EigSymmAccuracy extends AccuracyTestBase {
     }
 
     @Override
-    protected void processResults(DenseMatrix64F[] inputs, DenseMatrix64F[] results) {
-        DenseMatrix64F D = results[0];
-        DenseMatrix64F V = results[1];
+    protected void processResults(RowMajorMatrix[] inputs, RowMajorMatrix[] results) {
+        RowMajorMatrix D = results[0];
+        RowMajorMatrix V = results[1];
 
-        if(MatrixFeatures.hasUncountable(D) ||
-                MatrixFeatures.hasUncountable(V)) {
+        if(RowMajorOps.hasUncountable(D) ||
+                RowMajorOps.hasUncountable(V)) {
             reason = OutputError.UNCOUNTABLE;
             return;
         }
 
-        CommonOps.mult(A,V,L);
-        CommonOps.mult(V,D,R);
+        RowMajorOps.mult(A,V,L);
+        RowMajorOps.mult(V,D,R);
 
         foundResult = StabilityBenchmark.residualError(L,R);
     }

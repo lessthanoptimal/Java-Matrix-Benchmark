@@ -21,11 +21,11 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.misc.RandomizeMatrices;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
 
 import java.util.Random;
 
@@ -35,7 +35,7 @@ import java.util.Random;
  */
 public class InvertSymmPosDefGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F A;
+    RowMajorMatrix A;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -47,7 +47,7 @@ public class InvertSymmPosDefGenerator implements InputOutputGenerator {
         RandomizeMatrices.symmPosDef(inputs[0],rand);
 
         if( checkResults )
-            this.A = RandomizeMatrices.convertToEjml(inputs[0]);
+            this.A = new RowMajorMatrix(inputs[0]);
 
         return inputs;
     }
@@ -58,7 +58,7 @@ public class InvertSymmPosDefGenerator implements InputOutputGenerator {
             return OutputError.MISC;
         }
 
-        if( !MatrixFeatures.isInverse(RandomizeMatrices.convertToEjml(output[0]),A,1e-8) )
+        if( !RowMajorOps.isInverse(new RowMajorMatrix(output[0]), A, 1e-8) )
             return OutputError.LARGE_ERROR;
 
         return OutputError.NO_ERROR;

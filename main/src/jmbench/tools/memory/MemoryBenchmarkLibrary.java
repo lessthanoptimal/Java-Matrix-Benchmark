@@ -19,16 +19,13 @@
 
 package jmbench.tools.memory;
 
-import jmbench.impl.FactoryLibraryDescriptions;
 import jmbench.impl.LibraryDescription;
 import jmbench.tools.runtime.InputOutputGenerator;
 import jmbench.tools.runtime.generator.*;
 import jmbench.tools.stability.UtilXmlSerialization;
-import jmbench.tools.version.PrintLibraryVersion;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +65,11 @@ public class MemoryBenchmarkLibrary {
         this.rand = new Random(config.seed);
         this.config = config;
         this.directorySave = directorySave;
-        this.libraryName = desc.location.getPlotName();
+        this.libraryName = desc.info.getNamePlot();
         this.memoryOverhead = memoryOverhead;
         this.desc = desc;
 
-        tool.setJars(desc.location.listOfJarFilePaths());
+        tool.setJars(desc.listOfJarFilePaths());
         tool.setVerbose(false);
         tool.sampleType = config.memorySampleType;
 
@@ -103,16 +100,6 @@ public class MemoryBenchmarkLibrary {
         if( directorySave != null ) {
             setupOutputDirectory();
             setupLog();
-        }
-
-        // print the library's version to a file
-        PrintLibraryVersion printVersion = new PrintLibraryVersion(directorySave);
-        try {
-            printVersion.printVersion(desc);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -247,7 +234,8 @@ public class MemoryBenchmarkLibrary {
         tool.setMemory(config.memoryMinMB,maxMemory);
 
         MemoryTest test = new MemoryTest();
-        test.setup(desc.configure,desc.factoryRuntime,task.gen,task.nameOperation,1,task.matrixSize);
+        test.setup(desc.info.getLibraryConfigure(),desc.info.getFactoryConfigure(),
+                task.gen,task.nameOperation,1,task.matrixSize);
         test.setRandomSeed(config.seed);
 
         return tool.runTest(test);
@@ -284,7 +272,7 @@ public class MemoryBenchmarkLibrary {
     public static void main( String []args ) {
         MemoryConfig config = MemoryConfig.createDefault();
 
-        MemoryBenchmarkLibrary benchmark = new MemoryBenchmarkLibrary(config, FactoryLibraryDescriptions.createEJML(),null,1000,0);
+        MemoryBenchmarkLibrary benchmark = new MemoryBenchmarkLibrary(config,null,null,1000,0);
 
         benchmark.process();
     }

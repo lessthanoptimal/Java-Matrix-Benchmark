@@ -19,8 +19,8 @@
 
 package jmbench.tools.runtime;
 
-import jmbench.impl.FactoryLibraryDescriptions;
 import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
@@ -83,7 +83,7 @@ public class RuntimeBenchmarkMaster {
 
         for( LibraryDescription desc : libs ) {
 
-            String libOutputDir = directorySave+"/"+desc.location.getSaveDirName();
+            String libOutputDir = directorySave+"/"+desc.directory;
 
             // save the description so that where this came from can be easily extracted
             String outputFile = libOutputDir+".xml";
@@ -111,7 +111,7 @@ public class RuntimeBenchmarkMaster {
 
         File dir = new File(directorySave);
         if( !dir.exists() ) {
-            if( !dir.mkdir() ) {
+            if( !dir.mkdirs() ) {
                 throw new IllegalArgumentException("Can't make directories to save results.");
             }
         }
@@ -142,11 +142,13 @@ public class RuntimeBenchmarkMaster {
     }
 
     public static void main( String args[] ) throws IOException, InterruptedException {
+        LibraryManager manager = new LibraryManager();
+
         boolean memorySpecified = false;
         boolean failed = false;
         boolean configFileSpecified = false;
 
-        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig();
+        RuntimeBenchmarkConfig config = RuntimeBenchmarkConfig.createAllConfig(manager.getAll());
 
         System.out.println("** Parsing Command Line **");
         System.out.println();
@@ -186,11 +188,11 @@ public class RuntimeBenchmarkMaster {
                 System.out.println("Using quick and dirty config.");
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = FactoryLibraryDescriptions.find(splits[1]);
+                LibraryDescription match = manager.lookup(splits[1]);
                 if( match == null ) {
                     failed = true;
                     System.out.println("Can't find library.  See list below:");
-                    FactoryLibraryDescriptions.printAllNames();
+                    manager.printAllNames();
                     break;
                 }
                 config.targets.clear();

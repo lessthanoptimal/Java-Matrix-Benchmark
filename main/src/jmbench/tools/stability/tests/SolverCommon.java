@@ -21,10 +21,9 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.stability.StabilityTestBase;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.RandomMatrices;
 
 
 /**
@@ -37,7 +36,7 @@ public abstract class SolverCommon extends StabilityTestBase {
 
     protected boolean isLinearSolver;
 
-    protected transient DenseMatrix64F A,b;
+    protected transient RowMajorMatrix A,b;
 
     public SolverCommon(long randomSeed,
                         Class<LibraryConfigure> classConfigure ,
@@ -63,8 +62,8 @@ public abstract class SolverCommon extends StabilityTestBase {
 
     protected void createMatrix( int m, int n, double svMag ) {
 //        System.out.println("Matrix size = ("+m+" , "+n+" )");
-        DenseMatrix64F U = RandomMatrices.createOrthogonal(m,m,rand);
-        DenseMatrix64F V = RandomMatrices.createOrthogonal(n,n,rand);
+        RowMajorMatrix U = RowMajorOps.createOrthogonal(m,m,rand);
+        RowMajorMatrix V = RowMajorOps.createOrthogonal(n,n,rand);
 
         int o = Math.min(m,n);
 
@@ -73,19 +72,19 @@ public abstract class SolverCommon extends StabilityTestBase {
             sv[i] = svMag;
 
         A = createMatrix(U,V,sv);
-        DenseMatrix64F x = RandomMatrices.createRandom(n,1,rand);
-        b = new DenseMatrix64F(m,1);
+        RowMajorMatrix x = RowMajorOps.createRandom(n, 1, rand);
+        b = new RowMajorMatrix(m,1);
 
         // make sure b is reasonable
-        CommonOps.mult(A,x,b);
+        RowMajorOps.mult(A,x,b);
     }
 
-    public static DenseMatrix64F createMatrix( DenseMatrix64F U , DenseMatrix64F V , double []sv ) {
-        DenseMatrix64F S = CommonOps.diagR(U.numRows,V.numRows,sv);
+    public static RowMajorMatrix createMatrix( RowMajorMatrix U , RowMajorMatrix V , double []sv ) {
+        RowMajorMatrix S = RowMajorOps.diagR(U.numRows, V.numRows, sv);
 
-        DenseMatrix64F tmp = new DenseMatrix64F(U.numRows,V.numRows);
-        CommonOps.mult(U,S,tmp);
-        CommonOps.multTransB(tmp,V,S);
+        RowMajorMatrix tmp = new RowMajorMatrix(U.numRows,V.numRows);
+        RowMajorOps.mult(U,S,tmp);
+        RowMajorOps.multTransB(tmp,V,S);
 
         return S;
     }

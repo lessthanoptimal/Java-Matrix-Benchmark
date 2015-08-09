@@ -20,12 +20,16 @@
 package jmbench.impl;
 
 /**
- * Provides a way to access library version information at runtime.
+ * Do nothing at all to configure the library at runtime
  *
  * @author Peter Abeles
  */
-public interface LibraryVersion {
-    public String getVersionString();
+public class DoNothingSpecialConfigure implements LibraryConfigure {
+    @Override
+    public void runtimeConfigure() {}
 
-    public String getReleaseDate();
+    @Override
+    public String[] getJreFlags() {
+        return new String[0];
+    }
 }

@@ -21,12 +21,11 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.BenchmarkToolsMasterApp;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
-import org.ejml.simple.SimpleMatrix;
 
 
 /**
@@ -48,8 +47,8 @@ public class SvdOverflow extends OverflowTestBase {
     @Override
     protected void createMatrix( int m, int n ) {
 //        System.out.println("Matrix size = ("+m+" , "+n+" )");
-        DenseMatrix64F U = RandomMatrices.createOrthogonal(m,m,rand);
-        DenseMatrix64F V = RandomMatrices.createOrthogonal(n,n,rand);
+        RowMajorMatrix U = RowMajorOps.createOrthogonal(m, m, rand);
+        RowMajorMatrix V = RowMajorOps.createOrthogonal(n,n,rand);
 
         int o = Math.min(m,n);
 
@@ -61,7 +60,7 @@ public class SvdOverflow extends OverflowTestBase {
             sv[i] = svMag+rand.nextDouble()* BenchmarkToolsMasterApp.SMALL_PERTURBATION;
 
         A = SolverCommon.createMatrix(U,V, sv);
-        Ascaled = new DenseMatrix64F(m,n);
+        Ascaled = new RowMajorMatrix(m,n);
     }
 
     @Override
@@ -70,12 +69,19 @@ public class SvdOverflow extends OverflowTestBase {
     }
 
     @Override
-    protected boolean checkResults(DenseMatrix64F[] results) {
-        SimpleMatrix U = SimpleMatrix.wrap(results[0]);
-        SimpleMatrix S = SimpleMatrix.wrap(results[1]);
-        SimpleMatrix V = SimpleMatrix.wrap(results[2]);
+    protected boolean checkResults(RowMajorMatrix[] results) {
+        RowMajorMatrix U = results[0];
+        RowMajorMatrix S = results[1];
+        RowMajorMatrix V = results[2];
 
-        DenseMatrix64F foundA = U.mult(S).mult(V.transpose()).getMatrix();
+        RowMajorMatrix US = new RowMajorMatrix(U.numRows,S.numCols);
+        RowMajorMatrix V_tran = new RowMajorMatrix(V.numCols,V.numRows);
+
+        RowMajorMatrix foundA = new RowMajorMatrix(A.numRows,A.numCols);
+
+        RowMajorOps.transpose(V,V_tran);
+        RowMajorOps.mult(U, S, US);
+        RowMajorOps.mult(US,V_tran,foundA);
 
         double error = StabilityBenchmark.residualError(foundA,Ascaled);
 

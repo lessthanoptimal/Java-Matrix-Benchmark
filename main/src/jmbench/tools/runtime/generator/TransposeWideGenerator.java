@@ -21,14 +21,13 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 
 import java.util.Random;
 
-import static jmbench.misc.RandomizeMatrices.convertToEjml;
 import static jmbench.misc.RandomizeMatrices.randomize;
 
 
@@ -37,7 +36,7 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class TransposeWideGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F C;
+    RowMajorMatrix C;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -49,8 +48,9 @@ public class TransposeWideGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
 
         if( checkResults ) {
-            C = convertToEjml(inputs[0]);
-            CommonOps.transpose(C);
+            RowMajorMatrix A = new RowMajorMatrix(inputs[0]);
+            C = new RowMajorMatrix(A.numCols,A.numRows);
+            RowMajorOps.transpose(A, C);
         }
 
         return inputs;
@@ -58,7 +58,7 @@ public class TransposeWideGenerator implements InputOutputGenerator {
 
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        return ResultsChecking.checkResult(convertToEjml(output[0]),C,tol);
+        return ResultsChecking.checkResult(new RowMajorMatrix(output[0]),C,tol);
     }
 
     @Override

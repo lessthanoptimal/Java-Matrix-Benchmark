@@ -21,12 +21,10 @@ package jmbench.tools.stability.tests;
 
 import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.MatrixFeatures;
-import org.ejml.ops.RandomMatrices;
-import org.ejml.simple.SimpleMatrix;
 
 import java.util.Arrays;
 
@@ -38,7 +36,7 @@ public class SvdAccuracy extends AccuracyTestBase {
 
     private static final double maxMag = 50;
 
-    private volatile DenseMatrix64F A;
+    private volatile RowMajorMatrix A;
     private volatile double sv[];
 
     public SvdAccuracy(long randomSeed,
@@ -61,8 +59,8 @@ public class SvdAccuracy extends AccuracyTestBase {
         }
 
 //        System.out.println("Matrix size = ("+m+" , "+n+" )");
-        DenseMatrix64F U = RandomMatrices.createOrthogonal(m,m,rand);
-        DenseMatrix64F V = RandomMatrices.createOrthogonal(n,n,rand);
+        RowMajorMatrix U = RowMajorOps.createOrthogonal(m,m,rand);
+        RowMajorMatrix V = RowMajorOps.createOrthogonal(n,n,rand);
 
         // randomly generate singular values and put into ascending order
         sv = new double[o];
@@ -82,24 +80,29 @@ public class SvdAccuracy extends AccuracyTestBase {
     }
 
     @Override
-    protected DenseMatrix64F[] createInputs() {
-        return new DenseMatrix64F[]{A};
+    protected RowMajorMatrix[] createInputs() {
+        return new RowMajorMatrix[]{A};
     }
 
     @Override
-    protected void processResults(DenseMatrix64F[] inputs, DenseMatrix64F[] results) {
-        SimpleMatrix U = SimpleMatrix.wrap(results[0]);
-        SimpleMatrix S = SimpleMatrix.wrap(results[1]);
-        SimpleMatrix V = SimpleMatrix.wrap(results[2]);
+    protected void processResults(RowMajorMatrix[] inputs, RowMajorMatrix[] results) {
+        RowMajorMatrix U = results[0];
+        RowMajorMatrix S = results[1];
+        RowMajorMatrix V = results[2];
 
-        if(MatrixFeatures.hasUncountable(U.getMatrix()) ||
-                MatrixFeatures.hasUncountable(S.getMatrix()) ||
-                MatrixFeatures.hasUncountable(V.getMatrix()) ) {
+        if(RowMajorOps.hasUncountable(U) || RowMajorOps.hasUncountable(S) || RowMajorOps.hasUncountable(V) ) {
             reason = OutputError.UNCOUNTABLE;
             return;
         }
 
-        DenseMatrix64F foundA = U.mult(S).mult(V.transpose()).getMatrix();
+        RowMajorMatrix US = new RowMajorMatrix(U.numRows,S.numCols);
+        RowMajorMatrix V_tran = new RowMajorMatrix(V.numCols,V.numRows);
+
+        RowMajorMatrix foundA = new RowMajorMatrix(A.numRows,A.numCols);
+
+        RowMajorOps.transpose(V,V_tran);
+        RowMajorOps.mult(U, S, US);
+        RowMajorOps.mult(US,V_tran,foundA);
 
         foundResult = StabilityBenchmark.residualError(foundA,A);
     }

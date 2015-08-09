@@ -20,8 +20,8 @@
 package jmbench.misc;
 
 import jmbench.interfaces.BenchmarkMatrix;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.RandomMatrices;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 
 import java.util.Random;
 
@@ -57,7 +57,7 @@ public class RandomizeMatrices {
 
     public static void symmPosDef( BenchmarkMatrix input , Random rand ) {
 
-        DenseMatrix64F spd = RandomMatrices.createSymmPosDef(input.numRows(),rand);
+        RowMajorMatrix spd = RowMajorOps.createSymmPosDef(input.numRows(), rand);
 
         for( int i = 0; i < input.numRows(); i++ ) {
             for( int j = 0; j < input.numCols(); j++ ) {
@@ -66,19 +66,8 @@ public class RandomizeMatrices {
         }
     }
 
-    public static DenseMatrix64F convertToEjml( BenchmarkMatrix a ) {
-        DenseMatrix64F ret = new DenseMatrix64F(a.numRows(),a.numCols());
 
-        for( int i = 0; i < ret.numRows; i++ ) {
-            for( int j = 0; j < ret.numCols; j++ ) {
-                ret.set(i,j, a.get(i,j) );
-            }
-        }
-
-        return ret;
-    }
-
-    public static void convertToBm( DenseMatrix64F orig , BenchmarkMatrix ret ) {
+    public static void convertToBm( RowMajorMatrix orig , BenchmarkMatrix ret ) {
 
         for( int i = 0; i < orig.numRows; i++ ) {
             for( int j = 0; j < orig.numCols; j++ ) {

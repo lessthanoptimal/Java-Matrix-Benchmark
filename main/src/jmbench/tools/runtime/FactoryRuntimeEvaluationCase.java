@@ -19,8 +19,6 @@
 
 package jmbench.tools.runtime;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.tools.runtime.generator.*;
 
 import java.util.ArrayList;
@@ -31,13 +29,13 @@ import java.util.List;
  * @author Peter Abeles
  */
 public class FactoryRuntimeEvaluationCase {
-    Class<LibraryConfigure> configure;
-    Class<RuntimePerformanceFactory> factory;
+    String configure;
+    String factory;
 
     RuntimeBenchmarkConfig config;
 
-    public FactoryRuntimeEvaluationCase( Class<LibraryConfigure> configure ,
-                                         Class<RuntimePerformanceFactory> factory ,
+    public FactoryRuntimeEvaluationCase( String configure ,
+                                         String factory ,
                                          RuntimeBenchmarkConfig config ) {
         this.configure = configure;
         this.factory = factory;
@@ -87,7 +85,7 @@ public class FactoryRuntimeEvaluationCase {
     }
 
 
-    public RuntimeEvaluationCase createMatrixMult( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createMatrixMult( String configure , String factory ) {
 
         InputOutputGenerator generator = new MultGenerator();
 
@@ -97,7 +95,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createMatrixAdd( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createMatrixAdd( String configure , String factory ) {
 
         InputOutputGenerator generator = new AddGenerator();
 
@@ -107,7 +105,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createTransposeSquare( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createTransposeSquare( String configure , String factory ) {
 
         InputOutputGenerator generator = new TransposeSquareGenerator();
 
@@ -117,7 +115,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createTransposeTall( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createTransposeTall( String configure , String factory ) {
 
         InputOutputGenerator generator = new TransposeTallGenerator();
 
@@ -127,7 +125,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createTransposeWide( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createTransposeWide( String configure , String factory ) {
 
         InputOutputGenerator generator = new TransposeWideGenerator();
 
@@ -137,7 +135,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createScale( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createScale( String configure , String factory ) {
 
         InputOutputGenerator generator = new ScaleGenerator();
 
@@ -147,7 +145,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createDeterminant( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createDeterminant( String configure , String factory ) {
 
         InputOutputGenerator generator = new DeterminantGenerator();
 
@@ -157,7 +155,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createInvert( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createInvert( String configure , String factory ) {
 
         InputOutputGenerator generator = new InvertGenerator();
 
@@ -167,7 +165,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createInvertSymmPosDef( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createInvertSymmPosDef( String configure , String factory ) {
 
         InputOutputGenerator generator = new InvertSymmPosDefGenerator();
 
@@ -177,7 +175,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createSVD( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createSVD( String configure , String factory ) {
 
         InputOutputGenerator generator = new SvdGenerator();
 
@@ -187,7 +185,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createCholesky( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createCholesky( String configure , String factory ) {
 
         InputOutputGenerator generator = new CholeskyGenerator();
 
@@ -197,7 +195,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createMultTranB( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createMultTranB( String configure , String factory ) {
 
         InputOutputGenerator generator = new MultTranBGenerator();
 
@@ -210,7 +208,7 @@ public class FactoryRuntimeEvaluationCase {
     /**
      * The number of unknowns matches the number of equations.
      */
-    public RuntimeEvaluationCase createSolveEq( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createSolveEq( String configure , String factory ) {
 
         InputOutputGenerator generator = new SolveEqGenerator();
 
@@ -223,7 +221,7 @@ public class FactoryRuntimeEvaluationCase {
     /**
      * See how well it can solve an overdetermined system.
      */
-    public RuntimeEvaluationCase createSolveOver( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createSolveOver( String configure , String factory ) {
 
         InputOutputGenerator generator = new SolveOverGenerator();
 
@@ -233,7 +231,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createQR( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createQR( String configure , String factory ) {
 
         InputOutputGenerator generator = new QrGenerator();
 
@@ -243,7 +241,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createLU( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createLU( String configure , String factory ) {
 
         InputOutputGenerator generator = new LuGenerator();
 
@@ -253,7 +251,7 @@ public class FactoryRuntimeEvaluationCase {
                 factory,generator);
     }
 
-    public RuntimeEvaluationCase createEigSymm( Class<LibraryConfigure> configure , Class<RuntimePerformanceFactory> factory ) {
+    public RuntimeEvaluationCase createEigSymm( String configure , String factory ) {
 
         InputOutputGenerator generator = new EigSymmGenerator();
         int matDimen[] = createDimenList(config.minMatrixSize, config.maxMatrixSize);

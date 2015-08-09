@@ -20,7 +20,6 @@
 package jmbench.tools.runtime.evaluation;
 
 import jmbench.impl.LibraryDescription;
-import jmbench.impl.LibraryLocation;
 import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeResults;
 import jmbench.tools.stability.UtilXmlSerialization;
@@ -199,8 +198,8 @@ public class PlotRuntimeResults {
                     r[j] = Double.NaN;
             }
 
-            LibraryLocation lib = LibraryLocation.lookup(a.getLibraryName());
-            ret.addLibrary(lib.getPlotName(),r,lib.getPlotLineType());
+//            LibraryLocation lib = LibraryLocation.lookup(a.getLibraryName());
+//            ret.addLibrary(lib.getPlotName(),r,lib.getPlotLineType());
         }
 
         return ret;
@@ -220,7 +219,8 @@ public class PlotRuntimeResults {
             return false;
         }
 
-        return !(target.location.isNativeCode() && !plotNativeLibraries);
+//        return !(target.location.isNativeCode() && !plotNativeLibraries);
+        return false;
     }
 
     /**

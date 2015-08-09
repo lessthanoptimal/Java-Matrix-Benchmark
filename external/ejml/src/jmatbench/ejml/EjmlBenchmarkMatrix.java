@@ -20,7 +20,7 @@
 package jmatbench.ejml;
 
 import jmbench.interfaces.BenchmarkMatrix;
-import jmbench.interfaces.RowMajorMatrix;
+import jmbench.matrix.RowMajorMatrix;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.simple.SimpleMatrix;
 

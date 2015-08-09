@@ -1,0 +1,16 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.ejml.EjmlAlgorithmFactory</factory>
+    <configure>jmbench.impl.DoNothingSpecialConfigure</configure>
+    <nameFull>Efficient Java Matrix Library: CommonOps</nameFull>
+    <nameShort>EJML</nameShort>
+    <namePlot>EJML</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.ejml.EjmlSimpleAlgorithmFactory</factory>
+    <configure>jmbench.impl.DoNothingSpecialConfigure</configure>
+    <nameFull>Efficient Java Matrix Library: SimpleMatrix</nameFull>
+    <nameShort>SimpleMatrix</nameShort>
+    <namePlot>Simple</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

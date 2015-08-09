@@ -21,13 +21,12 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.misc.RandomizeMatrices;
 import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
 
 import java.util.Random;
 
@@ -37,7 +36,7 @@ import java.util.Random;
  */
 public class CholeskyGenerator implements InputOutputGenerator {
 
-    DenseMatrix64F A;
+    RowMajorMatrix A;
 
     @Override
     public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
@@ -49,7 +48,7 @@ public class CholeskyGenerator implements InputOutputGenerator {
         RandomizeMatrices.symmPosDef(inputs[0],rand);
 
         if( checkResults ) {
-            A = RandomizeMatrices.convertToEjml(inputs[0]);
+            A = new RowMajorMatrix(inputs[0]);
         }
 
         return inputs;
@@ -57,19 +56,19 @@ public class CholeskyGenerator implements InputOutputGenerator {
 
     @Override
     public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        DenseMatrix64F L = RandomizeMatrices.convertToEjml(output[0]);
+        RowMajorMatrix L = new RowMajorMatrix(output[0]);
 
         if( L == null ) {
             return OutputError.MISC;
         }
 
-        if(MatrixFeatures.hasUncountable(L)) {
+        if(RowMajorOps.hasUncountable(L)) {
             return OutputError.UNCOUNTABLE;
         }
 
-        DenseMatrix64F A_found = new DenseMatrix64F(A.numRows,A.numCols);
+        RowMajorMatrix A_found = new RowMajorMatrix(A.numRows,A.numCols);
 
-        CommonOps.multTransB(L,L,A_found);
+        RowMajorOps.multTransB(L,L,A_found);
 
         double error = StabilityBenchmark.residualError(A_found,A);
         if( error > tol ) {

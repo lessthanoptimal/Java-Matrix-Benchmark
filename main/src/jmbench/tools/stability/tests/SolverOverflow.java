@@ -24,11 +24,10 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
 import jmbench.tools.stability.StabilityBenchmark;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.MatrixFeatures;
 
 
 /**
@@ -41,9 +40,9 @@ public class SolverOverflow extends SolverCommon
     protected boolean overflow;
 
     private volatile BreakingPointBinarySearch search;
-    private volatile DenseMatrix64F A_scale = new DenseMatrix64F(10,10);
-    private volatile DenseMatrix64F b_scale = new DenseMatrix64F(10,1);
-    private volatile DenseMatrix64F y = new DenseMatrix64F(10,1);
+    private volatile RowMajorMatrix A_scale = new RowMajorMatrix(10,10);
+    private volatile RowMajorMatrix b_scale = new RowMajorMatrix(10,1);
+    private volatile RowMajorMatrix y = new RowMajorMatrix(10,1);
 
     private volatile double scaling;
 
@@ -133,16 +132,16 @@ public class SolverOverflow extends SolverCommon
     private void evaluateOverflowSolver( int m , int n ) {
         // avoid declaring new memory, which is important when prcessing large matrices
         if( A_scale.data.length >= m*n ) {
-            A_scale.reshape(m,n,false);
+            A_scale.reshape(m,n);
         } else {
-            A_scale = new DenseMatrix64F(m,n);
+            A_scale = new RowMajorMatrix(m,n);
         }
         if( b_scale.data.length >= m ) {
-            b_scale.reshape(m,1,false);
-            y.reshape(m,1,false);
+            b_scale.reshape(m,1);
+            y.reshape(m,1);
         } else {
-            b_scale = new DenseMatrix64F(m,1);
-            y = new DenseMatrix64F(m,1);
+            b_scale = new RowMajorMatrix(m,1);
+            y = new RowMajorMatrix(m,1);
         }
 
         reason = OutputError.NO_ERROR;
@@ -155,8 +154,8 @@ public class SolverOverflow extends SolverCommon
 //        System.out.println("check = "+testPoint);
         double scale = Math.pow(scaling,testPoint);
 
-        CommonOps.scale(scale,A,A_scale);
-        CommonOps.scale(scale,b,b_scale);
+        RowMajorOps.scale(scale, A, A_scale);
+        RowMajorOps.scale(scale,b,b_scale);
 
         BenchmarkMatrix[] inputsB = new BenchmarkMatrix[2];
         BenchmarkMatrix[] outputB = new BenchmarkMatrix[1];
@@ -182,13 +181,13 @@ public class SolverOverflow extends SolverCommon
             return false;
         }
 
-        DenseMatrix64F results[] = new DenseMatrix64F[outputB.length];
+        RowMajorMatrix results[] = new RowMajorMatrix[outputB.length];
         for( int i = 0; i < results.length; i++ )
             results[i] = factory.convertToRowMajor(outputB[i]);
 
-        DenseMatrix64F x = results[0];
+        RowMajorMatrix x = results[0];
 
-        if( MatrixFeatures.hasUncountable(x)) {
+        if( RowMajorOps.hasUncountable(x)) {
             reason = OutputError.UNCOUNTABLE;
             return false;
         }

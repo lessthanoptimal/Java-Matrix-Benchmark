@@ -23,10 +23,14 @@ import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.*;
-import jmatbench.ejml.EjmlBenchmarkMatrix;
-import jmbench.interfaces.*;
+import jmbench.interfaces.BenchmarkMatrix;
+import jmbench.interfaces.DetectedException;
+import jmbench.interfaces.MatrixProcessorInterface;
+import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorBenchmarkMatrix;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.ops.SpecializedOps;
 
 
 /**
@@ -112,7 +116,7 @@ public class ColtAlgorithmFactory implements RuntimePerformanceFactory {
             if( outputs != null ) {
                 outputs[0] = new ColtBenchmarkMatrix(L);
                 outputs[1] = new ColtBenchmarkMatrix(U);
-                outputs[2] = new EjmlBenchmarkMatrix(SpecializedOps.pivotMatrix(null, pivot, pivot.length, false));
+                outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivot, pivot.length, false));
             }
             return elapsed;
         }

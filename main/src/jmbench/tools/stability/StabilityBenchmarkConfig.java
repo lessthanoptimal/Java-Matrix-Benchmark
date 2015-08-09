@@ -19,11 +19,7 @@
 
 package jmbench.tools.stability;
 
-import jmbench.impl.FactoryLibraryDescriptions;
-import jmbench.impl.LibraryDescription;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -79,7 +75,7 @@ public class StabilityBenchmarkConfig implements Serializable {
     public boolean checkSymInv;
 
     // which libraries are to be evaluated
-    public List<LibraryDescription> targets = new ArrayList<LibraryDescription>();
+    public List<String> targets;
 
     public static StabilityBenchmarkConfig createDefault() {
         StabilityBenchmarkConfig config = new StabilityBenchmarkConfig();
@@ -114,7 +110,8 @@ public class StabilityBenchmarkConfig implements Serializable {
         config.trialsMediumSvd = 18*off;
         config.trialsLargeSvd = 7*off;
 
-        config.targets = FactoryLibraryDescriptions.createDefault();
+        // null defaults to all libraries
+        config.targets = null;
 
         config.checkAccuracy = true;
         config.checkOverflow = true;
@@ -217,11 +214,11 @@ public class StabilityBenchmarkConfig implements Serializable {
         this.trialsLargeSolve = trialsLargeSolve;
     }
 
-    public List<LibraryDescription> getTargets() {
+    public List<String> getTargets() {
         return targets;
     }
 
-    public void setTargets(List<LibraryDescription> targets) {
+    public void setTargets(List<String> targets) {
         this.targets = targets;
     }
 

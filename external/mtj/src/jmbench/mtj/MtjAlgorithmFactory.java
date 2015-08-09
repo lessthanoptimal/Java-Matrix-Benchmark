@@ -19,15 +19,15 @@
 
 package jmbench.mtj;
 
-import jmbench.impl.wrapper.EjmlBenchmarkMatrix;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorBenchmarkMatrix;
+import jmbench.matrix.RowMajorMatrix;
+import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import no.uib.cipr.matrix.*;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.ops.CommonOps;
 
 
 /**
@@ -161,7 +161,7 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
                 int n = matA.numColumns();
 
                 outputs[0] = new MtjBenchmarkMatrix(U);
-                outputs[1] = new EjmlBenchmarkMatrix(CommonOps.diagR(m, n, S));
+                outputs[1] = new RowMajorBenchmarkMatrix(RowMajorOps.diagR(m, n, S));
                 outputs[2] = new MtjBenchmarkMatrix(Vt.transpose());
             }
             return elapsedTime;
@@ -196,7 +196,7 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
 
             long elapsedTime = System.nanoTime()-prev;
             if( outputs != null ) {
-                outputs[0] = new EjmlBenchmarkMatrix(CommonOps.diag(D));
+                outputs[0] = new RowMajorBenchmarkMatrix(RowMajorOps.diag(D));
                 outputs[1] = new MtjBenchmarkMatrix(V);
             }
             return elapsedTime;
@@ -475,18 +475,14 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
-    public BenchmarkMatrix convertToLib(DenseMatrix64F input) {
+    public BenchmarkMatrix convertToLib(RowMajorMatrix input) {
         return new MtjBenchmarkMatrix(convertToMtj(input));
     }
 
     @Override
-    public DenseMatrix64F convertToRowMajor(BenchmarkMatrix input) {
-        if( input.getOriginal() instanceof DenseMatrix64F ) {
-            return (DenseMatrix64F)input.getOriginal();
-        } else {
-            DenseMatrix orig = input.getOriginal();
-            return mtjToEjml(orig);
-        }
+    public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
+        DenseMatrix orig = input.getOriginal();
+        return mtjToRowMajor(orig);
     }
 
     /**
@@ -495,27 +491,27 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
      * @param orig A BenchmarkMatrix in EML
      * @return A DenseMatrix in MTJ
      */
-    public static DenseMatrix convertToMtj( DenseMatrix64F orig )
+    public static DenseMatrix convertToMtj( RowMajorMatrix orig )
     {
         DenseMatrix ret = new DenseMatrix(orig.getNumRows(),orig.getNumCols());
 
         // MTJ's format is the transpose of this format
-        DenseMatrix64F temp = new DenseMatrix64F();
+        RowMajorMatrix temp = new RowMajorMatrix(1,1);
         temp.numRows = orig.numCols;
         temp.numCols = orig.numRows;
         temp.data = ret.getData();
 
-        CommonOps.transpose(orig,temp);
+        RowMajorOps.transpose(orig, temp);
 
         return ret;
     }
 
-    public static DenseMatrix64F mtjToEjml( AbstractMatrix orig )
+    public static RowMajorMatrix mtjToRowMajor(AbstractMatrix orig)
     {
         if( orig == null )
             return null;
 
-        DenseMatrix64F ret = new DenseMatrix64F(orig.numRows(),orig.numColumns());
+        RowMajorMatrix ret = new RowMajorMatrix(orig.numRows(),orig.numColumns());
 
         for( int i = 0; i < ret.numRows; i++ ) {
             for( int j = 0; j < ret.numCols; j++ ) {
