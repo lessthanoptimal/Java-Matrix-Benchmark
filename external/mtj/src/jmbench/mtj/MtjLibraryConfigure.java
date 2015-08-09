@@ -22,7 +22,7 @@ package jmbench.mtj;
 import com.github.fommil.netlib.ARPACK;
 import com.github.fommil.netlib.BLAS;
 import com.github.fommil.netlib.LAPACK;
-import jmbench.impl.LibraryConfigure;
+import jmbench.libraries.LibraryConfigure;
 
 /**
  * Configuration to force MTJ to use pure java code
@@ -33,6 +33,7 @@ public class MtjLibraryConfigure implements LibraryConfigure {
     @Override
     public void runtimeConfigure() {
 
+        MtjAlgorithmFactory.isNative = false;
         System.setProperty("java.util.logging.config.file","logging.properties");
         System.setProperty("com.github.fommil.netlib.BLAS","com.github.fommil.netlib.F2jBLAS");
         System.setProperty("com.github.fommil.netlib.LAPACK","com.github.fommil.netlib.F2jLAPACK");

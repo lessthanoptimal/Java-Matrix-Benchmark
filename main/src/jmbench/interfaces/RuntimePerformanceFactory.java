@@ -143,4 +143,8 @@ public interface RuntimePerformanceFactory extends LibraryFactory , MatrixFactor
     BenchmarkMatrix convertToLib( RowMajorMatrix input );
 
     RowMajorMatrix convertToRowMajor(BenchmarkMatrix input);
+
+    String getLibraryVersion();
+
+    boolean isNative();
 }

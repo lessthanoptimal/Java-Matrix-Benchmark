@@ -20,14 +20,14 @@
 package jmatbench.jama;
 
 import Jama.*;
-import jmatbench.ejml.EjmlBenchmarkMatrix;
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.ops.SpecializedOps;
+import jmbench.matrix.RowMajorOps;
 
 
 /**
@@ -102,7 +102,7 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
             if( outputs != null ) {
                 outputs[0] = new JamaBenchmarkMatrix(L);
                 outputs[1] = new JamaBenchmarkMatrix(U);
-                outputs[2] = new EjmlBenchmarkMatrix(SpecializedOps.pivotMatrix(null, pivot, pivot.length, false));
+                outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivot, pivot.length, false));
             }
             return elapsed;
         }
@@ -383,7 +383,7 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                result = matA.times(ScaleGenerator.SCALE);
+                result = matA.times(BenchmarkConstants.SCALE);
             }
 
             long elapsed = System.nanoTime()-prev;
@@ -461,6 +461,16 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         Matrix orig = input.getOriginal();
         return jamaToRowMajor(orig);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "1.0.3";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 
     public static Matrix convertToJama( RowMajorMatrix orig )

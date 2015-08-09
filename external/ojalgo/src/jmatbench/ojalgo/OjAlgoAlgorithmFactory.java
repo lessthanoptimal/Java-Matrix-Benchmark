@@ -20,14 +20,17 @@
 package jmatbench.ojalgo;
 
 import jmbench.PackageMatrixConversion;
-import jmbench.interfaces.BenchmarkMatrix;
-import jmbench.interfaces.DetectedException;
-import jmbench.interfaces.MatrixProcessorInterface;
-import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.impl.wrapper.EjmlBenchmarkMatrix;
+import jmbench.interfaces.*;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.runtime.generator.ScaleGenerator;
+import org.ejml.ops.SpecializedOps;
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.matrix.decomposition.*;
+import org.ojalgo.matrix.decomposition.task.DeterminantTask;
+import org.ojalgo.matrix.decomposition.task.InverterTask;
+import org.ojalgo.matrix.decomposition.task.SolverTask;
+import org.ojalgo.matrix.decomposition.task.TaskException;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
 import org.ojalgo.matrix.store.PrimitiveDenseStore;
@@ -97,13 +100,13 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-//            final DeterminantTask<Double> tmpTask = DeterminantTask.PRIMITIVE.make(matA, false);
+            final DeterminantTask<Double> tmpTask = DeterminantTask.PRIMITIVE.make(matA, false);
 
             final long prev = System.nanoTime();
 
-//            for (long i = 0; i < numTrials; i++) {
-//                tmpTask.calculateDeterminant(matA);
-//            }
+            for (long i = 0; i < numTrials; i++) {
+                tmpTask.calculateDeterminant(matA);
+            }
 
             return System.nanoTime() - prev;
         }
@@ -142,19 +145,19 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             MatrixStore<Double> result = null;
+            
+            InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, false);
+            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
-//            InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, false);
-//            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
-//
             final long prev = System.nanoTime();
 
-//            for (long i = 0; i < numTrials; i++) {
-//                try {
-//                    result = tmpInverter.invert(matA, tmpAlloc);
-//                } catch (TaskException ex) {
-//                    throw new DetectedException(ex);
-//                }
-//            }
+            for (long i = 0; i < numTrials; i++) {
+                try {
+                    result = tmpInverter.invert(matA, tmpAlloc);
+                } catch (TaskException ex) {
+                    throw new DetectedException(ex);
+                }
+            }
 
             final long elapsedTime = System.nanoTime() - prev;
             outputs[0] = new OjAlgoBenchmarkMatrix(result);
@@ -169,18 +172,18 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             MatrixStore<Double> inverse = null;
             
-//            InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, true);
-//            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
+            InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, true);
+            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
             final long prev = System.nanoTime();
 
-//            for (long i = 0; i < numTrials; i++) {
-//                try {
-//                    inverse = tmpInverter.invert(matA, tmpAlloc);
-//                } catch (TaskException ex) {
-//                    throw new DetectedException(ex);
-//                }
-//            }
+            for (long i = 0; i < numTrials; i++) {
+                try {
+                    inverse = tmpInverter.invert(matA, tmpAlloc);
+                } catch (TaskException ex) {
+                    throw new DetectedException(ex);
+                }
+            }
 
             final long elapsedTime = System.nanoTime() - prev;
             outputs[0] = new OjAlgoBenchmarkMatrix(inverse.transpose());
@@ -216,7 +219,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             outputs[0] = new OjAlgoBenchmarkMatrix(L);
             outputs[1] = new OjAlgoBenchmarkMatrix(U);
-//            outputs[2] = new EjmlBenchmarkMatrix(SpecializedOps.pivotMatrix(null, pivot, pivot.length, false));
+            outputs[2] = new EjmlBenchmarkMatrix(SpecializedOps.pivotMatrix(null, pivot, pivot.length, false));
 
             return elapsedTime;
         }
@@ -321,18 +324,18 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final PrimitiveDenseStore matB = inputs[1].getOriginal();
             MatrixStore<Double> result = null;
             
-//            SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
-//            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
+            SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
+            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
 
-//            for (long i = 0; i < numTrials; i++) {
-//                try {
-//                    result = tmpSolver.solve(matA, matB, tmpAlloc);
-//                } catch (TaskException ex) {
-//                    throw new DetectedException(ex);
-//                }
-//            }
+            for (long i = 0; i < numTrials; i++) {
+                try {
+                    result = tmpSolver.solve(matA, matB, tmpAlloc);
+                } catch (TaskException ex) {
+                    throw new DetectedException(ex);
+                }
+            }
 
             final long elapsedTime = System.nanoTime() - prev;
             outputs[0] = new OjAlgoBenchmarkMatrix(result);
@@ -348,18 +351,18 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matB = inputs[1].getOriginal();
             MatrixStore<Double> result = null;
             
-//            SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
-//            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
+            SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
+            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
 
-//            for (long i = 0; i < numTrials; i++) {
-//                try {
-//                    result = tmpSolver.solve(matA, matB, tmpAlloc);
-//                } catch (TaskException ex) {
-//                    throw new DetectedException(ex);
-//                }
-//            }
+            for (long i = 0; i < numTrials; i++) {
+                try {
+                    result = tmpSolver.solve(matA, matB, tmpAlloc);
+                } catch (TaskException ex) {
+                    throw new DetectedException(ex);
+                }
+            }
 
             final long elapsedTime = System.nanoTime() - prev;
             outputs[0] = new OjAlgoBenchmarkMatrix(result);

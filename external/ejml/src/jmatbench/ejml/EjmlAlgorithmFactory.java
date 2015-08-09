@@ -19,12 +19,13 @@
 
 package jmatbench.ejml;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
+import org.ejml.UtilEjml;
 import org.ejml.alg.dense.linsol.LinearSolverSafe;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.factory.DecompositionFactory;
@@ -391,7 +392,7 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.scale(ScaleGenerator.SCALE,matA,result);
+                CommonOps.scale(BenchmarkConstants.SCALE,matA,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -511,5 +512,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
         out.numRows = m.numRows;
 
         return out;
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return UtilEjml.VERSION;
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 }

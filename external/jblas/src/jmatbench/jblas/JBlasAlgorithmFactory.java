@@ -19,11 +19,11 @@
 
 package jmatbench.jblas;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.jblas.*;
 
 
@@ -331,7 +331,7 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                result = matA.mul(ScaleGenerator.SCALE);
+                result = matA.mul(BenchmarkConstants.SCALE);
             }
 
             long elapsed = System.nanoTime()-prev;
@@ -409,6 +409,16 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         DoubleMatrix orig = input.getOriginal();
         return jblasToEjml(orig);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "1.2.3";
+    }
+
+    @Override
+    public boolean isNative() {
+        return true;
     }
 
     public static DoubleMatrix convertToJBlas( RowMajorMatrix orig )

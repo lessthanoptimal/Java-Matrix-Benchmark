@@ -23,6 +23,7 @@ import cern.colt.matrix.DoubleFactory2D;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.*;
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -30,7 +31,6 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 
 
 /**
@@ -404,7 +404,11 @@ public class ColtAlgorithmFactory implements RuntimePerformanceFactory {
             for( long i = 0; i < numTrials; i++ ) {
                 // in-place operator
                 result.assign(matA);
+<<<<<<< HEAD
                 result.assign(cern.jet.math.Functions.mult(ScaleGenerator.SCALE));
+=======
+                result.assign(cern.jet.math.Functions.mult(BenchmarkConstants.SCALE));
+>>>>>>> ef28f8dcfa6df6b2ab3157e13ed1ea3820065e58
             }
 
             long elapsed = System.nanoTime()-prev;
@@ -465,6 +469,16 @@ public class ColtAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         DenseDoubleMatrix2D mat = input.getOriginal();
         return coltToEjml(mat);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "1.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 
     public static DenseDoubleMatrix2D convertToColt( RowMajorMatrix orig )

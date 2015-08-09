@@ -19,11 +19,11 @@
 
 package jmatbench.la4j;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.la4j.LinearAlgebra;
 import org.la4j.Matrix;
 import org.la4j.Vector;
@@ -346,7 +346,7 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                B = a.multiply(ScaleGenerator.SCALE);
+                B = a.multiply(BenchmarkConstants.SCALE);
             }
 
             long elapsed = System.nanoTime() - prev;
@@ -436,7 +436,17 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
         Matrix orig = input.getOriginal();
         return la4jToEjml(orig);
     }
-    
+
+    @Override
+    public String getLibraryVersion() {
+        return LinearAlgebra.VERSION;
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
+    }
+
     public static Matrix ejmlToLa4j( RowMajorMatrix orig ) {
         Matrix m = new Basic2DMatrix(orig.numRows, orig.numCols);
 

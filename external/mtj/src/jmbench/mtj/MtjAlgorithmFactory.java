@@ -19,6 +19,7 @@
 
 package jmbench.mtj;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -26,7 +27,6 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 import no.uib.cipr.matrix.*;
 
 
@@ -34,6 +34,8 @@ import no.uib.cipr.matrix.*;
  * @author Peter Abeles
  */
 public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
+
+    public static boolean isNative = false;
 
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
@@ -406,7 +408,7 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
             for( long i = 0; i < numTrials; i++ ) {
                 // in-place operator
                 mod.set(matA);
-                mod.scale(ScaleGenerator.SCALE);
+                mod.scale(BenchmarkConstants.SCALE);
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -485,6 +487,16 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
         return mtjToRowMajor(orig);
     }
 
+    @Override
+    public String getLibraryVersion() {
+        return "1.0.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return isNative;
+    }
+
     /**
      * Converts a BenchmarkMatrix in EML into a DenseMatrix in MTJ
      *
@@ -501,7 +513,7 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
         temp.numCols = orig.numRows;
         temp.data = ret.getData();
 
-        RowMajorOps.transpose(orig, temp);
+        RowMajorOps.transpose(orig,temp);
 
         return ret;
     }

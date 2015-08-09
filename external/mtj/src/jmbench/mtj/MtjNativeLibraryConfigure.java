@@ -22,7 +22,7 @@ package jmbench.mtj;
 import com.github.fommil.netlib.ARPACK;
 import com.github.fommil.netlib.BLAS;
 import com.github.fommil.netlib.LAPACK;
-import jmbench.impl.LibraryConfigure;
+import jmbench.libraries.LibraryConfigure;
 
 /**
  * Configuration which lets MTJ use native code, if properly installed
@@ -33,6 +33,7 @@ public class MtjNativeLibraryConfigure implements LibraryConfigure {
     @Override
     public void runtimeConfigure() {
 
+        MtjAlgorithmFactory.isNative = true;
         BLAS.getInstance();
         LAPACK.getInstance();
         ARPACK.getInstance();

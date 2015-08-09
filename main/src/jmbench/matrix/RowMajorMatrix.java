@@ -64,6 +64,10 @@ public class RowMajorMatrix {
 	}
 
 	public int getIndex(int row, int col) {
-		return row*numCols + col;
+		return row * numCols + col;
+	}
+	
+	public void add(int row, int col, double value) {
+		data[row*numCols+col] += value;
 	}
 }

@@ -19,14 +19,16 @@
 
 package jmatbench.ujmp;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ujmp.core.Matrix;
 import org.ujmp.core.MatrixFactory;
 import org.ujmp.core.doublematrix.DenseDoubleMatrix2D;
+import org.ujmp.core.util.UJMPSettings;
+import org.ujmp.gui.UJMP;
 
 /**
  *
@@ -377,8 +379,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 			long prev = System.nanoTime();
 
 			for (long i = 0; i < numTrials; i++) {
-				DenseDoubleMatrix2D.timesScalar.calc(matA,
-						ScaleGenerator.SCALE, result);
+				DenseDoubleMatrix2D.timesScalar.calc(matA,BenchmarkConstants.SCALE, result);
 			}
 
 			long elapsedTime = System.nanoTime() - prev;
@@ -461,7 +462,17 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
         return ujmpToRowMajor(orig);
     }
 
-    public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
+	@Override
+	public String getLibraryVersion() {
+		return UJMP.UJMPVERSION;
+	}
+
+	@Override
+	public boolean isNative() {
+		return UJMPSettings.isUseJBlas();
+	}
+
+	public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
 		DenseDoubleMatrix2D ret = DenseDoubleMatrix2D.factory.zeros(orig
 				.getNumRows(), orig.getNumCols());
 

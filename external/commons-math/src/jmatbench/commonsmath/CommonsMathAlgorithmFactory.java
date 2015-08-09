@@ -19,12 +19,12 @@
 
 package jmatbench.commonsmath;
 
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.apache.commons.math3.exception.MathArithmeticException;
 import org.apache.commons.math3.exception.MaxCountExceededException;
 import org.apache.commons.math3.linear.*;
@@ -395,7 +395,7 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                result = matA.scalarMultiply(ScaleGenerator.SCALE);
+                result = matA.scalarMultiply(BenchmarkConstants.SCALE);
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -493,6 +493,16 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         RealMatrix mat = input.getOriginal();
         return realToEjml(mat);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "3.2";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 
     /**

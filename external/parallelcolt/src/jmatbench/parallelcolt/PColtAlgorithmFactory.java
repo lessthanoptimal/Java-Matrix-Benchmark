@@ -25,14 +25,14 @@ import cern.colt.matrix.tdouble.algo.DenseDoubleAlgebra;
 import cern.colt.matrix.tdouble.algo.decomposition.*;
 import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix2D;
 import cern.jet.math.tdouble.DoubleFunctions;
-import jmatbench.ejml.EjmlBenchmarkMatrix;
+import jmbench.benchmark.BenchmarkConstants;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
+import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
-import jmbench.tools.runtime.generator.ScaleGenerator;
-import org.ejml.ops.SpecializedOps;
+import jmbench.matrix.RowMajorOps;
 
 
 /**
@@ -119,7 +119,7 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
             if( outputs != null ) {
                 outputs[0] = new PColtBenchmarkMatrix(L);
                 outputs[1] = new PColtBenchmarkMatrix(U);
-                outputs[2] = new EjmlBenchmarkMatrix(SpecializedOps.pivotMatrix(null, pivot, pivot.length, false));
+                outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivot, pivot.length, false));
             }
             return elapsedTime;
         }
@@ -410,7 +410,7 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
             for( long i = 0; i < numTrials; i++ ) {
                 // in-place operator
                 result.assign(matA);
-                result.assign(DoubleFunctions.mult(ScaleGenerator.SCALE));
+                result.assign(DoubleFunctions.mult(BenchmarkConstants.SCALE));
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -474,6 +474,16 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         cern.colt.matrix.tdouble.DoubleMatrix2D orig = input.getOriginal();
         return parallelColtToRowMajor(orig);
+    }
+
+    @Override
+    public String getLibraryVersion() {
+        return "0.9.4";
+    }
+
+    @Override
+    public boolean isNative() {
+        return false;
     }
 
     public static cern.colt.matrix.tdouble.DoubleMatrix2D convertToParallelColt( RowMajorMatrix orig )
