@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="bench-scope" pattern="(file[colt]:*/||file[commons-math]:*/||file[ejml]:*/||file[external]:*/||file[jama]:*/||file[Java-Matrix-Benchmark]:*/||file[jblas]:*/||file[JMatBench Main]:*/||file[la4j]:*/||file[MTJ]:*/||file[parallelcolt]:*/||file[ujmp]:*/)&amp;&amp;!file:*build.gradle" />
+</component>

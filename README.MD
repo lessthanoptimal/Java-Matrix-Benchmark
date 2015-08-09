@@ -12,16 +12,16 @@ however a few libraries aren't on Maven central so you need to download their ja
 libraries "libs/" directory.  Instructions for where to download the latest jar is typically provided in the
 "libs/source.txt".  After those jars have been downloaded gradle will be able to compile the project.
 
-1) Manual download jars for libaries which haven't been posted on Maven central
-2) gradle createRuntimeJars
-3) gradle benchmarkJar
-4) java -jar benchmark.jar
-5) Follow printed instructions for the benchmark you wish to run
+1. Manual download jars for libaries which haven't been posted on Maven central
+2. gradle createRuntimeJars
+3. gradle benchmarkJar
+4. java -jar benchmark.jar
+5. Follow printed instructions for the benchmark you wish to run
 
 
 # Adding Your Own Library
 
-1) Create directory in external
-2) copy "src" and "build.gradle" for another project into that directory
-3) Modify the source code and create your own "TestSetInfo.txt" file using the application you modified.
-4) Add the library to "external/DefaultTestSet.txt" if you wish
+1. Create directory in external
+2. copy "src" and "build.gradle" for another project into that directory
+3. Modify the source code and create your own "TestSetInfo.txt" file using the application you modified.
+4. Add the library to "external/DefaultTestSet.txt" if you wish
