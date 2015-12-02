@@ -20,15 +20,15 @@
 package jmbench.tools.runtime.evaluation;
 
 import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
+import jmbench.tools.runtime.LibraryRuntimeInfo;
+import jmbench.tools.runtime.RuntimeBenchmarkLibrary;
 import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeResults;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -78,6 +78,8 @@ public class PlotRuntimeResults {
 
         Map<String, List> opMap = new HashMap<String,List>();
 
+        List<String> libraryNames = new ArrayList<>();
+
         for( String nameLevel0 : files ) {
             File level0 = new File(directory.getPath()+"/"+nameLevel0);
 
@@ -89,6 +91,7 @@ public class PlotRuntimeResults {
                 if( !checkIncludeLibrary(level0.getAbsolutePath()))
                     continue;
 
+                libraryNames.add(level0.getName());
                 String []files2 = level0.list();
 
                 for( String name2 : files2 ) {
@@ -113,12 +116,15 @@ public class PlotRuntimeResults {
 
         }
 
-        createPlots(minMatrixSize,maxMatrixSize,directory,whichMetric, opMap, weightedSummary);
+        Collections.sort(libraryNames);
+
+        createPlots(minMatrixSize,maxMatrixSize,directory,whichMetric, opMap, weightedSummary, libraryNames);
     }
 
     public static void createPlots( int minMatrixSize , int maxMatrixSize ,
                                     File outputDirectory , int whichMetric,
-                                    Map<String, List> opMap , boolean weightedSummary ) {
+                                    Map<String, List> opMap , boolean weightedSummary,
+                                    List<String> libraryNames ) {
         List<RuntimePlotData> allResults = new ArrayList<RuntimePlotData>();
 
         RuntimeResultPlotter.Reference refType = RuntimeResultPlotter.Reference.MAX;
@@ -126,7 +132,7 @@ public class PlotRuntimeResults {
         for( String key : opMap.keySet() ) {
             List<RuntimeResults> l = opMap.get(key);
 
-            RuntimePlotData plotData = convertToPlotData(l,whichMetric);
+            RuntimePlotData plotData = convertToPlotData(l,whichMetric,libraryNames);
             allResults.add( plotData );
 
             truncatePlotData(minMatrixSize,maxMatrixSize,plotData);
@@ -136,7 +142,7 @@ public class PlotRuntimeResults {
             String fileNameAbs = outputDirectory.getPath()+"/plots/absolute/"+key;
 
 
-            RuntimeResultPlotter.variabilityPlots(l, fileNameVar,true,false);
+            RuntimeResultPlotter.variabilityPlots(l,libraryNames, fileNameVar,true,false);
             RuntimeResultPlotter.relativePlots(plotData, refType,null,fileNameRel,plotData.plotName,true,displayResults);
             RuntimeResultPlotter.absolutePlots(plotData, fileNameAbs,plotData.plotName,true,false);
         }
@@ -178,12 +184,16 @@ public class PlotRuntimeResults {
         }
     }
 
-    public static RuntimePlotData convertToPlotData( List<RuntimeResults> results , int whichMetric ) {
+    public static RuntimePlotData convertToPlotData( List<RuntimeResults> results , int whichMetric,
+                                                     List<String> libraryNames ) {
         RuntimeResults a = results.get(0);
 
         RuntimePlotData ret = new RuntimePlotData(a.matDimen);
 
         ret.plotName = a.getOpName();
+
+
+        LibraryManager manager = new LibraryManager();
 
         for( int i = 0; i < results.size(); i++ ) {
             a = results.get(i);
@@ -198,8 +208,9 @@ public class PlotRuntimeResults {
                     r[j] = Double.NaN;
             }
 
-//            LibraryLocation lib = LibraryLocation.lookup(a.getLibraryName());
-//            ret.addLibrary(lib.getPlotName(),r,lib.getPlotLineType());
+            int lineIndex = libraryNames.indexOf(a.getLibraryName());
+            LibraryDescription desc = manager.lookup(a.getLibraryName());
+            ret.addLibrary(desc.info.getNamePlot(),r,lineIndex);
         }
 
         return ret;
@@ -219,8 +230,15 @@ public class PlotRuntimeResults {
             return false;
         }
 
-//        return !(target.location.isNativeCode() && !plotNativeLibraries);
-        return false;
+        LibraryRuntimeInfo info = UtilXmlSerialization.deserializeXml(
+                new File(pathDir, RuntimeBenchmarkLibrary.RUNTIME_INFO_NAME).getPath());
+
+        if( info == null ) {
+            System.err.println("Can't find runtime library info");
+            System.exit(-1);
+        }
+
+        return !(info.isNative() && !plotNativeLibraries);
     }
 
     /**

@@ -109,10 +109,13 @@ public class LibraryManager {
     }
 
     public void printAllNames() {
+        System.out.println("List of Libraries:");
+        System.out.println();
+        System.out.println("     directory       | short name        |   long name ");
+        System.out.println("---------------------------------------------------------------");
         for (int i = 0; i < all.size(); i++) {
             LibraryStringInfo l = all.get(i).info;
-
-            System.out.println("Library "+l.nameFull+"  in directory "+all.get(i).directory);
+            System.out.printf("%20s | %17s | %s\n",all.get(i).directory,l.getNameShort(),l.getNameFull());
         }
     }
 

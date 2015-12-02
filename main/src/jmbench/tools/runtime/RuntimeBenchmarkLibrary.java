@@ -71,6 +71,8 @@ import java.util.Random;
  */
 public class RuntimeBenchmarkLibrary {
 
+    public static String RUNTIME_INFO_NAME = "runtime_info.xml";
+
     // used to randomize the order of processes
     private Random rand;
 
@@ -144,6 +146,10 @@ public class RuntimeBenchmarkLibrary {
                 System.out.println("Can't delete pointless log");
             }
         } else {
+            File runtimeInfoFile = new File(this.directorySave,RUNTIME_INFO_NAME);
+            if( !runtimeInfoFile.exists() )
+                saveRuntimeInfo(info.factory,runtimeInfoFile.getPath());
+
             long startTime = System.currentTimeMillis();
 
             while(!states.isEmpty()) {
@@ -307,11 +313,18 @@ public class RuntimeBenchmarkLibrary {
     }
 
     /**
+     * Saves library info that can only be determined at runtime.
+     */
+    private void saveRuntimeInfo( String factoryClassName , String savePath ) {
+        tools.launch(LibraryRuntimeInfo.class,factoryClassName,savePath);
+    }
+
+    /**
      * Computes the current results
      */
     private RuntimeResults computeResults( RuntimeEvaluationCase e , int matrixIndex ,
-                                             long randSeed ,
-                                             RuntimeEvaluationMetrics score[] , List<RuntimeMeasurement> rawResults )
+                                           long randSeed ,
+                                           RuntimeEvaluationMetrics score[] , List<RuntimeMeasurement> rawResults )
             throws FileNotFoundException {
 
         List<RuntimeMeasurement> opsPerSecond = evaluateCase( e , randSeed , matrixIndex , rawResults.size() );

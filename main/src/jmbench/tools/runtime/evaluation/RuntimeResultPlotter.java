@@ -19,6 +19,8 @@
 
 package jmbench.tools.runtime.evaluation;
 
+import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
 import jmbench.plots.OperationsVersusSizePlot;
 import jmbench.plots.OverallRelativeAreaPlot;
 import jmbench.plots.SummaryWhiskerPlot;
@@ -316,6 +318,7 @@ public class RuntimeResultPlotter {
     }
 
     public static void variabilityPlots( List<RuntimeResults> data ,
+                                         List<String> libraryNames ,
                                          String fileName ,
                                          boolean savePDF ,
                                          boolean showWindow )
@@ -344,7 +347,7 @@ public class RuntimeResultPlotter {
             int n = ops.getMatDimen().length;
 
             for( int i = 0; i < numMatrixSizes; i++ ) {
-                if( i < n && metrics[i] != null && metrics[i].getRawResults().size() > 5 ) {
+                if( i < n && metrics[i] != null && metrics[i].getRawResults().size() >= 2 ) {
 //                    double max = 1.0/metrics[i].getMin();
 //                    double min = 1.0/metrics[i].getMax();
                     double max = metrics[i].getMax();
@@ -356,10 +359,10 @@ public class RuntimeResultPlotter {
                 }
             }
 
-//            LibraryLocation lib = LibraryLocation.lookup(ops.getLibraryName());
-//            splot.addResults(matDimen,results,lib.getPlotName(),numMatrixSizes,
-//                    lib.getPlotLineType());
-            throw new RuntimeException("Implement");
+            LibraryManager manager = new LibraryManager();
+            LibraryDescription desc = manager.lookup(ops.getLibraryName());
+            int libraryIndex = libraryNames.indexOf(ops.getLibraryName());
+            splot.addResults(matDimen,results,desc.info.getNamePlot(),numMatrixSizes,libraryIndex);
         }
 
         if( savePDF )

@@ -89,7 +89,7 @@ public class JavaRuntimeLauncher {
     /**
      * Launches the class with the provided arguments.
      * @param mainClass Class
-     * @param args it's arugments
+     * @param args it's arguments
      * @return true if successful or false if it ended on error
      */
     public Exit launch( Class mainClass , String ...args ) {

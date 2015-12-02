@@ -83,7 +83,7 @@ public class RuntimeBenchmarkMaster {
 
         for( LibraryDescription desc : libs ) {
 
-            String libOutputDir = directorySave+"/"+desc.directory;
+            String libOutputDir = directorySave+"/"+desc.info.nameShort;
 
             // save the description so that where this came from can be easily extracted
             String outputFile = libOutputDir+".xml";
@@ -142,6 +142,11 @@ public class RuntimeBenchmarkMaster {
     }
 
     public static void main( String args[] ) throws IOException, InterruptedException {
+        if( args.length == 0 ) {
+            printHelp();
+            System.exit(0);
+        }
+
         LibraryManager manager = new LibraryManager();
 
         boolean memorySpecified = false;
@@ -191,7 +196,6 @@ public class RuntimeBenchmarkMaster {
                 LibraryDescription match = manager.lookup(splits[1]);
                 if( match == null ) {
                     failed = true;
-                    System.out.println("Can't find library.  See list below:");
                     manager.printAllNames();
                     break;
                 }
