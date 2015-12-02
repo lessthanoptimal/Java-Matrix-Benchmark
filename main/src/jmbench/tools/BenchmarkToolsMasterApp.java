@@ -55,7 +55,7 @@ public class BenchmarkToolsMasterApp {
         System.out.println("  displayStability   Prints out tables showing stability results.");
         System.out.println();
         System.out.println("For example to run the runtime benchmark type:");
-        System.out.println("  java -jar benchmark_app.jar runtime");
+        System.out.println("  java -jar benchmark.jar runtime");
         System.out.println();
         System.out.println("Additional help on commandline arguments for each tool can be obtained by typing:");
         System.out.println("  java -jar <tool> help");
