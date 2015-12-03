@@ -19,11 +19,9 @@
 
 package jmbench.tools.stability.tests;
 
-import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
@@ -47,7 +45,7 @@ public abstract class OverflowTestBase extends StabilityTestBase
     private volatile BreakingPointBinarySearch search;
 
     public OverflowTestBase(long randomSeed,
-                            Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> classFactory ,
+                            String classConfigure , String classFactory ,
                             String operation,
                        int totalTrials, double breakingPoint, int minLength, int maxLength,
                        boolean overflow)

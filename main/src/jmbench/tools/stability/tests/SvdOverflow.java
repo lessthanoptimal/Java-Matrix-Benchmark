@@ -19,8 +19,6 @@
 
 package jmbench.tools.stability.tests;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.BenchmarkToolsMasterApp;
@@ -36,7 +34,7 @@ public class SvdOverflow extends OverflowTestBase {
     private static final double svMag = 1;
 
     public SvdOverflow(long randomSeed,
-                       Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> classFactory,
+                       String classConfigure , String classFactory,
                        String nameOperation, int totalTrials,
                        double breakingPoint, int minLength, int maxLength, boolean overflow) {
         super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);

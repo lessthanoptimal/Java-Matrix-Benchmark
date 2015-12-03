@@ -1,0 +1,8 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.la4j.La4jAlgorithmFactory</factory>
+    <nameFull>La4j</nameFull>
+    <nameShort>La4j</nameShort>
+    <namePlot>La4j</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

@@ -25,10 +25,8 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.BenchmarkConstants;
 import org.ujmp.core.Matrix;
-import org.ujmp.core.MatrixFactory;
 import org.ujmp.core.doublematrix.DenseDoubleMatrix2D;
 import org.ujmp.core.util.UJMPSettings;
-import org.ujmp.gui.UJMP;
 
 /**
  *
@@ -39,7 +37,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
-        return wrap( DenseDoubleMatrix2D.factory.zeros(numRows,numCols));
+        return wrap( DenseDoubleMatrix2D.Factory.zeros(numRows,numCols));
     }
 
     @Override
@@ -260,7 +258,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 			Matrix matA = inputs[0].getOriginal();
 
 			Matrix result = null;
-			Matrix eye = MatrixFactory.eye(matA.getSize());
+			Matrix eye = Matrix.Factory.eye(matA.getSize());
 
 			long prev = System.nanoTime();
 
@@ -288,7 +286,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 			DenseDoubleMatrix2D matA = inputs[0].getOriginal();
 			DenseDoubleMatrix2D matB = inputs[1].getOriginal();
 
-			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.factory.zeros(matA
+			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.Factory.zeros(matA
 					.getRowCount(), matA.getColumnCount());
 
 			long prev = System.nanoTime();
@@ -317,7 +315,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 			DenseDoubleMatrix2D matA = inputs[0].getOriginal();
 			DenseDoubleMatrix2D matB = inputs[1].getOriginal();
 
-			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.factory.zeros(matA
+			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.Factory.zeros(matA
 					.getRowCount(), matB.getColumnCount());
 
 			long prev = System.nanoTime();
@@ -373,7 +371,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 				long numTrials) {
 			DenseDoubleMatrix2D matA = inputs[0].getOriginal();
 
-			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.factory.zeros(matA
+			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.Factory.zeros(matA
 					.getRowCount(), matA.getColumnCount());
 
 			long prev = System.nanoTime();
@@ -434,7 +432,7 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 				long numTrials) {
 			DenseDoubleMatrix2D matA = inputs[0].getOriginal();
 
-			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.factory.zeros(matA
+			DenseDoubleMatrix2D result = DenseDoubleMatrix2D.Factory.zeros(matA
 					.getColumnCount(), matA.getRowCount());
 
 			long prev = System.nanoTime();
@@ -464,16 +462,16 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 
 	@Override
 	public String getLibraryVersion() {
-		return UJMP.UJMPVERSION;
+		return "0.3.0";
 	}
 
 	@Override
 	public boolean isNative() {
-		return UJMPSettings.isUseJBlas();
+		return UJMPSettings.getInstance().isUseJBlas();
 	}
 
 	public static DenseDoubleMatrix2D convertToUjmp(RowMajorMatrix orig) {
-		DenseDoubleMatrix2D ret = DenseDoubleMatrix2D.factory.zeros(orig
+		DenseDoubleMatrix2D ret = DenseDoubleMatrix2D.Factory.zeros(orig
 				.getNumRows(), orig.getNumCols());
 
 		for (int i = 0; i < orig.numRows; i++) {

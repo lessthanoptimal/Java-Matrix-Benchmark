@@ -31,11 +31,6 @@ public class UjmpLibraryConfigure implements LibraryConfigure {
 
     @Override
     public void runtimeConfigure() {
-        UJMPSettings.setUseJBlas(false);
-    }
-
-    @Override
-    public String[] getJreFlags() {
-        return new String[0];
+        UJMPSettings.getInstance().setUseJBlas(false);
     }
 }
