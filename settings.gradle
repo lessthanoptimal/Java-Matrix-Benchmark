@@ -1,9 +1,8 @@
 include 'main'
 include 'external:mtj','external:la4j','external:jblas','external:commons-math', 'external:ejml'
-include 'external:ojalgo'
+include 'external:ojalgo','external:ujmp'
 
 // the following algorithms require non-Maven dependencies
 include 'external:colt'
 include 'external:jama'
 include 'external:parallelcolt'
-include 'external:ujmp'

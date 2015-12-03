@@ -32,6 +32,6 @@ public class UjmpNativeLibraryConfigure implements LibraryConfigure {
 
     @Override
     public void runtimeConfigure() {
-        UJMPSettings.setUseJBlas(true);
+        UJMPSettings.getInstance().setUseJBlas(true);
     }
 }
