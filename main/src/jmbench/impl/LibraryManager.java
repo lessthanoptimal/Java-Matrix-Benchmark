@@ -19,6 +19,7 @@
 
 package jmbench.impl;
 
+import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.MiscTools;
 
 import java.io.*;
@@ -122,17 +123,19 @@ public class LibraryManager {
 
     public List<LibraryDescription> getDefaults() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("external/DefaultTestSet.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader(BenchmarkConstants.DEFAULT_TEST_SET));
             String line = reader.readLine();
 
             List<LibraryDescription> defaults = new ArrayList<>();
 
             while( line != null ) {
-                LibraryDescription found = lookup(line);
-                if( found != null ) {
-                    defaults.add(found);
-                } else {
-                    throw new RuntimeException("Couldn't find default! "+line );
+                if( line.length() != 0 && line.charAt(0) != '#') {
+                    LibraryDescription found = lookup(line);
+                    if (found != null) {
+                        defaults.add(found);
+                    } else {
+                        throw new RuntimeException("Couldn't find default! " + line);
+                    }
                 }
 
                 line = reader.readLine();

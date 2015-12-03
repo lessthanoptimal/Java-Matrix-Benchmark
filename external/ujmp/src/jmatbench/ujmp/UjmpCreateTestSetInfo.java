@@ -19,18 +19,30 @@
 
 package jmatbench.ujmp;
 
-import jmbench.impl.LibraryConfigure;
-import org.ujmp.core.util.UJMPSettings;
+
+import jmbench.impl.LibraryStringInfo;
+import jmbench.tools.MiscTools;
+
+import java.io.IOException;
 
 /**
- * Allows native code to be turned on and off at runtime
- *
  * @author Peter Abeles
  */
-public class UjmpLibraryConfigure implements LibraryConfigure {
+public class UjmpCreateTestSetInfo {
+    public static void main(String[] args) throws IOException {
+        LibraryStringInfo infoA = new LibraryStringInfo();
+        infoA.factory = UjmpAlgorithmFactory.class.getName();
+        infoA.nameFull = "Universal Java Matrix Package";
+        infoA.nameShort = "UJMP";
+        infoA.namePlot = "UJMP";
 
-    @Override
-    public void runtimeConfigure() {
-        UJMPSettings.setUseJBlas(false);
+        LibraryStringInfo infoB = new LibraryStringInfo();
+        infoB.factory = UjmpAlgorithmFactory.class.getName();
+        infoB.nameFull = "Universal Java Matrix Package - Native";
+        infoB.nameShort = "UJMP-N";
+        infoB.namePlot = "UJMP-N";
+        infoB.configure = UjmpNativeLibraryConfigure.class.getName();
+
+        MiscTools.saveLibraryInfo("ujmp", infoA, infoB);
     }
 }

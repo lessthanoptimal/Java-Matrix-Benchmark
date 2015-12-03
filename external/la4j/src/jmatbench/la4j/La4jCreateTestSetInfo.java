@@ -17,25 +17,25 @@
  * along with JMatrixBenchmark.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jmbench.mtj;
+package jmatbench.la4j;
 
-import com.github.fommil.netlib.ARPACK;
-import com.github.fommil.netlib.BLAS;
-import com.github.fommil.netlib.LAPACK;
-import jmbench.impl.LibraryConfigure;
+
+import jmbench.impl.LibraryStringInfo;
+import jmbench.tools.MiscTools;
+
+import java.io.IOException;
 
 /**
- * Configuration which lets MTJ use native code, if properly installed
- *
  * @author Peter Abeles
  */
-public class MtjNativeLibraryConfigure implements LibraryConfigure {
-    @Override
-    public void runtimeConfigure() {
+public class La4jCreateTestSetInfo {
+    public static void main(String[] args) throws IOException {
+        LibraryStringInfo info = new LibraryStringInfo();
+        info.factory = La4jAlgorithmFactory.class.getName();
+        info.nameFull = "La4j";
+        info.nameShort = "La4j";
+        info.namePlot = "La4j";
 
-        MtjAlgorithmFactory.isNative = true;
-        BLAS.getInstance();
-        LAPACK.getInstance();
-        ARPACK.getInstance();
+        MiscTools.saveLibraryInfo("la4j", info);
     }
 }

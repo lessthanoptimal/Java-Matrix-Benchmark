@@ -19,9 +19,7 @@
 
 package jmbench.tools.stability;
 
-import jmbench.impl.LibraryConfigure;
 import jmbench.impl.LibraryDescription;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluatorSlave;
 import jmbench.tools.TestResults;
@@ -91,7 +89,7 @@ public class StabilityBenchmarkLibrary {
         this.numSolve = numSolve;
         this.numSvd = numSvd;
 
-        createOperationsList(target.info.getLibraryConfigure(),target.info.getFactoryConfigure());
+        createOperationsList(target.info.configure,target.info.factory);
 
     }
 
@@ -121,8 +119,8 @@ public class StabilityBenchmarkLibrary {
         logStream.println(tools.getClassPath());
     }
 
-    private void createOperationsList(Class<LibraryConfigure> configure ,
-                                      Class<RuntimePerformanceFactory> library) {
+    private void createOperationsList(String configure ,
+                                      String library) {
         operations = new ArrayList<StabilityTestBase>();
 
         if( config.checkOverflow ) {

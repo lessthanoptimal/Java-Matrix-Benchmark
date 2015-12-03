@@ -1,0 +1,8 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.parallelcolt.PColtAlgorithmFactory</factory>
+    <nameFull>Parallel Colt</nameFull>
+    <nameShort>PColt</nameShort>
+    <namePlot>PColt</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

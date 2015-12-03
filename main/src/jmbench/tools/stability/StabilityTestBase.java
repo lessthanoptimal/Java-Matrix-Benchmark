@@ -36,8 +36,9 @@ import java.util.Random;
  */
 public abstract class StabilityTestBase extends EvaluationTest {
 
-    protected Class<RuntimePerformanceFactory> classFactory;
-    protected Class<LibraryConfigure> classConfigure;
+    protected String classFactory;
+    protected String classConfigure;
+
     protected String nameOperation;
     protected int totalTrials;
 
@@ -51,14 +52,14 @@ public abstract class StabilityTestBase extends EvaluationTest {
     protected transient int numResults;
 
     protected StabilityTestBase(long randomSeed,
-                                Class<LibraryConfigure> classConfigure,
-                                Class<RuntimePerformanceFactory> classFactory,
+                                String classConfigure,
+                                String classFactory,
                                 String nameOperation,
                                 int totalTrials,
                                 double breakingPoint ) {
         super(randomSeed);
-        this.classConfigure = classConfigure;
         this.classFactory = classFactory;
+        this.classConfigure = classConfigure;
         this.nameOperation = nameOperation;
         this.totalTrials = totalTrials;
         this.breakingPoint = breakingPoint;
@@ -85,18 +86,19 @@ public abstract class StabilityTestBase extends EvaluationTest {
 
     @Override
     public void init() {
-        LibraryConfigure configure;
+
         try {
-            factory = classFactory.newInstance();
-            configure = classConfigure.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+            if( this.classConfigure != null ) {
+                LibraryConfigure configure = (LibraryConfigure)Class.forName(this.classConfigure).newInstance();
+                configure.runtimeConfigure();
+            }
+
+            factory = (RuntimePerformanceFactory)Class.forName(classFactory).newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         rand = new Random(randomSeed);
-        configure.runtimeConfigure();
     }
 
     @Override
@@ -201,12 +203,20 @@ public abstract class StabilityTestBase extends EvaluationTest {
 
     }
 
-    public Class<RuntimePerformanceFactory> getClassFactory() {
+    public String getClassFactory() {
         return classFactory;
     }
 
-    public void setClassFactory(Class<RuntimePerformanceFactory> classFactory) {
+    public void setClassFactory(String classFactory) {
         this.classFactory = classFactory;
+    }
+
+    public String getClassConfigure() {
+        return classConfigure;
+    }
+
+    public void setClassConfigure(String classConfigure) {
+        this.classConfigure = classConfigure;
     }
 
     public String getNameOperation() {

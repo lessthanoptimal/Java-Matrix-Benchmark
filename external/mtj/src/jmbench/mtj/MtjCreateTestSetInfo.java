@@ -17,7 +17,7 @@
  * along with JMatrixBenchmark.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jmatbench.jama;
+package jmbench.mtj;
 
 
 import jmbench.impl.LibraryStringInfo;
@@ -28,14 +28,22 @@ import java.io.IOException;
 /**
  * @author Peter Abeles
  */
-public class JavaCreateTestSetInfo {
+public class MtjCreateTestSetInfo {
     public static void main(String[] args) throws IOException {
-        LibraryStringInfo info = new LibraryStringInfo();
-        info.factory = JamaAlgorithmFactory.class.getName();
-        info.nameFull = "Jama";
-        info.nameShort = "Jama";
-        info.namePlot = "Jama";
+        LibraryStringInfo infoA = new LibraryStringInfo();
+        infoA.factory = MtjAlgorithmFactory.class.getName();
+        infoA.nameFull = "Matrix Toolkit Java";
+        infoA.nameShort = "MTJ";
+        infoA.namePlot = "MTJ";
+        infoA.configure = MtjLibraryConfigure.class.getName();
 
-        MiscTools.saveLibraryInfo("jama", info);
+        LibraryStringInfo infoB = new LibraryStringInfo();
+        infoB.factory = MtjAlgorithmFactory.class.getName();
+        infoB.nameFull = "Matrix Toolkit Java - Native";
+        infoB.nameShort = "MTJ-N";
+        infoB.namePlot = "MTJ-N";
+        infoB.configure = MtjNativeLibraryConfigure.class.getName();
+
+        MiscTools.saveLibraryInfo("mtj", infoA, infoB);
     }
 }

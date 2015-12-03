@@ -19,8 +19,6 @@
 
 package jmbench.impl;
 
-import jmbench.interfaces.RuntimePerformanceFactory;
-
 import java.io.Serializable;
 
 /**
@@ -40,24 +38,6 @@ public class LibraryStringInfo implements Serializable{
     public String nameFull;
     public String nameShort;
     public String namePlot;
-
-    public Class<LibraryConfigure> getLibraryConfigure() {
-        if( configure == null )
-            return (Class)DoNothingSpecialConfigure.class;
-        try {
-            return  (Class)Class.forName(configure);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Class<RuntimePerformanceFactory> getFactoryConfigure() {
-        try {
-            return  (Class)Class.forName(factory);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public String getFactory() {
         return factory;

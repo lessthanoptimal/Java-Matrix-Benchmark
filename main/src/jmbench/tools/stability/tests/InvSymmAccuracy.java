@@ -19,8 +19,6 @@
 
 package jmbench.tools.stability.tests;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
@@ -39,7 +37,7 @@ public class InvSymmAccuracy extends AccuracyTestBase {
     protected volatile RowMajorMatrix I;
 
     public InvSymmAccuracy(long randomSeed,
-                           Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> classFactory,
+                           String classConfigure , String classFactory,
                            String nameOperation,
                            int totalTrials, int minLength, int maxLength) {
         super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, minLength, maxLength);

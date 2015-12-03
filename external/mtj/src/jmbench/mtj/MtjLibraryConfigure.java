@@ -43,9 +43,4 @@ public class MtjLibraryConfigure implements LibraryConfigure {
         LAPACK.getInstance();
         ARPACK.getInstance();
     }
-
-    @Override
-    public String[] getJreFlags() {
-        return new String[0];
-    }
 }
