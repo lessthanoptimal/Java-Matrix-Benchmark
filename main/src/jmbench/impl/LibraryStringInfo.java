@@ -42,6 +42,8 @@ public class LibraryStringInfo implements Serializable{
     public String namePlot;
 
     public Class<LibraryConfigure> getLibraryConfigure() {
+        if( configure == null )
+            return (Class)DoNothingSpecialConfigure.class;
         try {
             return  (Class)Class.forName(configure);
         } catch (ClassNotFoundException e) {

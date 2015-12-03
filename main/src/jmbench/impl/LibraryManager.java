@@ -117,6 +117,7 @@ public class LibraryManager {
             LibraryStringInfo l = all.get(i).info;
             System.out.printf("%20s | %17s | %s\n",all.get(i).directory,l.getNameShort(),l.getNameFull());
         }
+        System.out.println();
     }
 
     public List<LibraryDescription> getDefaults() {
