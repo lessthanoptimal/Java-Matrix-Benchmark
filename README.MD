@@ -24,4 +24,4 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
 1. Create directory in external
 2. copy "src" and "build.gradle" for another project into that directory
 3. Modify the source code and create your own "TestSetInfo.txt" file using the application you modified.
-4. Add the library to "external/DefaultTestSet.txt" if you wish
+4. Add the library to "external/DefaultTestSet.txt" if you wish it to be included by default

@@ -234,8 +234,7 @@ public class MemoryBenchmarkLibrary {
         tool.setMemory(config.memoryMinMB,maxMemory);
 
         MemoryTest test = new MemoryTest();
-        test.setup(desc.info.getLibraryConfigure(),desc.info.getFactoryConfigure(),
-                task.gen,task.nameOperation,1,task.matrixSize);
+        test.setup(desc.info.configure,desc.info.factory,task.gen,task.nameOperation,1,task.matrixSize);
         test.setRandomSeed(config.seed);
 
         return tool.runTest(test);

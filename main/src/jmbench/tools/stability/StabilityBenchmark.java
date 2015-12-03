@@ -75,7 +75,7 @@ public class StabilityBenchmark {
         System.out.println("Done with stability benchmark. Processing time " + (timeAfter - timeBefore) + " (ms)");
     }
 
-    private void processLibraries( List<String> libs, StabilityBenchmarkConfig config ) {
+    private void processLibraries( List<LibraryDescription> libs, StabilityBenchmarkConfig config ) {
 
         benchmarkLibraries(libs, config, "small",config.smallSizeMin,config.smallSizeMax,
                     config.trialsSmallSolve,config.trialsSmallSvd );
@@ -87,13 +87,12 @@ public class StabilityBenchmark {
                 config.trialsLargeSolve,config.trialsLargeSvd );
     }
 
-    private void benchmarkLibraries(List<String> libs,
+    private void benchmarkLibraries(List<LibraryDescription> libs,
                                     StabilityBenchmarkConfig config,
                                     String dirSize ,
                                     int sizeMin , int sizeMax ,
                                     int numTrialsSolve , int numTrialsSvd) {
-        for( String name : libs ) {
-            LibraryDescription desc = libraryManager.lookup(name);
+        for( LibraryDescription desc : libs ) {
             String libOutputDir = directorySave+"/"+dirSize+"/"+desc.directory;
 
             StabilityBenchmarkLibrary benchmark = new StabilityBenchmarkLibrary(
@@ -156,9 +155,9 @@ public class StabilityBenchmark {
     public static void main( String args[] ) throws IOException, InterruptedException {
         boolean failed = false;
 
-        StabilityBenchmarkConfig config = StabilityBenchmarkConfig.createDefault();
-
         LibraryManager libraryManager = new LibraryManager();
+        StabilityBenchmarkConfig config = StabilityBenchmarkConfig.createDefault();
+        config.targets = libraryManager.getDefaults();
 
         System.out.println("** Parsing Command Line **");
         System.out.println();
@@ -183,12 +182,11 @@ public class StabilityBenchmark {
                 LibraryDescription match = libraryManager.lookup(splits[1]);
                 if( match == null ) {
                     failed = true;
-                    System.out.println("Can't find library.  See list below:");
                     libraryManager.printAllNames();
                     break;
                 }
                 config.targets.clear();
-                config.targets.add(splits[1]);
+                config.targets.add(libraryManager.lookup(splits[1]));
             } else {
                 System.out.println("Unknown flag: "+flag);
                 failed = true;

@@ -19,6 +19,8 @@
 
 package jmbench.tools.memory;
 
+import jmbench.impl.LibraryDescription;
+
 import java.util.List;
 
 
@@ -31,7 +33,7 @@ public class MemoryConfig {
     public long seed;
 
     // list of all the libraries being tested
-    public List<String> libraries;
+    public List<LibraryDescription> libraries;
 
     // maximum amount of time it allows for any test
     public long maxTestTimeMilli;
@@ -61,7 +63,7 @@ public class MemoryConfig {
     /**
      * Different ways that memory is sampled
      */
-    public static enum SampleType
+    public enum SampleType
     {
         /**
          * Use the unix command 'ps' to get memory usage
@@ -100,11 +102,11 @@ public class MemoryConfig {
         return ret;
     }
 
-    public List<String> getLibraries() {
+    public List<LibraryDescription> getLibraries() {
         return libraries;
     }
 
-    public void setLibraries(List<String> libraries) {
+    public void setLibraries(List<LibraryDescription> libraries) {
         this.libraries = libraries;
     }
 
