@@ -12,7 +12,7 @@ however a few libraries aren't on Maven central so you need to download their ja
 libraries "libs/" directory.  Instructions for where to download the latest jar is typically provided in the
 "libs/source.txt".  After those jars have been downloaded gradle will be able to compile the project.
 
-1. Manual download jars for libaries which haven't been posted on Maven central
+1. Manual download jars for libraries which haven't been posted on Maven central
 2. gradle createRuntimeJars
 3. gradle benchmarkJar
 4. java -jar benchmark.jar

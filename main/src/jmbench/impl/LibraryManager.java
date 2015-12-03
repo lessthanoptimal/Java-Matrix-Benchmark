@@ -134,7 +134,9 @@ public class LibraryManager {
                     if (found != null) {
                         defaults.add(found);
                     } else {
-                        throw new RuntimeException("Couldn't find default! " + line);
+                        System.err.println("Couldn't find library listed in defaults! " + line);
+                        // pause to make this message easier to read
+                        try { Thread.sleep(500);  } catch (InterruptedException ignore) {}
                     }
                 }
 

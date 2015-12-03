@@ -21,8 +21,8 @@ package jmbench.tools.runtime.evaluation;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
+import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.runtime.LibraryRuntimeInfo;
-import jmbench.tools.runtime.RuntimeBenchmarkLibrary;
 import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeResults;
 import jmbench.tools.stability.UtilXmlSerialization;
@@ -231,7 +231,7 @@ public class PlotRuntimeResults {
         }
 
         LibraryRuntimeInfo info = UtilXmlSerialization.deserializeXml(
-                new File(pathDir, RuntimeBenchmarkLibrary.RUNTIME_INFO_NAME).getPath());
+                new File(pathDir, BenchmarkConstants.RUNTIME_INFO_NAME).getPath());
 
         if( info == null ) {
             System.err.println("Can't find runtime library info");
