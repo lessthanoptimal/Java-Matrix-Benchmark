@@ -80,7 +80,7 @@ public class MemoryBenchmark {
         System.out.println("  elapsed time "+(stopTime-startTime)+" (ms) "+((stopTime-startTime)/(60*60*1000.0))+" hrs");
     }
 
-    private void processLibraries( List<String> libs, MemoryConfig config , long overhead ) {
+    private void processLibraries( List<LibraryDescription> libs, MemoryConfig config , long overhead ) {
 
         for( int i = 0; i < config.matrixSizes.length; i++ ) {
 
@@ -91,9 +91,7 @@ public class MemoryBenchmark {
             f.mkdirs();
             saveMatrixSize(directorySave+"/"+size+"/size.txt",size);
 
-            for( String name : libs ) {
-
-                LibraryDescription desc = manager.lookup(name);
+            for( LibraryDescription desc : libs ) {
 
                 // run the benchmark
                 String libOutputDir = directorySave+"/"+size+"/"+desc.directory;
@@ -121,11 +119,11 @@ public class MemoryBenchmark {
     /**
      * Save the description so that where this came from can be easily extracted
      */
-    public static void saveLibraryDescriptions( String directorySave , List<String> libs )
+    public static void saveLibraryDescriptions( String directorySave , List<LibraryDescription> libs )
     {
-        for( String desc : libs ) {
+        for( LibraryDescription desc : libs ) {
 
-            String outputFile = directorySave+"/"+desc+".xml";
+            String outputFile = directorySave+"/"+desc.info.nameShort+".xml";
             UtilXmlSerialization.serializeXml(desc,outputFile);
         }
     }
@@ -140,7 +138,9 @@ public class MemoryBenchmark {
         MemoryBenchmark master = new MemoryBenchmark();
 
         boolean failed = false;
+        LibraryManager manager = new LibraryManager();
         MemoryConfig config = MemoryConfig.createDefault();
+        config.libraries = manager.getDefaults();
 
         System.out.println("** Parsing Command Line **");
         System.out.println();
@@ -157,15 +157,14 @@ public class MemoryBenchmark {
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-//                LibraryDescription match = FactoryLibraryDescriptions.find(splits[1]);
-//                if( match == null ) {
-//                    failed = true;
-//                    System.out.println("Can't find library.  See list below:");
-//                    FactoryLibraryDescriptions.printAllNames();
-//                    break;
-//                }
-//                config.libraries.clear();
-//                config.libraries.add(match);
+                LibraryDescription match = manager.lookup(splits[1]);
+                if( match == null ) {
+                    failed = true;
+                    manager.printAllNames();
+                    break;
+                }
+                config.libraries.clear();
+                config.libraries.add(match);
             } else {
                 failed = true;
             }

@@ -21,10 +21,7 @@ package jmbench.tools.runtime;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryStringInfo;
-import jmbench.tools.BenchmarkTools;
-import jmbench.tools.EvaluationTest;
-import jmbench.tools.EvaluatorSlave;
-import jmbench.tools.TestResults;
+import jmbench.tools.*;
 import jmbench.tools.runtime.evaluation.RuntimeResultsCsvIO;
 
 import java.io.*;
@@ -70,8 +67,6 @@ import java.util.Random;
  * @author Peter Abeles
  */
 public class RuntimeBenchmarkLibrary {
-
-    public static String RUNTIME_INFO_NAME = "runtime_info.xml";
 
     // used to randomize the order of processes
     private Random rand;
@@ -146,7 +141,7 @@ public class RuntimeBenchmarkLibrary {
                 System.out.println("Can't delete pointless log");
             }
         } else {
-            File runtimeInfoFile = new File(this.directorySave,RUNTIME_INFO_NAME);
+            File runtimeInfoFile = new File(this.directorySave, BenchmarkConstants.RUNTIME_INFO_NAME);
             if( !runtimeInfoFile.exists() )
                 saveRuntimeInfo(info.factory,runtimeInfoFile.getPath());
 

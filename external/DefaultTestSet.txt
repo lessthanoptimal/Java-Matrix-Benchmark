@@ -1,4 +1,14 @@
+# List of libraries included by default in all benchmarks
+# Lines which start with # are skipped as well as empty lines
 Colt
 Commons-Math
 EJML
 Jama
+JBlas
+La4j
+MTJ
+MTJ-N
+ojAlgo
+PColt
+UJMP
+UJMP-N

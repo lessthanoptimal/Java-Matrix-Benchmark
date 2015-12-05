@@ -19,8 +19,6 @@
 
 package jmbench.tools.stability.tests;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.stability.StabilityTestBase;
@@ -39,8 +37,8 @@ public abstract class SolverCommon extends StabilityTestBase {
     protected transient RowMajorMatrix A,b;
 
     public SolverCommon(long randomSeed,
-                        Class<LibraryConfigure> classConfigure ,
-                        Class<RuntimePerformanceFactory> classFactory ,
+                        String classConfigure ,
+                        String classFactory ,
                         String nameOperation,
                         int totalTrials,
                         double breakingPoint ,

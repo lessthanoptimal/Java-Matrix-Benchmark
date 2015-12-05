@@ -39,8 +39,9 @@ import java.util.Random;
  */
 public class MemoryTest extends EvaluationTest {
 
-    Class<RuntimePerformanceFactory> classFactory;
-    Class<LibraryConfigure> classConfigure;
+    String nameFactory;
+    String nameConfigure;
+
     InputOutputGenerator gen;
     String nameOperation;
     int N;
@@ -48,11 +49,11 @@ public class MemoryTest extends EvaluationTest {
 
     volatile RuntimePerformanceFactory factory;
 
-    public void setup( Class<LibraryConfigure> classConfigure, Class<RuntimePerformanceFactory> classFactory ,
+    public void setup( String nameConfigure , String nameFactory ,
                        InputOutputGenerator gen ,
                        String nameOperation , int N , int size ) {
-        this.classConfigure = classConfigure;
-        this.classFactory = classFactory;
+        this.nameConfigure = nameConfigure;
+        this.nameFactory = nameFactory;
         this.gen = gen;
         this.nameOperation = nameOperation;
         this.N = N;
@@ -61,18 +62,20 @@ public class MemoryTest extends EvaluationTest {
 
     @Override
     public void init() {
-        LibraryConfigure configure;
-        if( classFactory != null ) {
-            try {
-                configure = classConfigure.newInstance();
-                factory = classFactory.newInstance();
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+        try {
+            if( nameConfigure != null ) {
+                LibraryConfigure configure = (LibraryConfigure)Class.forName(nameConfigure).newInstance();
+                configure.runtimeConfigure();
             }
-
-            configure.runtimeConfigure();
+            if( nameFactory != null ) {
+                factory = (RuntimePerformanceFactory)Class.forName(nameFactory).newInstance();
+            }
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -178,12 +181,20 @@ public class MemoryTest extends EvaluationTest {
         }
     }
 
-    public Class<RuntimePerformanceFactory> getClassFactory() {
-        return classFactory;
+    public String getNameFactory() {
+        return nameFactory;
     }
 
-    public void setClassFactory(Class<RuntimePerformanceFactory> classFactory) {
-        this.classFactory = classFactory;
+    public void setNameFactory(String nameFactory) {
+        this.nameFactory = nameFactory;
+    }
+
+    public String getNameConfigure() {
+        return nameConfigure;
+    }
+
+    public void setNameConfigure(String nameConfigure) {
+        this.nameConfigure = nameConfigure;
     }
 
     public String getNameOperation() {

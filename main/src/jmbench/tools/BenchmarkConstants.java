@@ -27,4 +27,5 @@ public class BenchmarkConstants {
 
 	public static String DEFAULT_TEST_SET = "external/DefaultTestSet.txt";
 	public static String RUNTIME_LIBS = "runtimeLibs";
+	public static String RUNTIME_INFO_NAME = "runtime_info.xml";
 }

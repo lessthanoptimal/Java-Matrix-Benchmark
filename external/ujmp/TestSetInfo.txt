@@ -1,0 +1,15 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.ujmp.UjmpAlgorithmFactory</factory>
+    <nameFull>Universal Java Matrix Package</nameFull>
+    <nameShort>UJMP</nameShort>
+    <namePlot>UJMP</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.ujmp.UjmpAlgorithmFactory</factory>
+    <configure>jmatbench.ujmp.UjmpNativeLibraryConfigure</configure>
+    <nameFull>Universal Java Matrix Package - Native</nameFull>
+    <nameShort>UJMP-N</nameShort>
+    <namePlot>UJMP-N</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

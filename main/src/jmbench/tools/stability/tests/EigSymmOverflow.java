@@ -19,8 +19,6 @@
 
 package jmbench.tools.stability.tests;
 
-import jmbench.impl.LibraryConfigure;
-import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.OutputError;
@@ -36,10 +34,10 @@ public class EigSymmOverflow extends OverflowTestBase
     protected volatile RowMajorMatrix R;
 
     public EigSymmOverflow(long randomSeed,
-                           Class<LibraryConfigure> classConfigure , Class<RuntimePerformanceFactory> factory,
+                           String classConfigure , String classFactory,
                            String nameOperation, int totalTrials,
                            double breakingPoint, int minLength, int maxLength, boolean overflow) {
-        super(randomSeed, classConfigure , factory, nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
+        super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
     }
 
     public EigSymmOverflow(){}

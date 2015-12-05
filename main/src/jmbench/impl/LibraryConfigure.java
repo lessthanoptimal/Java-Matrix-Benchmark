@@ -32,9 +32,4 @@ public interface LibraryConfigure extends Serializable {
      * Called once when the benchmark thread starts to configure the library at runtime
      */
     public void runtimeConfigure();
-
-    /**
-     * Returns runtime flags which are to be passed to the JRE
-     */
-    public String[] getJreFlags();
 }

@@ -1,0 +1,8 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.ojalgo.OjAlgoAlgorithmFactory</factory>
+    <nameFull>ojAlgo</nameFull>
+    <nameShort>ojAlgo</nameShort>
+    <namePlot>ojAlgo</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>

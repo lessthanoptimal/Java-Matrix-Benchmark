@@ -1,4 +1,7 @@
 dependencies {
+    ['ujmp-complete','ujmp-colt','ujmp-commonsmath','ujmp-ejml',
+     'ujmp-jblas','ujmp-la4j','ujmp-mtj','ujmp-ojalgo','ujmp-parallelcolt'].
+            each {String a ->compile group: 'org.ujmp', name: a, version: '0.3.0'}
     compile project(':main')
 }
 

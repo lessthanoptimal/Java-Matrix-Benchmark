@@ -27,9 +27,4 @@ package jmbench.impl;
 public class DoNothingSpecialConfigure implements LibraryConfigure {
     @Override
     public void runtimeConfigure() {}
-
-    @Override
-    public String[] getJreFlags() {
-        return new String[0];
-    }
 }
