@@ -109,7 +109,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-            final DeterminantTask<Double> tmpTask = DeterminantTask.PRIMITIVE.make(matA, false);
+            final DeterminantTask<Double> tmpTask = DeterminantTask.PRIMITIVE.make(matA, false, false);
 
             final long prev = System.nanoTime();
 
@@ -155,7 +155,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             MatrixStore<Double> result = null;
 
-            final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, false);
+            final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, false, false);
             final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
             final long prev = System.nanoTime();
@@ -181,7 +181,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             MatrixStore<Double> inverse = null;
 
-            final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, true);
+            final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, true, true);
             final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
             final long prev = System.nanoTime();
@@ -333,7 +333,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final PrimitiveDenseStore matB = inputs[1].getOriginal();
             MatrixStore<Double> result = null;
 
-            final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
+            final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false, false);
             final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
@@ -360,7 +360,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matB = inputs[1].getOriginal();
             MatrixStore<Double> result = null;
 
-            final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false);
+            final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false, false);
             final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
