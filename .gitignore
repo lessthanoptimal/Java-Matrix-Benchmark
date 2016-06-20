@@ -9,3 +9,4 @@ bin
 libs
 results
 *.jar
+**/runtimeLibs/*.pom
