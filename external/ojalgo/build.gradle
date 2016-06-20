@@ -1,6 +1,6 @@
 dependencies {
     compile project(':main')
-    compile 'org.ojalgo:ojalgo:40.0.0-SNAPSHOT'
+    compile 'org.ojalgo:ojalgo:40.0.0'
 }
 
 idea {
