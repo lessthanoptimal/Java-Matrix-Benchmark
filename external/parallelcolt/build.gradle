@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main')
+    compile group: 'net.sourceforge.parallelcolt', name: 'parallelcolt', version: '0.10.1'
 }
 
 idea {

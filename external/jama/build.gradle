@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main')
+    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 }
 
 idea {

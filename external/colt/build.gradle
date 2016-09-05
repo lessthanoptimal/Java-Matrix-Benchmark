@@ -1,5 +1,6 @@
 dependencies {
     compile project(':main')
+    compile group: 'colt', name: 'colt', version: '1.2.0'
 }
 
 idea {

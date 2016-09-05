@@ -1,6 +1,6 @@
 dependencies {
-    compile group: 'org.jblas', name: 'jblas', version: '1.2.3'
     compile project(':main')
+    compile group: 'org.jblas', name: 'jblas', version: '1.2.4'
 }
 
 idea {
