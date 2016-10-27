@@ -18,6 +18,7 @@ public class DisplayStability {
         System.out.println("Generate Stability Benchmark Results");
         System.out.println("  --Format=<type>          |  HTML or TEXT");
         System.out.println("  --Size=<size>            |  small or large results");
+        System.out.println("  --Directory=<dir>        |  To specify which directory it should launch");
         System.out.println();
         System.out.println("If no options are specified then a default configuration will be used.");
 
@@ -56,16 +57,22 @@ public class DisplayStability {
                     failed = true;
                 }
             } else if( flag.compareTo("Size") == 0 ) {
-                if( splits.length != 2 ) {failed = true; break;}
+                if (splits.length != 2) {
+                    failed = true;
+                    break;
+                }
 
-                if( splits[1].compareToIgnoreCase("small") == 0) {
+                if (splits[1].compareToIgnoreCase("small") == 0) {
                     dataSmall = true;
-                } else if( splits[1].compareToIgnoreCase("large") == 0) {
+                } else if (splits[1].compareToIgnoreCase("large") == 0) {
                     dataSmall = false;
                 } else {
-                    System.err.println("Unknown data size: "+splits[1]);
-                    failed = true; break;
+                    System.err.println("Unknown data size: " + splits[1]);
+                    failed = true;
+                    break;
                 }
+            } else if( flag.compareToIgnoreCase("directory") == 0 ) {
+                inputDirectory = splits[1];
             } else {
                 printHelp();
                 return;

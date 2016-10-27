@@ -180,10 +180,13 @@ public class StabilityBenchmark {
                 System.out.println("Loading config: "+splits[1]);
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
-                if( splits.length != 2 ) {failed = true; break;}
+                if (splits.length != 2) {
+                    failed = true;
+                    break;
+                }
                 String[] libs = splits[1].split(",");
                 config.targets.clear();
-                for( String lib : libs ) {
+                for (String lib : libs) {
                     LibraryDescription match = libraryManager.lookup(lib);
                     if (match == null) {
                         failed = true;
