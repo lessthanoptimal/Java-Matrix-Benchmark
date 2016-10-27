@@ -17,7 +17,8 @@ task benchmarkJar(type: Jar) {
                 'Implementation-Version': version,
                 'Main-Class': 'jmbench.tools.BenchmarkToolsMasterApp'
     }
-    archiveName = '../benchmark.jar'
+
+    outputs.upToDateWhen { false }
 
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
@@ -25,6 +26,6 @@ task benchmarkJar(type: Jar) {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
 
     doLast {
-        archivePath.renameTo(file(archiveName))
+        archivePath.renameTo(file('../benchmark.jar'))
     }
 }

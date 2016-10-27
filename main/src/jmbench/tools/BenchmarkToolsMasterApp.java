@@ -25,6 +25,7 @@ import jmbench.tools.runtime.RuntimeBenchmarkMaster;
 import jmbench.tools.runtime.evaluation.CheckForErrorsInResults;
 import jmbench.tools.runtime.evaluation.ComparePlatformResults;
 import jmbench.tools.runtime.evaluation.PlotRuntimeResults;
+import jmbench.tools.stability.DisplayStability;
 import jmbench.tools.stability.StabilityBenchmark;
 
 import java.io.IOException;
@@ -89,7 +90,7 @@ public class BenchmarkToolsMasterApp {
         } else if( tool.compareToIgnoreCase("compareRuntime") == 0 ) {
             ComparePlatformResults.main(pruned);
         } else if( tool.compareToIgnoreCase("displayStability") == 0) {
-            System.out.println("Not supported yet "+tool);
+            DisplayStability.main(pruned);
         } else {
             System.out.println("Unknown tool '"+args[0]+"'");
         }
