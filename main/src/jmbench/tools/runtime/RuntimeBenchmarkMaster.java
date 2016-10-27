@@ -21,16 +21,13 @@ package jmbench.tools.runtime;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
+import jmbench.tools.MiscTools;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -51,11 +48,7 @@ public class RuntimeBenchmarkMaster {
     private String directorySave;
 
     public RuntimeBenchmarkMaster() {
-        DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH:mm:ss");
-        Date today = Calendar.getInstance().getTime();
-        String reportDate = df.format(today);
-
-        directorySave = "results/"+reportDate;
+        directorySave = MiscTools.selectDirectoryName();
     }
 
     public RuntimeBenchmarkMaster( String directory ) {

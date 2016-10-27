@@ -23,6 +23,7 @@ import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
+import jmbench.tools.MiscTools;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.memory.MemoryBenchmark;
 
@@ -41,7 +42,7 @@ public class StabilityBenchmark {
     String directorySave;
 
     public StabilityBenchmark( LibraryManager libraryManager ) {
-        directorySave = "results/"+System.currentTimeMillis();
+        directorySave = MiscTools.selectDirectoryName();
         this.libraryManager = libraryManager;
     }
 

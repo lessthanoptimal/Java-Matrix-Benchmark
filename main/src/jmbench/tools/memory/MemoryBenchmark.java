@@ -21,6 +21,7 @@ package jmbench.tools.memory;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
+import jmbench.tools.MiscTools;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
@@ -41,7 +42,7 @@ public class MemoryBenchmark {
     LibraryManager manager = new LibraryManager();
 
     public MemoryBenchmark() {
-        directorySave = "results/"+System.currentTimeMillis();
+        directorySave = MiscTools.selectDirectoryName();
     }
 
     public MemoryBenchmark( String directory ) {
@@ -157,14 +158,19 @@ public class MemoryBenchmark {
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = manager.lookup(splits[1]);
-                if( match == null ) {
-                    failed = true;
-                    manager.printAllNames();
-                    break;
-                }
+                String[] libs = splits[1].split(",");
+
                 config.libraries.clear();
-                config.libraries.add(match);
+
+                for (int j = 0; j < libs.length; j++) {
+                    LibraryDescription match = manager.lookup(libs[j]);
+                    if( match == null ) {
+                        failed = true;
+                        manager.printAllNames();
+                        break;
+                    }
+                    config.libraries.add(match);
+                }
             } else {
                 failed = true;
             }

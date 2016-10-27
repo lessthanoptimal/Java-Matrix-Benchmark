@@ -26,13 +26,24 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * @author Peter Abeles
  */
 public class MiscTools {
+
+    public static String selectDirectoryName() {
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH:mm:ss");
+        Date today = Calendar.getInstance().getTime();
+
+        return"results/"+df.format(today);
+    }
 
     public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
         XStream xstream = new XStream();

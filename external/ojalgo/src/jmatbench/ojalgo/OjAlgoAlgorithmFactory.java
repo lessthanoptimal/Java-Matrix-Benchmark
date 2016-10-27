@@ -19,22 +19,6 @@
 
 package jmatbench.ojalgo;
 
-import org.ojalgo.OjAlgoUtils;
-import org.ojalgo.function.PrimitiveFunction;
-import org.ojalgo.matrix.decomposition.Cholesky;
-import org.ojalgo.matrix.decomposition.DecompositionStore;
-import org.ojalgo.matrix.decomposition.Eigenvalue;
-import org.ojalgo.matrix.decomposition.LU;
-import org.ojalgo.matrix.decomposition.QR;
-import org.ojalgo.matrix.decomposition.SingularValue;
-import org.ojalgo.matrix.store.MatrixStore;
-import org.ojalgo.matrix.store.PhysicalStore;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
-import org.ojalgo.matrix.task.DeterminantTask;
-import org.ojalgo.matrix.task.InverterTask;
-import org.ojalgo.matrix.task.SolverTask;
-import org.ojalgo.matrix.task.TaskException;
-
 import jmbench.PackageMatrixConversion;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
@@ -44,6 +28,16 @@ import jmbench.matrix.RowMajorBenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
+import org.ojalgo.OjAlgoUtils;
+import org.ojalgo.function.PrimitiveFunction;
+import org.ojalgo.matrix.decomposition.*;
+import org.ojalgo.matrix.store.MatrixStore;
+import org.ojalgo.matrix.store.PhysicalStore;
+import org.ojalgo.matrix.store.PrimitiveDenseStore;
+import org.ojalgo.matrix.task.DeterminantTask;
+import org.ojalgo.matrix.task.InverterTask;
+import org.ojalgo.matrix.task.SolverTask;
+import org.ojalgo.matrix.task.TaskException;
 
 /**
  * @author Peter Abeles
@@ -142,8 +136,10 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(D);
-            outputs[1] = new OjAlgoBenchmarkMatrix(V);
+            if( outputs != null ) {
+                outputs[0] = new OjAlgoBenchmarkMatrix(D);
+                outputs[1] = new OjAlgoBenchmarkMatrix(V);
+            }
             return elapsedTime;
         }
     }
@@ -169,7 +165,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -195,7 +192,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(inverse.transpose());
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(inverse.transpose());
             return elapsedTime;
         }
     }
@@ -226,10 +224,11 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final long elapsedTime = System.nanoTime() - prev;
 
-            outputs[0] = new OjAlgoBenchmarkMatrix(L);
-            outputs[1] = new OjAlgoBenchmarkMatrix(U);
-            outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivot, pivot.length, false));
-
+            if( outputs != null ) {
+                outputs[0] = new OjAlgoBenchmarkMatrix(L);
+                outputs[1] = new OjAlgoBenchmarkMatrix(U);
+                outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivot, pivot.length, false));
+            }
             return elapsedTime;
         }
     }
@@ -250,7 +249,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -271,7 +271,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -297,8 +298,10 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(Q);
-            outputs[1] = new OjAlgoBenchmarkMatrix(R);
+            if( outputs != null ) {
+                outputs[0] = new OjAlgoBenchmarkMatrix(Q);
+                outputs[1] = new OjAlgoBenchmarkMatrix(R);
+            }
             return elapsedTime;
         }
     }
@@ -320,7 +323,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -347,7 +351,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -374,7 +379,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
@@ -403,9 +409,11 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(U);
-            outputs[1] = new OjAlgoBenchmarkMatrix(S);
-            outputs[2] = new OjAlgoBenchmarkMatrix(V);
+            if( outputs != null ) {
+                outputs[0] = new OjAlgoBenchmarkMatrix(U);
+                outputs[1] = new OjAlgoBenchmarkMatrix(S);
+                outputs[2] = new OjAlgoBenchmarkMatrix(V);
+            }
             return elapsedTime;
         }
     }
@@ -425,7 +433,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             }
 
             final long elapsedTime = System.nanoTime() - prev;
-            outputs[0] = new OjAlgoBenchmarkMatrix(result);
+            if( outputs != null )
+                outputs[0] = new OjAlgoBenchmarkMatrix(result);
             return elapsedTime;
         }
     }
