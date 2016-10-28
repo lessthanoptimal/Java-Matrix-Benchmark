@@ -21,16 +21,13 @@ package jmbench.tools.runtime;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
+import jmbench.tools.MiscTools;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -51,11 +48,7 @@ public class RuntimeBenchmarkMaster {
     private String directorySave;
 
     public RuntimeBenchmarkMaster() {
-        DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH:mm:ss");
-        Date today = Calendar.getInstance().getTime();
-        String reportDate = df.format(today);
-
-        directorySave = "results/"+reportDate;
+        directorySave = MiscTools.selectDirectoryName();
     }
 
     public RuntimeBenchmarkMaster( String directory ) {
@@ -126,6 +119,7 @@ public class RuntimeBenchmarkMaster {
         System.out.println("  --Size=min:max           |  Test matrices from the specified minimum size to the specified maximum size.");
         System.out.println("  --Quick                  |  Generate results much faster by sacrificing accuracy/stability of the results.");
         System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
+        System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println("  --Seed=<number>          |  used to set the random seed to the specified value.");
         System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000.");
         System.out.println("  --MaxTime=<ms>           |  Maximum number of milliseconds it can spend in a single test.  Typical is 300000.");
@@ -193,14 +187,19 @@ public class RuntimeBenchmarkMaster {
                 System.out.println("Using quick and dirty config.");
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = manager.lookup(splits[1]);
-                if( match == null ) {
-                    failed = true;
-                    manager.printAllNames();
-                    break;
-                }
+                String[] libs = splits[1].split(",");
+
                 config.targets.clear();
-                config.targets.add(match);
+
+                for (int j = 0; j < libs.length; j++) {
+                    LibraryDescription match = manager.lookup(libs[j]);
+                    if( match == null ) {
+                        failed = true;
+                        manager.printAllNames();
+                        break;
+                    }
+                    config.targets.add(match);
+                }
             } else if( flag.compareTo("Seed") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 config.seed = Long.parseLong(splits[1]);

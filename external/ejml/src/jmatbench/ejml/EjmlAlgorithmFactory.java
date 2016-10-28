@@ -504,7 +504,7 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
-        DenseMatrix64F m = (DenseMatrix64F)input;
+        DenseMatrix64F m = ((EjmlBenchmarkMatrix)input).mat;
 
         RowMajorMatrix out = new RowMajorMatrix(1,1);
         out.data = m.data;

@@ -1,11 +1,13 @@
 ----- Version 0.11
 
-2015/
+2016/
 
 - Converted build over to Gradle
   * Changed directory structure
   * Reference as many libraries as possible on Maven central
 - Removed dependency on DenseMatrix64F in RuntimePerformanceFactory
+- Changed default directory output naming scheme
+- Can launch plot stability from command line
 
 ----- Version 0.10
 

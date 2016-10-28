@@ -492,7 +492,7 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
     @Override
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
         RealMatrix mat = input.getOriginal();
-        return realToEjml(mat);
+        return realToCommon(mat);
     }
 
     @Override
@@ -544,7 +544,7 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
         return MatrixUtils.createRealMatrix(mat);
     }
 
-    public static RowMajorMatrix realToEjml( RealMatrix orig )
+    public static RowMajorMatrix realToCommon(RealMatrix orig )
     {
         if( orig == null )
             return null;

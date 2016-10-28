@@ -23,6 +23,7 @@ import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryManager;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
+import jmbench.tools.MiscTools;
 import jmbench.tools.SystemInfo;
 import jmbench.tools.memory.MemoryBenchmark;
 
@@ -41,7 +42,7 @@ public class StabilityBenchmark {
     String directorySave;
 
     public StabilityBenchmark( LibraryManager libraryManager ) {
-        directorySave = "results/"+System.currentTimeMillis();
+        directorySave = MiscTools.selectDirectoryName();
         this.libraryManager = libraryManager;
     }
 
@@ -148,6 +149,7 @@ public class StabilityBenchmark {
         System.out.println("Stability Benchmark: The following options are valid:");
         System.out.println("  --Config=<file>          |  Configure using the specified xml file.");
         System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
+        System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println();
         System.out.println("If no options are specified then a default configuration will be used.");
     }
@@ -178,15 +180,22 @@ public class StabilityBenchmark {
                 System.out.println("Loading config: "+splits[1]);
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
             } else if( flag.compareTo("Library") == 0 ) {
-                if( splits.length != 2 ) {failed = true; break;}
-                LibraryDescription match = libraryManager.lookup(splits[1]);
-                if( match == null ) {
+                if (splits.length != 2) {
                     failed = true;
-                    libraryManager.printAllNames();
                     break;
                 }
+                String[] libs = splits[1].split(",");
                 config.targets.clear();
-                config.targets.add(libraryManager.lookup(splits[1]));
+                for (String lib : libs) {
+                    LibraryDescription match = libraryManager.lookup(lib);
+                    if (match == null) {
+                        failed = true;
+                        libraryManager.printAllNames();
+                        break;
+                    }
+
+                    config.targets.add(match);
+                }
             } else {
                 System.out.println("Unknown flag: "+flag);
                 failed = true;
