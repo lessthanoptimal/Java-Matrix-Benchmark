@@ -90,17 +90,19 @@ public class EvaluatorSlave {
             if( VERBOSE ) System.out.println("Slave done");
             r.requestID = requestID;
             UtilXmlSerialization.serializeXml(r,"slave_results.xml");
-        } catch( Exception e ) {
-            e.printStackTrace();
-            String message = e.toString() +"\n";
-            StackTraceElement[] stack = e.getStackTrace();
-            for( StackTraceElement s : stack ) {
-                message += s.toString()+"\n";
+        } catch( Error e ) {
+            if( e instanceof OutOfMemoryError ) {
+                if( VERBOSE) System.out.println("OutOfMemoryError: Slave is out of memory!");
+                writeOutFailure(requestID,FailReason.OUT_OF_MEMORY,null);
+            } else {
+                e.printStackTrace();
+                String message = e.toString() + "\n";
+                StackTraceElement[] stack = e.getStackTrace();
+                for (StackTraceElement s : stack) {
+                    message += s.toString() + "\n";
+                }
+                writeOutFailure(requestID, FailReason.MISC_EXCEPTION, message);
             }
-            writeOutFailure(requestID,FailReason.MISC_EXCEPTION,message);
-        } catch( OutOfMemoryError e ) {
-            if( VERBOSE) System.out.println("OutOfMemoryError: Slave is out of memory!");
-            writeOutFailure(requestID,FailReason.OUT_OF_MEMORY,null);
         }
 
         // by calling this exit function the slave will terminate even if a library is poorly
