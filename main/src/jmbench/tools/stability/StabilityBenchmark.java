@@ -42,7 +42,7 @@ public class StabilityBenchmark {
     String directorySave;
 
     public StabilityBenchmark( LibraryManager libraryManager ) {
-        directorySave = MiscTools.selectDirectoryName();
+        directorySave = MiscTools.selectDirectoryName("stability");
         this.libraryManager = libraryManager;
     }
 

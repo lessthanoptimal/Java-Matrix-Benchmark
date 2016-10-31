@@ -42,7 +42,7 @@ public class MemoryBenchmark {
     LibraryManager manager = new LibraryManager();
 
     public MemoryBenchmark() {
-        directorySave = MiscTools.selectDirectoryName();
+        directorySave = MiscTools.selectDirectoryName("memory");
     }
 
     public MemoryBenchmark( String directory ) {

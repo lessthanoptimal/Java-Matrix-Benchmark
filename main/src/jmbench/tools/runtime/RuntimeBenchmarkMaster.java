@@ -48,7 +48,7 @@ public class RuntimeBenchmarkMaster {
     private String directorySave;
 
     public RuntimeBenchmarkMaster() {
-        directorySave = MiscTools.selectDirectoryName();
+        directorySave = MiscTools.selectDirectoryName("runtime");
     }
 
     public RuntimeBenchmarkMaster( String directory ) {

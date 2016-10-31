@@ -38,11 +38,11 @@ import java.util.List;
  */
 public class MiscTools {
 
-    public static String selectDirectoryName() {
+    public static String selectDirectoryName( String benchmarkName ) {
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH:mm:ss");
         Date today = Calendar.getInstance().getTime();
 
-        return"results/"+df.format(today);
+        return new File("results",benchmarkName+"_"+df.format(today)).getPath();
     }
 
     public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
