@@ -1,6 +1,15 @@
+repositories {
+    maven {
+        url = "http://clojars.org/repo/"
+    }
+}
+
 dependencies {
     compile project(':main')
-    compile group: 'net.sourceforge.parallelcolt', name: 'parallelcolt', version: '0.10.1'
+
+    // 0.9.4 appears to be the latest official version
+    // 0.10.1 that was here before was broken
+    compile group: 'incanter', name: 'parallelcolt', version: '0.9.4'
 }
 
 idea {
