@@ -47,21 +47,19 @@ public class MiscTools {
 
     public static long parseTime( String message ) {
         long multiplier = 1;
-        if( message.length() > 2 ) {
-            int truncate = 0;
-            if( message.endsWith("ms"))
-                truncate = 2;
-            else if ( message.endsWith("s")) {
-                multiplier = 1000;
-                truncate = 2;
-            } else if ( message.endsWith("m")) {
-                multiplier = 60*1000;
-                truncate = 2;
-            }
-            if( truncate > 0 )
-                message = message.substring(0, message.length()-truncate);
+        int truncate = 0;
+        if( message.endsWith("ms"))
+            truncate = 2;
+        else if ( message.endsWith("s")) {
+            multiplier = 1000;
+            truncate = 1;
+        } else if ( message.endsWith("m")) {
+            multiplier = 60*1000;
+            truncate = 1;
         }
-        return Long.parseLong(message);
+        if( truncate > 0 )
+            message = message.substring(0, message.length()-truncate);
+        return Long.parseLong(message)*multiplier;
     }
 
     public static String stringTimeArgumentHelp() {

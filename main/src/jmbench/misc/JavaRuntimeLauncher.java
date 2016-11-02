@@ -164,6 +164,7 @@ public class JavaRuntimeLauncher {
             } catch( IllegalThreadStateException e) {
                 // check to see if the process is frozen
                 if(System.currentTimeMillis() - startTime > frozenTime ) {
+                    pr.destroy(); // kill the process
                     frozen = true;
                     break;
                 }
