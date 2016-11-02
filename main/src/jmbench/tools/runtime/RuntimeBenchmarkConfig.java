@@ -65,9 +65,9 @@ public class RuntimeBenchmarkConfig implements Serializable {
     public int numBlockTrials;
     // it will stop processing a matrix size if this number of trials has been exceeded
     public int maxTrials;
-    // the minimum amount of time each trials should last for
+    // the minimum amount of time each trials should last for (ms)
     public int trialTime;
-    // the maximum amount of time a trial can last for
+    // the maximum amount of time a trial can last for (ms)
     public int maxTrialTime;
 
     // specifies a fixed amount of memory that is to be allocated to the slave.

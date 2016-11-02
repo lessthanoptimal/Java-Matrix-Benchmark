@@ -103,10 +103,12 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
 
         setMemoryInMB(allocatedMemory);
 
+        boolean skipReadXml = false;
         switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTrials),Long.toString(requestID) ) )
         {
             case FROZEN:
                 errorStream.println("BenchmarkTools: Slave froze and was killed");
+                skipReadXml = true;
                 break;
 
             case RETURN_NOT_ZERO:
@@ -116,14 +118,17 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             case NORMAL:break;
         }
 
-        // see if the user terminated the slave
-        EvaluatorSlave.Results ret = UtilXmlSerialization.deserializeXml("slave_results.xml");
-        if( ret == null || ret.getRequestID() != requestID ) {
-            if( ret == null )
-                errorStream.println("UtilXmlSerialization.deserializeXml returned null");
-            else
-                errorStream.println("ret.getRequestID() does not match");
-            ret = null;
+        EvaluatorSlave.Results ret = null;
+        if( !skipReadXml ) {
+            // see if the user terminated the slave
+            ret = UtilXmlSerialization.deserializeXml("slave_results.xml");
+            if (ret == null || ret.getRequestID() != requestID) {
+                if (ret == null)
+                    errorStream.println("UtilXmlSerialization.deserializeXml returned null");
+                else
+                    errorStream.println("ret.getRequestID() does not match");
+                ret = null;
+            }
         }
 
         cleanup();

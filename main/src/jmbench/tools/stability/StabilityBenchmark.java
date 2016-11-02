@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static jmbench.tools.MiscTools.stringTimeArgumentHelp;
+
 
 /**
  * @author Peter Abeles
@@ -73,7 +75,7 @@ public class StabilityBenchmark {
         long timeAfter = System.currentTimeMillis();
 
         System.out.println();
-        System.out.println("Done with stability benchmark. Processing time " + (timeAfter - timeBefore) + " (ms)");
+        System.out.println("Elapsed time "+MiscTools.milliToHuman(timeAfter-timeBefore)+"\n");
     }
 
     private void processLibraries( List<LibraryDescription> libs, StabilityBenchmarkConfig config ) {
@@ -150,6 +152,7 @@ public class StabilityBenchmark {
         System.out.println("  --Config=<file>          |  Configure using the specified xml file.");
         System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
         System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
+        System.out.println("  --MaxTime=<time>         |  "+ stringTimeArgumentHelp());
         System.out.println();
         System.out.println("If no options are specified then a default configuration will be used.");
     }
@@ -196,6 +199,8 @@ public class StabilityBenchmark {
 
                     config.targets.add(match);
                 }
+            } else if( flag.compareTo("MaxTime") == 0 ) {
+                config.maxProcessingTime = MiscTools.parseTime(splits[1]);
             } else {
                 System.out.println("Unknown flag: "+flag);
                 failed = true;

@@ -78,7 +78,7 @@ public class MemoryBenchmark {
         long stopTime = System.currentTimeMillis();
 
         System.out.println("Finished Benchmark");
-        System.out.println("  elapsed time "+(stopTime-startTime)+" (ms) "+((stopTime-startTime)/(60*60*1000.0))+" hrs");
+        System.out.println("Elapsed time "+MiscTools.milliToHuman(System.currentTimeMillis()-startTime)+"\n");
     }
 
     private void processLibraries( List<LibraryDescription> libs, MemoryConfig config , long overhead ) {
