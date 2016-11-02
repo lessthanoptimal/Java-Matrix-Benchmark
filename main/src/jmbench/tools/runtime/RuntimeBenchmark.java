@@ -42,16 +42,16 @@ import java.util.List;
  * 
  * @author Peter Abeles
  */
-public class RuntimeBenchmarkMaster {
+public class RuntimeBenchmark {
 
     // where should the results be saved to
     private String directorySave;
 
-    public RuntimeBenchmarkMaster() {
+    public RuntimeBenchmark() {
         directorySave = MiscTools.selectDirectoryName("runtime");
     }
 
-    public RuntimeBenchmarkMaster( String directory ) {
+    public RuntimeBenchmark(String directory ) {
         this.directorySave = directory;
     }
 
@@ -122,7 +122,7 @@ public class RuntimeBenchmarkMaster {
         System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println("  --Seed=<number>          |  used to set the random seed to the specified value.");
         System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000.");
-        System.out.println("  --MaxTime=<ms>           |  Maximum number of milliseconds it can spend in a single test.  Typical is 300000.");
+        System.out.println("  --MaxTime=<ms>           |  "+MiscTools.stringTimeArgumentHelp());
         System.out.println("  --Resume=<directory>     |  It will resume an unfinished benchmark at the specified directory.");
         System.out.println("  --Memory=<MB>            |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
         System.out.println("                           |  as large as possible with out exceeding the amount of physical memory on the system.  If zero is specified");
@@ -210,12 +210,12 @@ public class RuntimeBenchmarkMaster {
                 System.out.println("Time per trial set to "+config.trialTime+" (ms).");
             } else if( flag.compareTo("MaxTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.maxTrialTime = Integer.parseInt(splits[1]);
+                config.maxTrialTime = (int)MiscTools.parseTime(splits[1]);
                 System.out.println("Max time per trial set to "+config.maxTrialTime+" (ms).");
             }else if( flag.compareTo("Resume") == 0 ) {
                 if( splits.length != 2 || args.length != 1 ) {failed = true; break;}
                 System.out.println("Resuming a benchmark in dir "+splits[1]);
-                RuntimeBenchmarkMaster master = new RuntimeBenchmarkMaster(splits[1]);
+                RuntimeBenchmark master = new RuntimeBenchmark(splits[1]);
                 config = UtilXmlSerialization.deserializeXml(splits[1]+"/config.xml");
                 master.performBenchmark(config);
                 return;
@@ -248,7 +248,7 @@ public class RuntimeBenchmarkMaster {
             if( !configFileSpecified && !memorySpecified ) {
                 System.out.println("The amount of memory must be specified using \"--Memory=<MB>\"!");
             } else {
-                RuntimeBenchmarkMaster master = new RuntimeBenchmarkMaster();
+                RuntimeBenchmark master = new RuntimeBenchmark();
                 master.performBenchmark(config);
             }
         }

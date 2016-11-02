@@ -21,7 +21,7 @@ package jmbench.tools;
 
 import jmbench.tools.memory.MemoryBenchmark;
 import jmbench.tools.memory.PlotMemoryResultsXml;
-import jmbench.tools.runtime.RuntimeBenchmarkMaster;
+import jmbench.tools.runtime.RuntimeBenchmark;
 import jmbench.tools.runtime.evaluation.CheckForErrorsInResults;
 import jmbench.tools.runtime.evaluation.ComparePlatformResults;
 import jmbench.tools.runtime.evaluation.PlotRuntimeResults;
@@ -76,7 +76,7 @@ public class BenchmarkToolsMasterApp {
         System.arraycopy(args,1,pruned,0,pruned.length);
 
         if( tool.compareToIgnoreCase("runtime") == 0) {
-            RuntimeBenchmarkMaster.main(pruned);
+            RuntimeBenchmark.main(pruned);
         } else if( tool.compareToIgnoreCase("stability") == 0) {
             StabilityBenchmark.main(pruned);
         } else if( tool.compareToIgnoreCase("memory") == 0 ) {

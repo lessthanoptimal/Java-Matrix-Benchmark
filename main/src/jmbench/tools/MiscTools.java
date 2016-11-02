@@ -45,6 +45,29 @@ public class MiscTools {
         return new File("results",benchmarkName+"_"+df.format(today)).getPath();
     }
 
+    public static long parseTime( String message ) {
+        long multiplier = 1;
+        if( message.length() > 2 ) {
+            int truncate = 0;
+            if( message.endsWith("ms"))
+                truncate = 2;
+            else if ( message.endsWith("s")) {
+                multiplier = 1000;
+                truncate = 2;
+            } else if ( message.endsWith("m")) {
+                multiplier = 60*1000;
+                truncate = 2;
+            }
+            if( truncate > 0 )
+                message = message.substring(0, message.length()-truncate);
+        }
+        return Long.parseLong(message);
+    }
+
+    public static String stringTimeArgumentHelp() {
+        return "Maximum time on a single test. <value><unit> Units: ms = milliseconds, s = seconds, m = minutes.  Default is ms";
+    }
+
     public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
         XStream xstream = new XStream();
         String string = xstream.toXML(tests);
