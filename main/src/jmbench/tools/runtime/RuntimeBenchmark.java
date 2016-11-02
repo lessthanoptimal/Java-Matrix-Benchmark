@@ -63,12 +63,9 @@ public class RuntimeBenchmark {
         saveSystemInfo(config);
 
         long startTime = System.currentTimeMillis();
-
         processLibraries(config.getTargets(),config);
 
-        double seconds = (System.currentTimeMillis()-startTime)/1000.0;
-        double days = seconds/60.0/60.0/24.0;
-        System.out.println("Total processing time = "+seconds+" (s) or "+days+" days");
+        System.out.println("Elapsed time "+MiscTools.milliToHuman(System.currentTimeMillis()-startTime)+"\n");
     }
 
     private void processLibraries( List<LibraryDescription> libs, RuntimeBenchmarkConfig config ) {

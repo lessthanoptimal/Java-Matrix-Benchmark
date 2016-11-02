@@ -75,7 +75,7 @@ public class StabilityBenchmark {
         long timeAfter = System.currentTimeMillis();
 
         System.out.println();
-        System.out.println("Done with stability benchmark. Processing time " + (timeAfter - timeBefore) + " (ms)");
+        System.out.println("Elapsed time "+MiscTools.milliToHuman(timeAfter-timeBefore)+"\n");
     }
 
     private void processLibraries( List<LibraryDescription> libs, StabilityBenchmarkConfig config ) {

@@ -66,6 +66,15 @@ public class MiscTools {
         return "Maximum time on a single test. <value><unit> Units: ms = milliseconds, s = seconds, m = minutes.  Default is ms";
     }
 
+    public static String milliToHuman( long milliseconds ) {
+        long second = (milliseconds / 1000) % 60;
+        long minute = (milliseconds / (1000 * 60)) % 60;
+        long hour = (milliseconds / (1000 * 60 * 60)) % 24;
+        long days = milliseconds / (1000 * 60 * 60 * 24);
+
+        return String.format("%03d:%02d:%02d:%02d (days:hrs:min:sec)", days, hour, minute, second);
+    }
+
     public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
         XStream xstream = new XStream();
         String string = xstream.toXML(tests);
