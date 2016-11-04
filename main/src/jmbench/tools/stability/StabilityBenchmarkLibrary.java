@@ -20,9 +20,11 @@
 package jmbench.tools.stability;
 
 import jmbench.impl.LibraryDescription;
+import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluatorSlave;
 import jmbench.tools.TestResults;
+import jmbench.tools.runtime.LibraryRuntimeInfo;
 import jmbench.tools.stability.tests.*;
 
 import java.io.File;
@@ -88,6 +90,10 @@ public class StabilityBenchmarkLibrary {
 
         this.numSolve = numSolve;
         this.numSvd = numSvd;
+
+        File runtimeInfoFile = new File(this.directorySave, BenchmarkConstants.RUNTIME_INFO_NAME);
+        if( !runtimeInfoFile.exists() )
+            tools.launch(LibraryRuntimeInfo.class,target.info.factory,runtimeInfoFile.getPath());
 
         createOperationsList(target.info.configure,target.info.factory);
 
