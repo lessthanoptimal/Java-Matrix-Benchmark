@@ -37,11 +37,10 @@ public class UjmpCreateTestSetInfo {
         infoA.namePlot = "UJMP";
 
         LibraryStringInfo infoB = new LibraryStringInfo();
-        infoB.factory = UjmpAlgorithmFactory.class.getName();
+        infoB.factory = UjmpAlgorithmFactoryNative.class.getName();
         infoB.nameFull = "Universal Java Matrix Package - Native";
         infoB.nameShort = "UJMP-N";
         infoB.namePlot = "UJMP-N";
-        infoB.configure = UjmpNativeLibraryConfigure.class.getName();
 
         MiscTools.saveLibraryInfo("ujmp", infoA, infoB);
     }

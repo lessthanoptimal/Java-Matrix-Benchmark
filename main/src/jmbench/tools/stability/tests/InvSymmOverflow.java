@@ -35,10 +35,10 @@ public class InvSymmOverflow extends OverflowTestBase {
     protected volatile RowMajorMatrix I_found;
     protected volatile RowMajorMatrix I;
 
-    public InvSymmOverflow(long randomSeed, String classConfigure ,
+    public InvSymmOverflow(long randomSeed,
                            String classFactory, String nameOperation, int totalTrials,
                            double breakingPoint, int minLength, int maxLength, boolean overflow) {
-        super(randomSeed, classConfigure , classFactory , nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
+        super(randomSeed, classFactory , nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
     }
 
     public InvSymmOverflow() {

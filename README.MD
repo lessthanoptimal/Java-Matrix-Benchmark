@@ -13,11 +13,11 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
 "libs/source.txt".  After those jars have been downloaded gradle will be able to compile the project.
 
 1. Install [Gradle](http://gradle.org/) on to your system
-1. Manual download jars for libraries which haven't been posted on Maven central
-2. gradle createRuntimeJars
-3. gradle benchmarkJar
-4. java -jar benchmark.jar
-5. Follow printed instructions for the benchmark you wish to run
+2. (Can probably skip) Manual download jars for libraries which haven't been posted on Maven central.
+3. gradle createRuntimeJars
+4. gradle benchmarkJar
+5. java -jar benchmark.jar
+6. Follow printed instructions for the benchmark you wish to run
 
 
 # Adding Your Own Library
@@ -28,3 +28,4 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
 4. Create your own "TestSetInfo.txt" file using <Your Project>CreateTestSetInfo.
 5. Add the library to "external/DefaultTestSet.txt" if you wish it to be included by default
 6. Add your library to settings.gradle so that Gradle will compile it
+

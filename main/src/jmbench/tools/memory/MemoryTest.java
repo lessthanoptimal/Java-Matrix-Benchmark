@@ -19,7 +19,6 @@
 
 package jmbench.tools.memory;
 
-import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
@@ -40,8 +39,6 @@ import java.util.Random;
 public class MemoryTest extends EvaluationTest {
 
     String nameFactory;
-    String nameConfigure;
-
     InputOutputGenerator gen;
     String nameOperation;
     int N;
@@ -49,10 +46,9 @@ public class MemoryTest extends EvaluationTest {
 
     volatile RuntimePerformanceFactory factory;
 
-    public void setup( String nameConfigure , String nameFactory ,
+    public void setup( String nameFactory ,
                        InputOutputGenerator gen ,
                        String nameOperation , int N , int size ) {
-        this.nameConfigure = nameConfigure;
         this.nameFactory = nameFactory;
         this.gen = gen;
         this.nameOperation = nameOperation;
@@ -63,13 +59,8 @@ public class MemoryTest extends EvaluationTest {
     @Override
     public void init() {
         try {
-            if( nameConfigure != null ) {
-                LibraryConfigure configure = (LibraryConfigure)Class.forName(nameConfigure).newInstance();
-                configure.runtimeConfigure();
-            }
-            if( nameFactory != null ) {
-                factory = (RuntimePerformanceFactory)Class.forName(nameFactory).newInstance();
-            }
+            factory = (RuntimePerformanceFactory)Class.forName(nameFactory).newInstance();
+
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -187,14 +178,6 @@ public class MemoryTest extends EvaluationTest {
 
     public void setNameFactory(String nameFactory) {
         this.nameFactory = nameFactory;
-    }
-
-    public String getNameConfigure() {
-        return nameConfigure;
-    }
-
-    public void setNameConfigure(String nameConfigure) {
-        this.nameConfigure = nameConfigure;
     }
 
     public String getNameOperation() {

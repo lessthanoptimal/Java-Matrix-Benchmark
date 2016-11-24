@@ -35,14 +35,12 @@ public class MtjCreateTestSetInfo {
         infoA.nameFull = "Matrix Toolkit Java";
         infoA.nameShort = "MTJ";
         infoA.namePlot = "MTJ";
-        infoA.configure = MtjLibraryConfigure.class.getName();
 
         LibraryStringInfo infoB = new LibraryStringInfo();
-        infoB.factory = MtjAlgorithmFactory.class.getName();
+        infoB.factory = MtjAlgorithmFactoryNative.class.getName();
         infoB.nameFull = "Matrix Toolkit Java - Native";
         infoB.nameShort = "MTJ-N";
         infoB.namePlot = "MTJ-N";
-        infoB.configure = MtjNativeLibraryConfigure.class.getName();
 
         MiscTools.saveLibraryInfo("mtj", infoA, infoB);
     }

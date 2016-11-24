@@ -34,7 +34,6 @@ public class LibraryStringInfo implements Serializable{
     /**
      * Class path to the configuration class
      */
-    public String configure;
     public String nameFull;
     public String nameShort;
     public String namePlot;
@@ -45,14 +44,6 @@ public class LibraryStringInfo implements Serializable{
 
     public void setFactory(String factory) {
         this.factory = factory;
-    }
-
-    public String getConfigure() {
-        return configure;
-    }
-
-    public void setConfigure(String configure) {
-        this.configure = configure;
     }
 
     public String getNameFull() {

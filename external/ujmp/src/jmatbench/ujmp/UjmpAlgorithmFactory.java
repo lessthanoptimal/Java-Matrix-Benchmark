@@ -35,6 +35,14 @@ import org.ujmp.core.util.UJMPSettings;
  */
 public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 
+	public UjmpAlgorithmFactory() {
+		init();
+	}
+
+	public void init() {
+		UJMPSettings.getInstance().setUseJBlas(false);
+	}
+
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
         return wrap( DenseDoubleMatrix2D.Factory.zeros(numRows,numCols));

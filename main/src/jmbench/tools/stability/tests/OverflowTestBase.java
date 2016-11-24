@@ -45,12 +45,12 @@ public abstract class OverflowTestBase extends StabilityTestBase
     private volatile BreakingPointBinarySearch search;
 
     public OverflowTestBase(long randomSeed,
-                            String classConfigure , String classFactory ,
+                            String classFactory ,
                             String operation,
                        int totalTrials, double breakingPoint, int minLength, int maxLength,
                        boolean overflow)
     {
-        super(randomSeed, classConfigure , classFactory , operation, totalTrials, breakingPoint);
+        super(randomSeed, classFactory , operation, totalTrials, breakingPoint);
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.overflow = overflow;

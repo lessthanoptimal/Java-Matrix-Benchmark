@@ -56,6 +56,10 @@ public class LibraryRuntimeInfo implements Serializable {
         try {
             RuntimePerformanceFactory factory = (RuntimePerformanceFactory)Class.forName(factoryName).newInstance();
 
+            System.out.println("LibraryRuntimeInfo factory "+factoryName);
+            System.out.println("                   native "+factory.isNative());
+
+
             LibraryRuntimeInfo info = new LibraryRuntimeInfo();
             info.isNative = factory.isNative();
             info.version = factory.getLibraryVersion();

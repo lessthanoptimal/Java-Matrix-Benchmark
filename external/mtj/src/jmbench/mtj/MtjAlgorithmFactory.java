@@ -19,6 +19,9 @@
 
 package jmbench.mtj;
 
+import com.github.fommil.netlib.ARPACK;
+import com.github.fommil.netlib.BLAS;
+import com.github.fommil.netlib.LAPACK;
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
@@ -35,7 +38,19 @@ import no.uib.cipr.matrix.*;
  */
 public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
 
-    public static boolean isNative = false;
+    public MtjAlgorithmFactory() {
+        init();
+    }
+    public void init() {
+        System.setProperty("java.util.logging.config.file","logging.properties");
+        System.setProperty("com.github.fommil.netlib.BLAS","com.github.fommil.netlib.F2jBLAS");
+        System.setProperty("com.github.fommil.netlib.LAPACK","com.github.fommil.netlib.F2jLAPACK");
+        System.setProperty("com.github.fommil.netlib.ARPACK","com.github.fommil.netlib.F2jARPACK");
+
+        BLAS.getInstance();
+        LAPACK.getInstance();
+        ARPACK.getInstance();
+    }
 
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
@@ -494,7 +509,7 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public boolean isNative() {
-        return isNative;
+        return false;
     }
 
     /**

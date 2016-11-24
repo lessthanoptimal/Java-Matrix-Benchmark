@@ -43,13 +43,12 @@ public class SolverSingular extends SolverCommon
     private volatile BreakingPointBinarySearch search;
 
     public SolverSingular(long randomSeed,
-                          String classConfigure ,
                           String classFactory, String nameOperation,
                           int totalTrials,
                           double breakingPoint ,
                           int minLength, int maxLength,
                           boolean linearSolver) {
-        super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, breakingPoint , minLength, maxLength, linearSolver);
+        super(randomSeed, classFactory, nameOperation, totalTrials, breakingPoint , minLength, maxLength, linearSolver);
     }
 
     public SolverSingular() {
