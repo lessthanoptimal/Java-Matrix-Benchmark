@@ -9,6 +9,8 @@
 - Changed default directory output naming scheme
 - Can launch plot stability from command line
 
+TODO https://github.com/hughperkins/jeigen
+
 ----- Version 0.10
 
 2013/10/29
