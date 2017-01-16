@@ -19,7 +19,6 @@
 
 package jmbench.tools.stability;
 
-import jmbench.impl.LibraryConfigure;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.tools.EvaluationTest;
@@ -37,7 +36,6 @@ import java.util.Random;
 public abstract class StabilityTestBase extends EvaluationTest {
 
     protected String classFactory;
-    protected String classConfigure;
 
     protected String nameOperation;
     protected int totalTrials;
@@ -52,14 +50,12 @@ public abstract class StabilityTestBase extends EvaluationTest {
     protected transient int numResults;
 
     protected StabilityTestBase(long randomSeed,
-                                String classConfigure,
                                 String classFactory,
                                 String nameOperation,
                                 int totalTrials,
                                 double breakingPoint ) {
         super(randomSeed);
         this.classFactory = classFactory;
-        this.classConfigure = classConfigure;
         this.nameOperation = nameOperation;
         this.totalTrials = totalTrials;
         this.breakingPoint = breakingPoint;
@@ -88,11 +84,6 @@ public abstract class StabilityTestBase extends EvaluationTest {
     public void init() {
 
         try {
-            if( this.classConfigure != null ) {
-                LibraryConfigure configure = (LibraryConfigure)Class.forName(this.classConfigure).newInstance();
-                configure.runtimeConfigure();
-            }
-
             factory = (RuntimePerformanceFactory)Class.forName(classFactory).newInstance();
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -209,14 +200,6 @@ public abstract class StabilityTestBase extends EvaluationTest {
 
     public void setClassFactory(String classFactory) {
         this.classFactory = classFactory;
-    }
-
-    public String getClassConfigure() {
-        return classConfigure;
-    }
-
-    public void setClassConfigure(String classConfigure) {
-        this.classConfigure = classConfigure;
     }
 
     public String getNameOperation() {

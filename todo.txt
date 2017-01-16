@@ -1,6 +1,9 @@
 - Add support for commercial libraries
  * Make it so everything will compile even if the library is not present.
 
+
+- Add benchmark for matrix creation time. 
+
 - applet for displaying results
 
 - Randomly draw operation and matrix size

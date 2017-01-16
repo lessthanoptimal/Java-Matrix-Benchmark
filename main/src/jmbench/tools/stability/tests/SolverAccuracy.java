@@ -34,12 +34,12 @@ import jmbench.tools.stability.StabilityBenchmark;
 public class SolverAccuracy extends SolverCommon {
 
     public SolverAccuracy(long randomSeed,
-                          String classConfigure , String classFactory,
+                          String classFactory,
                           String nameOperation,
                           int totalTrials, double breakingPoint,
                           int minLength, int maxLength, boolean linearSolver)
     {
-        super(randomSeed, classConfigure , classFactory , nameOperation, totalTrials, breakingPoint, minLength, maxLength, linearSolver);
+        super(randomSeed, classFactory , nameOperation, totalTrials, breakingPoint, minLength, maxLength, linearSolver);
     }
 
     public SolverAccuracy(){}

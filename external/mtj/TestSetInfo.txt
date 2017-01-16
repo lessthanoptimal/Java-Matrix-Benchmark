@@ -1,14 +1,12 @@
 <list>
   <jmbench.impl.LibraryStringInfo>
     <factory>jmbench.mtj.MtjAlgorithmFactory</factory>
-    <configure>jmbench.mtj.MtjLibraryConfigure</configure>
     <nameFull>Matrix Toolkit Java</nameFull>
     <nameShort>MTJ</nameShort>
     <namePlot>MTJ</namePlot>
   </jmbench.impl.LibraryStringInfo>
   <jmbench.impl.LibraryStringInfo>
-    <factory>jmbench.mtj.MtjAlgorithmFactory</factory>
-    <configure>jmbench.mtj.MtjNativeLibraryConfigure</configure>
+    <factory>jmbench.mtj.MtjAlgorithmFactoryNative</factory>
     <nameFull>Matrix Toolkit Java - Native</nameFull>
     <nameShort>MTJ-N</nameShort>
     <namePlot>MTJ-N</namePlot>

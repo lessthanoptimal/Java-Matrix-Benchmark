@@ -45,7 +45,6 @@ public class SolverOverflow extends SolverCommon
     private volatile double scaling;
 
     public SolverOverflow(long randomSeed,
-                          String classConfigure ,
                           String classFactory ,
                           String nameOperation,
                           int totalTrials,
@@ -54,7 +53,7 @@ public class SolverOverflow extends SolverCommon
                           boolean linearSolver ,
                           boolean overflow )
     {
-        super(randomSeed, classConfigure, classFactory, nameOperation, totalTrials, breakingPoint , minLength, maxLength, linearSolver);
+        super(randomSeed, classFactory, nameOperation, totalTrials, breakingPoint , minLength, maxLength, linearSolver);
 
         this.overflow = overflow;
     }

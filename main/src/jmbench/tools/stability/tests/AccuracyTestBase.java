@@ -38,12 +38,12 @@ public abstract class AccuracyTestBase extends StabilityTestBase {
     protected int minLength;
     protected int maxLength;
 
-    public AccuracyTestBase(long randomSeed, String classConfigure ,
+    public AccuracyTestBase(long randomSeed,
                             String classFactory, String nameOperation,
                             int totalTrials,
                             int minLength, int maxLength)
     {
-        super(randomSeed, classConfigure , classFactory , nameOperation, totalTrials, 0);
+        super(randomSeed , classFactory , nameOperation, totalTrials, 0);
         this.minLength = minLength;
         this.maxLength = maxLength;
     }

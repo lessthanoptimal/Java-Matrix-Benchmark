@@ -30,8 +30,6 @@ public class RuntimeEvaluationCase implements Serializable {
     private String opName;
     // the different matrix sizes that can be evaluated
     private int dimens[];
-    // configures the library's runtime environment
-    private String classConfigure;
     // used to create perform tests
     private String classFactory;
     // list of algorithms it it can run
@@ -42,13 +40,11 @@ public class RuntimeEvaluationCase implements Serializable {
     private volatile RuntimeEvaluationTest theTest = new RuntimeEvaluationTest();
 
     public RuntimeEvaluationCase( String opName , String nameAlgorithm , int dimens[] ,
-                                  String classConfigure ,
                                   String classFactory ,
                                   InputOutputGenerator generator )
     {
         this.opName = opName;
         this.dimens = dimens.clone();
-        this.classConfigure = classConfigure;
         this.classFactory = classFactory;
         this.nameAlgorithm = nameAlgorithm;
         this.generator = generator;
@@ -62,7 +58,6 @@ public class RuntimeEvaluationCase implements Serializable {
         theTest.setNumTrials(numTrials);
         theTest.setDimen(dimens[dimenIndex]);
         theTest.setNameAlgorithm(nameAlgorithm);
-        theTest.setClassConfigure(classConfigure);
         theTest.setClassFactory(classFactory);
         theTest.setGenerator(generator);
         theTest.setGoalRuntime(duration);
@@ -110,13 +105,5 @@ public class RuntimeEvaluationCase implements Serializable {
 
     public void setGenerator(InputOutputGenerator generator) {
         this.generator = generator;
-    }
-
-    public String getClassConfigure() {
-        return classConfigure;
-    }
-
-    public void setClassConfigure(String classConfigure) {
-        this.classConfigure = classConfigure;
     }
 }

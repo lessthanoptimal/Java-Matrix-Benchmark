@@ -37,14 +37,13 @@ public abstract class SolverCommon extends StabilityTestBase {
     protected transient RowMajorMatrix A,b;
 
     public SolverCommon(long randomSeed,
-                        String classConfigure ,
                         String classFactory ,
                         String nameOperation,
                         int totalTrials,
                         double breakingPoint ,
                         int minLength, int maxLength,
                         boolean linearSolver) {
-        super(randomSeed, classConfigure, classFactory , nameOperation, totalTrials, breakingPoint);
+        super(randomSeed, classFactory , nameOperation, totalTrials, breakingPoint);
         this.minLength = minLength;
         this.maxLength = maxLength;
         isLinearSolver = linearSolver;

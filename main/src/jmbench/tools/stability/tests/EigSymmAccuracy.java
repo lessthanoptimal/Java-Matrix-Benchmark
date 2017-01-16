@@ -35,10 +35,10 @@ public class EigSymmAccuracy extends AccuracyTestBase {
     protected volatile RowMajorMatrix R;
 
     public EigSymmAccuracy(long randomSeed,
-                           String classConfigure , String classFactory,
+                           String classFactory,
                            String nameOperation,
                            int totalTrials, int minLength, int maxLength) {
-        super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, minLength, maxLength);
+        super(randomSeed, classFactory, nameOperation, totalTrials, minLength, maxLength);
     }
 
     public EigSymmAccuracy() {}

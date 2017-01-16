@@ -34,10 +34,10 @@ public class SvdOverflow extends OverflowTestBase {
     private static final double svMag = 1;
 
     public SvdOverflow(long randomSeed,
-                       String classConfigure , String classFactory,
+                       String classFactory,
                        String nameOperation, int totalTrials,
                        double breakingPoint, int minLength, int maxLength, boolean overflow) {
-        super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
+        super(randomSeed, classFactory, nameOperation, totalTrials, breakingPoint, minLength, maxLength, overflow);
     }
 
     public SvdOverflow(){}

@@ -38,10 +38,9 @@ public class SvdAccuracy extends AccuracyTestBase {
     private volatile double sv[];
 
     public SvdAccuracy(long randomSeed,
-                       String classConfigure ,
                        String classFactory, String nameOperation,
                        int totalTrials, int minLength, int maxLength) {
-        super(randomSeed, classConfigure , classFactory, nameOperation, totalTrials, minLength, maxLength);
+        super(randomSeed, classFactory, nameOperation, totalTrials, minLength, maxLength);
     }
 
     public SvdAccuracy(){}

@@ -130,7 +130,7 @@ public class RuntimeBenchmarkLibrary {
         setupLog();
 
         List<RuntimeEvaluationCase> cases =
-                new FactoryRuntimeEvaluationCase(info.configure,info.factory,config).createCases();
+                new FactoryRuntimeEvaluationCase(info.factory,config).createCases();
 
         List<CaseState> states = createCaseList(cases);
 

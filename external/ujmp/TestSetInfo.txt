@@ -6,8 +6,7 @@
     <namePlot>UJMP</namePlot>
   </jmbench.impl.LibraryStringInfo>
   <jmbench.impl.LibraryStringInfo>
-    <factory>jmatbench.ujmp.UjmpAlgorithmFactory</factory>
-    <configure>jmatbench.ujmp.UjmpNativeLibraryConfigure</configure>
+    <factory>jmatbench.ujmp.UjmpAlgorithmFactoryNative</factory>
     <nameFull>Universal Java Matrix Package - Native</nameFull>
     <nameShort>UJMP-N</nameShort>
     <namePlot>UJMP-N</namePlot>
