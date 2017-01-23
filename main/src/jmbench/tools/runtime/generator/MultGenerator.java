@@ -21,9 +21,6 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.matrix.RowMajorMatrix;
-import jmbench.matrix.RowMajorOps;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
 
 import java.util.Random;
@@ -36,11 +33,9 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class MultGenerator implements InputOutputGenerator {
 
-    RowMajorMatrix C;
-
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[2];
 
         inputs[0] = factory.create(size,size);
@@ -49,20 +44,7 @@ public class MultGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
         randomize(inputs[1],-1,1,rand);
 
-        if( checkResults ) {
-            RowMajorMatrix A = new RowMajorMatrix(inputs[0]);
-            RowMajorMatrix B = new RowMajorMatrix(inputs[1]);
-
-            C = new RowMajorMatrix(A.numRows,A.numCols);
-            RowMajorOps.mult(A,B,C);
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        return ResultsChecking.checkResult(new RowMajorMatrix(output[0]),C,tol);
     }
 
     @Override

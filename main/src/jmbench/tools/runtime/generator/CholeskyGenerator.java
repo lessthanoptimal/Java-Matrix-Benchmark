@@ -21,12 +21,8 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.matrix.RowMajorMatrix;
-import jmbench.matrix.RowMajorOps;
 import jmbench.misc.RandomizeMatrices;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import jmbench.tools.stability.StabilityBenchmark;
 
 import java.util.Random;
 
@@ -36,46 +32,16 @@ import java.util.Random;
  */
 public class CholeskyGenerator implements InputOutputGenerator {
 
-    RowMajorMatrix A;
-
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[1];
 
         inputs[0] = factory.create(size,size);
 
         RandomizeMatrices.symmPosDef(inputs[0],rand);
 
-        if( checkResults ) {
-            A = new RowMajorMatrix(inputs[0]);
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        RowMajorMatrix L = new RowMajorMatrix(output[0]);
-
-        if( L == null ) {
-            return OutputError.MISC;
-        }
-
-        if(RowMajorOps.hasUncountable(L)) {
-            return OutputError.UNCOUNTABLE;
-        }
-
-        RowMajorMatrix A_found = new RowMajorMatrix(A.numRows,A.numCols);
-
-        RowMajorOps.multTransB(L,L,A_found);
-
-        double error = StabilityBenchmark.residualError(A_found,A);
-        if( error > tol ) {
-            return OutputError.LARGE_ERROR;
-        }
-
-        return OutputError.NO_ERROR;
     }
 
     @Override

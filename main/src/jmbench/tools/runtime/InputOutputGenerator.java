@@ -21,7 +21,6 @@ package jmbench.tools.runtime;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.tools.OutputError;
 
 import java.util.Random;
 
@@ -42,22 +41,12 @@ public interface InputOutputGenerator {
      *
      * @param factory Used to create input matrices.
      * @param rand Random number generator used to create the matrices.
-     * @param checkResults If the results will be checked.  If false less memory is needed.
      * @param size how big the matrices should be.
      *
      * @return List of input matrices.
      */
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand , 
-                                           boolean checkResults , int size );
-    
-    /**
-     * Checks to see if anything is wrong with the computed output.
-     *
-     * @param output Output from the operation.
-     * @param tol Tolerance that is uses in deciding of it is close enough to the expected result.
-     * @return
-     */
-    public OutputError checkResults( BenchmarkMatrix[] output , double tol );
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size);
 
 
     /**

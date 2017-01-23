@@ -23,7 +23,6 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.tools.EvaluationTest;
-import jmbench.tools.OutputError;
 import jmbench.tools.TestResults;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +38,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     public static final double MAX_ERROR_THRESHOLD = 0.05;
 
     // how many trials have already been completed.  Used to determine which random seed is used
-    private int numTrials;
+    private int completedTrials;
 
     private String nameAlgorithm;
     private int dimen;
@@ -49,16 +48,13 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     private long goalRuntime;
 
     // the max amount of time it will let a test run for
-    private long maxRuntime;
+    private long maxEvaluationTime;
     // randomly generated input matrices
     private volatile Random masterRand;
 
     private volatile BenchmarkMatrix inputs[];
     private volatile BenchmarkMatrix outputs[];
     private volatile RuntimePerformanceFactory factory;
-
-    // should it make sure the tested operation is performing the expected oepration
-    private boolean sanityCheck;
 
     // an estimate of how many cycles it will take to finish the test in the desired
     // amount of time
@@ -71,26 +67,24 @@ public class RuntimeEvaluationTest extends EvaluationTest {
      * @param nameAlgorithm The algorithm that is being processed.
      * @param generator Creates the inputs and expected outputs for the tested operation
      * @param goalRuntime  How long it wants to try to run the test for in milliseconds
-     * @param maxRuntime  How long it will let a test run for in milliseconds
+     * @param maxEvaluationTime  How long it will let a test run for in milliseconds
      * @param randomSeed The random seed used for the tests.
      */
-    public RuntimeEvaluationTest( int numTrials,
-                                  int dimen ,
-                                  String classFactory,
-                                  String nameAlgorithm ,
-                                  InputOutputGenerator generator ,
-                                  boolean sanityCheck ,
-                                  long goalRuntime, long maxRuntime , long randomSeed )
+    public RuntimeEvaluationTest(int completedTrials,
+                                 int dimen ,
+                                 String classFactory,
+                                 String nameAlgorithm ,
+                                 InputOutputGenerator generator ,
+                                 long goalRuntime, long maxEvaluationTime, long randomSeed )
     {
         super(randomSeed);
-        this.numTrials = numTrials;
+        this.completedTrials = completedTrials;
         this.dimen = dimen;
         this.classFactory = classFactory;
         this.nameAlgorithm = nameAlgorithm;
         this.generator = generator;
-        this.sanityCheck = sanityCheck;
         this.goalRuntime = goalRuntime;
-        this.maxRuntime = maxRuntime;
+        this.maxEvaluationTime = maxEvaluationTime;
     }
 
     public RuntimeEvaluationTest(){}
@@ -117,7 +111,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
         estimatedTrials = 0;
         masterRand = new Random(randomSeed);
-        for( int i = 0; i < numTrials; i++ )
+        for(int i = 0; i < completedTrials; i++ )
             masterRand.nextLong();
     }
 
@@ -126,7 +120,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     {
         Random rand = new Random(masterRand.nextLong());
 
-        inputs = generator.createInputs(factory,rand,sanityCheck,dimen);
+        inputs = generator.createInputs(factory,rand,dimen);
         outputs = new BenchmarkMatrix[ generator.numOutputs() ];
     }
 
@@ -164,17 +158,17 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
         // see if the operation isn't supported
         if( alg == null ) {
-            return new RuntimeMeasurement(-1,-1, OutputError.NOT_SUPPORTED);
+            return new RuntimeMeasurement(-1,-1);
         }
 
         // translate it to nanoseconds
-        long goalDuration = this.goalRuntime *1000000;
+        long goalDuration = this.goalRuntime*1000000;
 
         while( true ) {
             // nano is more precise than the millisecond timer
             long elapsedTime = alg.process(inputs, outputs, numTrials);
 
-//            System.out.println("elapsed time = "+elapsedTime + "  numTrials "+numTrials+"  ops/sec "+(double)numTrials/(elapsedTime/1e9));
+//            System.out.println("elapsed time = "+elapsedTime + "  completedTrials "+completedTrials+"  ops/sec "+(double)completedTrials/(elapsedTime/1e9));
 //            System.out.println("  in seconds "+(elapsedTime/1e9));
             if( elapsedTime > goalDuration*0.9 )  {
                 estimatedTrials = (long)Math.ceil(goalDuration * (double)numTrials / (double)elapsedTime);
@@ -212,11 +206,8 @@ public class RuntimeEvaluationTest extends EvaluationTest {
      */
     private RuntimeMeasurement compileResults( double opsPerSecond )
     {
-        RuntimeMeasurement results = new RuntimeMeasurement(opsPerSecond,Runtime.getRuntime().totalMemory());
-        if( sanityCheck )
-            results.error = generator.checkResults(outputs,MAX_ERROR_THRESHOLD);
 
-        return results;
+        return new RuntimeMeasurement(opsPerSecond,Runtime.getRuntime().totalMemory());
     }
 
     private MatrixProcessorInterface createAlgorithm() {
@@ -272,28 +263,20 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         this.goalRuntime = goalRuntime;
     }
 
-    public boolean isSanityCheck() {
-        return sanityCheck;
+    public int getCompletedTrials() {
+        return completedTrials;
     }
 
-    public void setSanityCheck(boolean sanityCheck) {
-        this.sanityCheck = sanityCheck;
-    }
-
-    public int getNumTrials() {
-        return numTrials;
-    }
-
-    public void setNumTrials(int numTrials) {
-        this.numTrials = numTrials;
+    public void setCompletedTrials(int completedTrials) {
+        this.completedTrials = completedTrials;
     }
 
     @Override
-    public long getMaximumRuntime() {
-        return maxRuntime;
+    public long getMaximumEvaluateTime() {
+        return maxEvaluationTime;
     }
 
-    public void setMaximumRuntime(long maxRuntime) {
-        this.maxRuntime = maxRuntime;
+    public void setMaximumEvaluateTime(long maxRuntime) {
+        this.maxEvaluationTime = maxRuntime;
     }
 }

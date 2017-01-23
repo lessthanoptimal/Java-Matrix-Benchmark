@@ -61,33 +61,28 @@ public class RuntimeBenchmarkConfig implements Serializable {
     // which libraries are to be evaluated
     public List<LibraryDescription> targets;
 
+    // Block Trials are the number of trials it will perform in a single JVM instance
+    // A trial is a test where it benchmarks how many iterations it can perform in at least 'minimumTimePerTestMS'
+    // Max trial time is the maximum amount of time a single trial is allowed to take before it's declared frozen
+
     // how many performance trials should it run in a block
-    public int numBlockTrials;
+    public int numTestsPerBlock;
     // it will stop processing a matrix size if this number of trials has been exceeded
-    public int maxTrials;
+    public int totalTests;
     // the minimum amount of time each trials should last for (ms)
-    public int trialTime;
+    public int minimumTimePerTestMS;
     // the maximum amount of time a trial can last for (ms)
-    public int maxTrialTime;
+    public int maxTimePerTest;
 
     // specifies a fixed amount of memory that is to be allocated to the slave.
     // if set to zero then the memory will be dynamically allocated
     // memory here is in megabytes
-    public int memoryTrial;
-
-    // if memory is dynamically allocated this specifies how much is allocated
-    public int memorySlaveBase;
-    public int memorySlaveScale;
+    public int memoryMB;
 
     // largest size matrix it can process
     public int maxMatrixSize;
     // the smallest matrix size it will process
     public int minMatrixSize;
-
-    // should it perform a sanity check on the operations it tests
-    // this requires more memory and time, but can make sure the operation is
-    // really doing what it should be doing.
-    public boolean sanityCheck;
 
     /**
      * This config will process everything
@@ -98,17 +93,14 @@ public class RuntimeBenchmarkConfig implements Serializable {
         RuntimeBenchmarkConfig config = new RuntimeBenchmarkConfig();
 
         config.seed = 0xDEADBEEF;//new Random().nextLong();
-        config.numBlockTrials = 5;
-        config.maxTrials = 25;
-        config.trialTime = 3000;
-        config.maxTrialTime = 600000;
-        config.memoryTrial = 0;
-        config.memorySlaveBase = 20;
-        config.memorySlaveScale = 1;
+        config.numTestsPerBlock = 5;
+        config.totalTests = 25;
+        config.minimumTimePerTestMS = 3000;
+        config.maxTimePerTest = 600000;
+        config.memoryMB = 0;
         config.randizeOrder = true;
         config.maxMatrixSize = 10000;
         config.minMatrixSize = 2;
-        config.sanityCheck = false;
 
 //        config.chol = true;
 //        config.lu = true;
@@ -286,44 +278,28 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.randizeOrder = randizeOrder;
     }
 
-    public int getNumBlockTrials() {
-        return numBlockTrials;
+    public int getNumTestsPerBlock() {
+        return numTestsPerBlock;
     }
 
-    public void setNumBlockTrials(int numBlockTrials) {
-        this.numBlockTrials = numBlockTrials;
+    public void setNumTestsPerBlock(int numTestsPerBlock) {
+        this.numTestsPerBlock = numTestsPerBlock;
     }
 
-    public int getMaxTrials() {
-        return maxTrials;
+    public int getTotalTests() {
+        return totalTests;
     }
 
-    public void setMaxTrials(int maxTrials) {
-        this.maxTrials = maxTrials;
+    public void setTotalTests(int totalTests) {
+        this.totalTests = totalTests;
     }
 
-    public int getTrialTime() {
-        return trialTime;
+    public int getMinimumTimePerTestMS() {
+        return minimumTimePerTestMS;
     }
 
-    public void setTrialTime(int trialTime) {
-        this.trialTime = trialTime;
-    }
-
-    public int getMemorySlaveBase() {
-        return memorySlaveBase;
-    }
-
-    public void setMemorySlaveBase(int memorySlaveBase) {
-        this.memorySlaveBase = memorySlaveBase;
-    }
-
-    public int getMemorySlaveScale() {
-        return memorySlaveScale;
-    }
-
-    public void setMemorySlaveScale(int memorySlaveScale) {
-        this.memorySlaveScale = memorySlaveScale;
+    public void setMinimumTimePerTestMS(int minimumTimePerTestMS) {
+        this.minimumTimePerTestMS = minimumTimePerTestMS;
     }
 
     public int getMaxMatrixSize() {
@@ -350,27 +326,19 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.invertSymmPosDef = invertSymmPosDef;
     }
 
-    public int getMaxTrialTime() {
-        return maxTrialTime;
+    public int getMaxTimePerTest() {
+        return maxTimePerTest;
     }
 
-    public void setMaxTrialTime(int maxTrialTime) {
-        this.maxTrialTime = maxTrialTime;
+    public void setMaxTimePerTest(int maxTimePerTest) {
+        this.maxTimePerTest = maxTimePerTest;
     }
 
-    public int getMemoryTrial() {
-        return memoryTrial;
+    public int getMemoryMB() {
+        return memoryMB;
     }
 
-    public void setMemoryTrial(int memoryTrial) {
-        this.memoryTrial = memoryTrial;
-    }
-
-    public boolean isSanityCheck() {
-        return sanityCheck;
-    }
-
-    public void setSanityCheck(boolean sanityCheck) {
-        this.sanityCheck = sanityCheck;
+    public void setMemoryMB(int memoryMB) {
+        this.memoryMB = memoryMB;
     }
 }

@@ -21,7 +21,10 @@ package jmbench.tools.runtime;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryStringInfo;
-import jmbench.tools.*;
+import jmbench.tools.BenchmarkConstants;
+import jmbench.tools.BenchmarkTools;
+import jmbench.tools.EvaluatorSlave;
+import jmbench.tools.TestResults;
 import jmbench.tools.runtime.evaluation.RuntimeResultsCsvIO;
 
 import java.io.*;
@@ -118,8 +121,7 @@ public class RuntimeBenchmarkLibrary {
         this.rand = new Random(config.seed);
         this.randSeedTrials = rand.nextLong();
 
-        tools = new BenchmarkTools(config.numBlockTrials,config.memorySlaveBase,config.memorySlaveScale,
-                desc.listOfJarFilePaths());
+        tools = new BenchmarkTools(desc.listOfJarFilePaths());
         tools.setVerbose(false);
     }
 
@@ -194,14 +196,14 @@ public class RuntimeBenchmarkLibrary {
 
                         // TODO have a single function evaluate if its done processing matrix size
                         // see if it has enough trials to move on to the next matrix size
-                        if( rawResults.size() >= config.maxTrials ) {
+                        if( rawResults.size() >= config.totalTests) {
                             cs.matrixIndex++;
                         } else {
                             // see if any of the current results are too long and it should move on
                             for( RuntimeMeasurement r : rawResults ) {
                                 double time = 1.0/r.getOpsPerSec();
 
-                                if( time > config.getMaxTrialTime() ) {
+                                if( time > config.getMaxTimePerTest() ) {
                                     cs.matrixIndex++;
                                     break;
                                 }
@@ -277,7 +279,7 @@ public class RuntimeBenchmarkLibrary {
 
         RuntimeEvaluationMetrics score[] = state.score;
 
-        System.out.println("#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" numTrials "+state.results.size()+"  ####");
+        System.out.println("#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" Performed "+state.results.size()+"/"+config.totalTests+"  ####");
 
         RuntimeResults r = computeResults(e, state.matrixIndex , randSeedTrials , score , state.results);
 
@@ -287,7 +289,7 @@ public class RuntimeBenchmarkLibrary {
         boolean done = tooSlow || caseFailed;
 
         // increment the number of blocks
-        if( !done && state.results.size() >= config.maxTrials ) {
+        if( !done && state.results.size() >= config.totalTests) {
             state.results.clear();
             state.matrixIndex++;
 
@@ -322,7 +324,11 @@ public class RuntimeBenchmarkLibrary {
                                            RuntimeEvaluationMetrics score[] , List<RuntimeMeasurement> rawResults )
             throws FileNotFoundException {
 
-        List<RuntimeMeasurement> opsPerSecond = evaluateCase( e , randSeed , matrixIndex , rawResults.size() );
+        // compute how many tests it should perform in this JVM instance
+        int numTests = Math.min(config.numTestsPerBlock, config.totalTests - rawResults.size());
+
+        // compute the results for all the tests
+        List<RuntimeMeasurement> opsPerSecond = evaluateCaseFixedMemory( e , randSeed , matrixIndex , rawResults.size(),numTests  );
 
         if( caseFailed ) {
             System.out.println("      ---- ***** -----");
@@ -342,67 +348,6 @@ public class RuntimeBenchmarkLibrary {
         return results;
     }
 
-    private List<RuntimeMeasurement> evaluateCase( RuntimeEvaluationCase e , long seed , int indexDimen, int numTrials ) {
-        if( config.memoryTrial == 0 ) {
-            return evaluateCaseDynamic(e,seed,indexDimen,numTrials);
-        } else {
-            return evaluateCaseFixedMemory(e,seed,indexDimen,numTrials);
-        }
-    }
-
-    /**
-     * Computes performance metrics for the specified case.
-     *
-     * @param indexDimen Which matrix size it should use.
-     * @return The operations per second for this case.
-     */
-    @SuppressWarnings({"RedundantCast", "unchecked"})
-    private List<RuntimeMeasurement> evaluateCaseDynamic( RuntimeEvaluationCase e , long seed , int indexDimen, int numTrials) {
-        EvaluationTest test = e.createTest(numTrials,indexDimen,config.trialTime,config.maxTrialTime,config.sanityCheck);
-        test.setRandomSeed(seed);
-
-        int matrixSize = e.getDimens()[indexDimen];
-
-        // try running the application a few times and see if its size increases
-        for( int attempts = 0; attempts < 5; attempts++ ) {
-            // estimate how much memory is needed for the operation
-            long memory = test.getInputMemorySize()/1024/1024 + config.memorySlaveBase;
-
-            // if this is less than the max it knows it can get away with set it to the max
-            // to reduce the number of attempts needed in the future.
-            if( memory < maxMemoryAllocated ) {
-                memory = maxMemoryAllocated;
-            }
-
-            // increase the amount of memory allocated if it failed last time
-            memory *= attempts+1;
-
-            tools.setOverrideMemory(memory);
-
-            EvaluatorSlave.Results r = callRunTest(e, test, matrixSize);
-
-            if( caseFailed )  {
-                if( r != null && r.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
-                    // have it run again, which will up the memory
-                    System.out.println("  Not enough memory given to slave. Attempt "+attempts);
-                    logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op name = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb");
-                } else {
-                    return null;
-                }
-            } else {
-                if( memory > maxMemoryAllocated ) {
-                    maxMemoryAllocated = memory;
-                }
-                return (List<RuntimeMeasurement>)((List)r.results);
-            }
-
-        }
-
-        logStream.println("Case failed since not enough memory could be allocated.");
-        // never had enough memory
-        caseFailed = true;
-        return null;
-    }
 
     /**
      * Computes performance metrics for the specified case only allocating the specified amount of memory.
@@ -412,15 +357,17 @@ public class RuntimeBenchmarkLibrary {
      */
     @SuppressWarnings({"RedundantCast", "unchecked"})
     private List<RuntimeMeasurement> evaluateCaseFixedMemory( RuntimeEvaluationCase e ,
-                                                          long seed , int indexDimen, int numTrials ) {
-        EvaluationTest test = e.createTest(numTrials,indexDimen,config.trialTime,config.maxTrialTime,config.sanityCheck);
+                                                              long seed , int indexDimen, int completedTests , int performTests) {
+
+
+        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTest);
         test.setRandomSeed(seed);
 
         int matrixSize = e.getDimens()[indexDimen];
 
-        tools.setOverrideMemory(config.memoryTrial);
+        tools.setOverrideMemory(config.memoryMB);
 
-        EvaluatorSlave.Results r = callRunTest(e, test, matrixSize);
+        EvaluatorSlave.Results r = callRunTest(e, test, matrixSize, performTests);
 
         if( caseFailed ) {
             return null;
@@ -429,16 +376,17 @@ public class RuntimeBenchmarkLibrary {
         return (List<RuntimeMeasurement>)((List)r.results);
     }
 
-    private EvaluatorSlave.Results callRunTest(RuntimeEvaluationCase e, EvaluationTest test, int matrixSize) {
+    private EvaluatorSlave.Results callRunTest(RuntimeEvaluationCase e, RuntimeEvaluationTest test, int matrixSize,
+                                               int numberOfTests  ) {
         tooSlow = false;
         caseFailed = false;
         EvaluatorSlave.Results r;
         if( SPAWN_SLAVE )
-            r = tools.runTest(test);
+            r = tools.runTest(test, numberOfTests);
         else
-            r = tools.runTestNoSpawn(test);
+            r = tools.runTestNoSpawn(test, numberOfTests);
 
-        tools.setFrozenTime(test.getMaximumRuntime());
+        tools.setFrozenTime( test.getMaximumEvaluateTime() );
 
         if( r == null ) {
             logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
@@ -508,7 +456,7 @@ public class RuntimeBenchmarkLibrary {
     {
         RuntimeEvaluationCase evalCase;
 
-        List<RuntimeMeasurement> results = new ArrayList<RuntimeMeasurement>();
+        List<RuntimeMeasurement> results = new ArrayList<>();
 
         RuntimeEvaluationMetrics score[];
 

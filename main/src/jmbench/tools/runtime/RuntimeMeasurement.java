@@ -42,12 +42,6 @@ public class RuntimeMeasurement implements TestResults , Comparable<RuntimeMeasu
         this.memoryUsed = memoryUsed;
     }
 
-    public RuntimeMeasurement(double opsPerSec, long memoryUsed, OutputError error) {
-        this.opsPerSec = opsPerSec;
-        this.memoryUsed = memoryUsed;
-        this.error = error;
-    }
-
     public RuntimeMeasurement(){}
 
     public String toString() {
@@ -60,14 +54,6 @@ public class RuntimeMeasurement implements TestResults , Comparable<RuntimeMeasu
 
     public void setOpsPerSec(double opsPerSec) {
         this.opsPerSec = opsPerSec;
-    }
-
-    public OutputError getError() {
-        return error;
-    }
-
-    public void setError(OutputError error) {
-        this.error = error;
     }
 
     public long getMemoryUsed() {
