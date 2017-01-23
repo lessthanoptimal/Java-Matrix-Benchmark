@@ -1,10 +1,8 @@
-- Add support for commercial libraries
- * Make it so everything will compile even if the library is not present.
+- Auto generate absolute plots
+  * Fix broken image for absolute manual/DescriptionRuntime/
 
 
-- Add benchmark for matrix creation time. 
-
-- applet for displaying results
+- Add benchmark for matrix creation time.
 
 - Randomly draw operation and matrix size
  * first do a run through until an exception occurs
