@@ -8,8 +8,7 @@
 - Removed dependency on DenseMatrix64F in RuntimePerformanceFactory
 - Changed default directory output naming scheme
 - Can launch plot stability from command line
-
-TODO https://github.com/hughperkins/jeigen
+- added support for Jeigen
 
 ----- Version 0.10
 

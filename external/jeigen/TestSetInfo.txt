@@ -1,0 +1,8 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.jeigen.JeigenAlgorithmFactory</factory>
+    <nameFull>Jeigen</nameFull>
+    <nameShort>Jeigen</nameShort>
+    <namePlot>Jeigen</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>
