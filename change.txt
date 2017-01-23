@@ -10,6 +10,7 @@
 - Can launch plot stability from command line
 
 TODO https://github.com/hughperkins/jeigen
+TODO complete benchmark run
 
 ----- Version 0.10
 
