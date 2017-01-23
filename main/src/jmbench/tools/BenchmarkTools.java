@@ -35,6 +35,8 @@ import java.util.Random;
 // todo change random seed with each trial, optional
 public class BenchmarkTools extends JavaRuntimeLauncher {
 
+    public static final String RESULTS_NAME = "slave_results.xml";
+
     // used to ID stale results
     int requestID= new Random().nextInt();
     // how many MC trials should the slave perform
@@ -121,7 +123,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         EvaluatorSlave.Results ret = null;
         if( !skipReadXml ) {
             // see if the user terminated the slave
-            ret = UtilXmlSerialization.deserializeXml("slave_results.xml");
+            ret = UtilXmlSerialization.deserializeXml(RESULTS_NAME);
             if (ret == null || ret.getRequestID() != requestID) {
                 if (ret == null)
                     errorStream.println("UtilXmlSerialization.deserializeXml returned null");
@@ -171,8 +173,12 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             System.out.println("Couldn't delete case.xml");
         }
 
-        if( !new File("slave_results.xml").delete() ) {
-            System.out.println("Couldn't delete slave_results.xml");
+        File results = new File(RESULTS_NAME);
+
+        if( !results.exists() )
+            System.out.println(results.getName()+" does not exist");
+        else if( !results.delete() ) {
+            System.out.println("Couldn't delete "+results.getName());
         }
     }
 }

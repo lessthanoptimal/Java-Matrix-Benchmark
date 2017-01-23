@@ -10,6 +10,8 @@
 - Can launch plot stability from command line
 - added support for Jeigen
 
+TODO have MemoryBenchmarkTools extend JavaRuntimeLauncher?
+
 ----- Version 0.10
 
 2013/10/29

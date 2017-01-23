@@ -33,17 +33,17 @@ import java.util.List;
  */
 public class JavaRuntimeLauncher {
 
-    String classPath;
+    private String classPath;
     // amount of memory allocated to the JVM
-    long memoryInMB = 200;
+    private long memoryInMB = 200;
     // if the process doesn't finish in this number of milliesconds it's considered frozen and killed
-    long frozenTime = 60*1000;
+    private long frozenTime = 60*1000;
 
     // amount of time it actually took to execute in milliseconds
-    long durationMilli;
+    private long durationMilli;
 
     // save for future debugging
-    String[] jvmArgs;
+    private String[] jvmArgs;
 
     /**
      * Constructor.  Configures which library it is to be launching a class from/related to

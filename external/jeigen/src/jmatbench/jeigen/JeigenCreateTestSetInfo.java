@@ -32,7 +32,7 @@ public class JeigenCreateTestSetInfo {
     public static void main(String[] args) throws IOException {
         LibraryStringInfo info = new LibraryStringInfo();
         info.factory = JeigenAlgorithmFactory.class.getName();
-        info.nameFull = "Jeigen";
+        info.nameFull = "Jeigen - Eigen Wrapper";
         info.nameShort = "Jeigen";
         info.namePlot = "Jeigen";
 

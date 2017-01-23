@@ -10,6 +10,8 @@ import jmbench.tools.BenchmarkConstants;
 /**
  * @author Peter Abeles
  */
+// TODO fix solve solveOver()  crashes hard
+    // TODO fix SVD
 public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {

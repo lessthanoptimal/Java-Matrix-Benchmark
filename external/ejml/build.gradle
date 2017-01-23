@@ -1,6 +1,6 @@
 dependencies {
     compile project(':main')
-    compile group: 'org.ejml', name: 'all', version: '0.30-SNAPSHOT'
+    compile group: 'org.ejml', name: 'all', version: '0.30'
 }
 
 idea {
