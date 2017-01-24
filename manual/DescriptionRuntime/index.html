@@ -7,12 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Description of Runtime Performance Benchmark</title>
-  <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
-">
+  <meta name="description" content="This page discusses which operations were tested and how to understand the results for the runtime performance benchmark.  The tested operations were primari...">
 
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/manual/DescriptionRuntime/">
-  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
+  <link rel="canonical" href="http://localhost:4000/Java-Matrix-Benchmark/manual/DescriptionRuntime/">
+  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://localhost:4000/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/jmatbench.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css">
@@ -71,7 +70,7 @@
 
 <h1 id="understanding-summary-plots">Understanding Summary Plots</h1>
 
-<p><img src="../../runtime/2015_07_XeonQuad/summary.png" alt="" /></p>
+<p><img src="/Java-Matrix-Benchmark/runtime/2015_07_XeonQuad/summary.png" alt="" /></p>
 
 <p><strong>Summary box-and-whisker plots are an attempt to provide an overview of performance for all the libaries tested in a single plot.  Higher numbers and more compact distributions represent better performance and more consistent performance across all operations, respectively.</strong></p>
 
@@ -96,20 +95,20 @@ N_OP = MAX_SAMPLES*(fastest library runtime) / SLOWEST_BY_SIZE
 
 <p>Results are presented primarily using relative runtime plots.  These plots show how fast one library runs relative to another library across a range of matrix sizes for a single operation.  An example of such a plot is shown below:</p>
 
-<p><img src="../../runtime/2015_07_XeonQuad/mult.png" alt="" /></p>
+<p><img src="/Java-Matrix-Benchmark/runtime/2015_07_XeonQuad/mult.png" alt="" /></p>
 
 <p><em>Higher numbers are better and represent more operations per second relative to other libraries.  The scale is normalized against the fastest library at each matrix size.  This formating is much succinct that standard FLOPS plots.</em></p>
 
-<p>The x-axis is input matrix size and the y-axis shows the relative runtime.  In general matrix size refers to the width and height of the input matrix/matrices, e.g. 100 on the axis refers to a 100 by 100 matrix with 1,000 elements.  However there are some operations which use non-square matrices, see below.  The reference library is the fastest library for each matrix size.  Therefore one library always has a value of one.  Larger the y-axis value is the faster the library is.  If a plot ends prematurely for a library that means that it either became too slow or a fatal error occurred and the test was stopped.</p>
+<p>The x-axis is input matrix size and the y-axis shows the relative runtime.  In general matrix size refers to the width and height of the input matrix/matrices, e.g. 100 on the axis refers to a 100 by 100 matrix with 10,000 elements.  However there are some operations which use non-square matrices, see below.  The reference library is the fastest library for each matrix size.  Therefore one library always has a value of one.  Larger the y-axis value is the faster the library is.  If a plot ends prematurely for a library that means that it either became too slow or a fatal error occurred and the test was stopped.</p>
 
 <p>By viewing these plots it is easy to tell how fast a particular library runs relative to any other library.  Since these plots show the results as a function of matrix size it is often easy to see when CPU cache size starts adversely effecting one algorithm or when a library switches to a multi-threaded approach.</p>
 
 <p>The benchmark also produces plots which show the absolute runtime.  These have not been posted online for take of simplicity.  Absolute runtime plots are in general more useful for understanding the behavior of an individual library and not for comparing performance across several libraries.</p>
 
 <h1 id="absolute-runtime-plots">Absolute Runtime Plots</h1>
-<p><img src="../../runtime/2015_07_XeonQuad/absoluteScale.jpg" alt="" /></p>
+<p><img src="/Java-Matrix-Benchmark/runtime/2015_07_XeonQuad/absoluteScale.jpg" alt="" /></p>
 
-<p>** Absolute runtime plots show how long each operations takes.  Unlike all the previous plots, lower numbers are better here. **</p>
+<p><strong>Absolute runtime plots show how long each operations takes.  Unlike all the previous plots, lower numbers are better here.</strong></p>
 
 <p>In addition to relative runtime plots, plots of the absolute runtime are computed.  These plots show on a log log scale how long each operation takes to run for each library.  It is easier to see how the performance of each library changes as a function of time and how CPU caches affect it.  However it is harder to see how much faster or slower each library is and these plots require more room to be clear.</p>
 

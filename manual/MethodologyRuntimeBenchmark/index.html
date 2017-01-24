@@ -7,12 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Runtime Benchmark Methodology</title>
-  <meta name="description" content="Java Matrix Benchmark is a tool for evaluating Java linear algebra libraries for speed, stability, and memory usage. Its goal is to help improve the state of high performance computing on the Java platform and to encourage performance optimization across a range of matrix sizes.
-">
+  <meta name="description" content="The runtime performance benchmark portion of Java Matrix Benchmark is designed to measure the best possible performance of each library in different linear a...">
 
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/main.css">
-  <link rel="canonical" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/manual/MethodologyRuntimeBenchmark/">
-  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://lessthanoptimal.github.io/Java-Matrix-Benchmark/feed.xml" />
+  <link rel="canonical" href="http://localhost:4000/Java-Matrix-Benchmark/manual/MethodologyRuntimeBenchmark/">
+  <link rel="alternate" type="application/rss+xml" title="Java Matrix Benchmark" href="http://localhost:4000/Java-Matrix-Benchmark/feed.xml" />
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/syntax.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/jmatbench.css" >
   <link rel="stylesheet" href="/Java-Matrix-Benchmark/css/common.css">
@@ -75,7 +74,7 @@
 
 <p>In principle benchmarking an algorithm is a simple task.  Just measure how long it takes to perform an operation and save the results.  For this project we wanted measure how fast various matrix libraries are at performing different linear algebra operations across a variety of matrix sizes.  A very simple benchmark for this project might go something like:</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">performBenchmark</span><span class="o">(</span> <span class="n">Libraries</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">performBenchmark</span><span class="o">(</span> <span class="n">Libraries</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
     <span class="k">for</span><span class="o">(</span> <span class="n">Libraries</span> <span class="n">lib</span> <span class="o">:</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
         <span class="k">for</span><span class="o">(</span> <span class="n">Operation</span> <span class="n">op</span> <span class="o">:</span> <span class="n">lib</span><span class="o">.</span><span class="na">getOperations</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
             <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">matrixSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">matrixSize</span> <span class="o">&lt;</span> <span class="n">maxSize</span><span class="o">;</span> <span class="n">matrixSize</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
@@ -89,7 +88,7 @@
             <span class="o">}</span>
         <span class="o">}</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>This approach is very simple and for many application is good enough, when only a crude estimate is needed.  Unfortunately it will produce inaccurate results in practice because it fails to take in account several factors:</p>
 
@@ -107,33 +106,33 @@
   <li><a href="#1.5">Exception Handling</a></li>
 </ol>
 
-<h1 id="benchmark-procedures">1 Benchmark Procedures</h1>
+<h1 id="1-benchmark-procedures">1 Benchmark Procedures</h1>
 
 <p>Measuring runtime performance accurately requires benchmark procedures that carefully take in account the reality of how modern computers operate. Desktop computers today are very complex and no single application has control over the entire system.  This complexity adds more unknowns and makes it more difficult to predict future performance based upon your past results, which is what a benchmark is used to do.</p>
 
 <p>Benchmarking in a Java environment is even more difficult than native code, because of the additional layers of abstraction from hardware.  Even a simple Java application will show more variability in its runtime than a simple application written in c.  Modern Java virtual machines (VM) will actually change the executed code at runtime.  Making benchmarking more difficult.</p>
 
-<h2 id="a-name1111-implicit-assumptions"><a name="1.1"></a>1.1 Implicit Assumptions</h2>
+<h2 id="11-implicit-assumptions"><a name="1.1"></a>1.1 Implicit Assumptions</h2>
 
 <p>When writing a benchmark it is hard, if not impossible, to not make implicit assumptions about the system the benchmark is run on.  The most common culprit is the variable ‘numberOfTrials’ that determines the number of times a particular trial is run for a test.  If set too small then the performance cannot be accurate measured.  If set too high then it will take too long. For example, if a benchmark is written on a very fast computer then in might be too slow when used on an older computer.  Then years later when the same program is run on a new computer it might be too fast.</p>
 
 <p>A benchmark running too fast leads to inaccurate results because there is always noise in how the execution time measured.  Mathematically this can be viewed as a random process:</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">t_m</span> <span class="o">=</span> <span class="n">t_0</span> <span class="o">+</span> <span class="n">N</span><span class="o">(</span><span class="n">t_0</span><span class="o">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">t_m</span> <span class="o">=</span> <span class="n">t_0</span> <span class="o">+</span> <span class="n">N</span><span class="o">(</span><span class="n">t_0</span><span class="o">)</span></code></pre></figure>
 
 <p>where ‘t_m’ is the measured time, ‘t_0’ is the true time, and N(t_0) is a noise process that may be dependent on when it is called.  This issue is exaggerated in Java due to the abstraction from the systems hardware, preventing very low level system calls from being called.</p>
 
-<p>In Java a common function to measure time is System.currentTimeMillis() and it has an unspecified accuracy that is assumed to be within milliseconds.  In practice its accuracy is variable depending on which operations/hardware it is run on.  System.nanoTime() returns a more precise time measurement, but its documentation explicitly states that its accuracy is not defined, see the excerpt from its documentation below:
-<code>
-This method can only be used to measure elapsed time and is not related to any other.
+<p>In Java a common function to measure time is System.currentTimeMillis() and it has an unspecified accuracy that is assumed to be within milliseconds.  In practice its accuracy is variable depending on which operations/hardware it is run on.  System.nanoTime() returns a more precise time measurement, but its documentation explicitly states that its accuracy is not defined, see the excerpt from its documentation below:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>This method can only be used to measure elapsed time and is not related to any other.
 This method provides nanosecond precision, but not necessarily nanosecond accuracy. 
-</code></p>
+</code></pre>
+</div>
 
 <p>One way to handle this problem is to simply increase the length of the benchmark until the noise is insignificant.  As previously mentioned, the number of trials that this requires is dependent on the system it is run on.</p>
 
 <p>In this benchmark matrices of different sizes are used as inputs.  In general, the larger the matrix is the longer it takes to process.  Determining the maximum matrix size has similar issues to determining the number of trials and is system dependent.</p>
 
-<h3 id="the-java-matrix-benchmark-approach">1.1.1 The Java Matrix Benchmark Approach</h3>
+<h3 id="111-the-java-matrix-benchmark-approach">1.1.1 The Java Matrix Benchmark Approach</h3>
 
 <p>Java Matrix Benchmark dynamically determines the number of trials by estimating how long each operation takes.  Each time a new benchmark is run it first runs a small number of trials.  Then it estimates how long it takes to run each operation and increases the number of trials so that it should last for a minimum duration T<sub>min</sub>.  This process is repeated until it approximately runs for T<sub>min</sub> seconds.  At which point the trial stops and the number of operations per second is returned.</p>
 
@@ -143,7 +142,7 @@ This method provides nanosecond precision, but not necessarily nanosecond accura
 
 <p>A side effect of this approach is that the amount of time it takes for a complete benchmark to run is approximately system independent.  It would take about as long on a state of the art computer 10 years from now as it would on an old door stop collecting dust.</p>
 
-<h2 id="a-name1212-previous-history-infuencing-future-results"><a name="1.2"></a>1.2 Previous History Infuencing Future Results</h2>
+<h2 id="12-previous-history-infuencing-future-results"><a name="1.2"></a>1.2 Previous History Infuencing Future Results</h2>
 
 <p>A basic assumption made when measuring an algorithm’s performance is that its current performance is independent of what was run before it.  If this assumption is broken then results become unpredictable or unreproducible on different systems. At a glance the sample code above wouldn’t have this issue, since by the time new library is being evaluated the old library would have stopped and would no longer be running. Unfortunately this is not the case.  A few of the reasons why are listed below:</p>
 
@@ -166,7 +165,7 @@ This method provides nanosecond precision, but not necessarily nanosecond accura
 
 <p>To illustrate how significant this issue is consider the following benchmark that compares performance of three different ways to multiply matrices:</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BenchmarkMatrixMatrixMult</span> <span class="o">{</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BenchmarkMatrixMatrixMult</span> <span class="o">{</span>
 
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">multSmall</span><span class="o">(</span> <span class="n">DenseMatrix64F</span> <span class="n">matA</span> <span class="o">,</span> <span class="n">DenseMatrix64F</span> <span class="n">matB</span> <span class="o">,</span>
                              <span class="n">DenseMatrix64F</span> <span class="n">matResult</span> <span class="o">,</span> <span class="kt">int</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
@@ -196,10 +195,10 @@ This method provides nanosecond precision, but not necessarily nanosecond accura
             <span class="kt">long</span> <span class="n">timeLarge</span> <span class="o">=</span> <span class="n">multLarge</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">,</span><span class="n">count</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
             <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
 
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">&quot;Size %4d elapsed time: %6d %6d %6d\n&quot;</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">timeSmall</span><span class="o">,</span><span class="n">timeAux</span><span class="o">,</span><span class="n">timeLarge</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Size %4d elapsed time: %6d %6d %6d\n"</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">timeSmall</span><span class="o">,</span><span class="n">timeAux</span><span class="o">,</span><span class="n">timeLarge</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>Please note that the code has been truncated to only show what is essential.  When the above code is run using JavaVM 1.6.0_15 on my computer it produces the following output:</p>
 
@@ -225,17 +224,17 @@ Size 1000 elapsed time:  13574   3562   3491
 
 <p>The results are now completely different!  Why did this happen?  That’s hard to say, but clearly the conclusions you reach are dependent upon the order in which you process your results.</p>
 
-<h3 id="the-java-matrix-benchmark-approach-1">1.2.1 The Java Matrix Benchmark Approach</h3>
+<h3 id="121-the-java-matrix-benchmark-approach">1.2.1 The Java Matrix Benchmark Approach</h3>
 
 <p>Java Matrix Benchmark mitigates these problems by launching a new Java virtual machine with every set of tests for an operation.  In a typical configuration the same operation in the same library will be evaluated 25 times.  A new virtual machine will be launched and it will repeat the test 5 times in that instance.  A new instance is launched 5 times.</p>
 
 <p>Jar files are only loaded if they are used by the library being evaluated.  This eliminates the possibility of accidental overloading of classes.  Between each test in the same Java instance a call to “System.gc()” is made to reduce the influence of the garbage collector on the results.</p>
 
-<h2 id="a-name1313-benchmark-overhead"><a name="1.3"></a>1.3 Benchmark Overhead</h2>
+<h2 id="13-benchmark-overhead"><a name="1.3"></a>1.3 Benchmark Overhead</h2>
 
 <p>When measuring an algorithms performance, the influence of the benchmark on the results should be minimized.  Consider the following benchmark:</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="n">totalTrials</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="n">totalTrials</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         
 <span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
 <span class="k">while</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">startTime</span> <span class="o">&lt;</span> <span class="mi">5000</span> <span class="o">)</span> <span class="o">{</span>
@@ -245,17 +244,17 @@ Size 1000 elapsed time:  13574   3562   3491
     <span class="o">}</span>
 <span class="o">}</span>
 
-<span class="k">return</span> <span class="o">(</span><span class="kt">double</span><span class="o">)(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">startTime</span><span class="o">)/(</span><span class="kt">double</span><span class="o">)</span><span class="n">totalTrials</span><span class="o">;</span></code></pre></div>
+<span class="k">return</span> <span class="o">(</span><span class="kt">double</span><span class="o">)(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">startTime</span><span class="o">)/(</span><span class="kt">double</span><span class="o">)</span><span class="n">totalTrials</span><span class="o">;</span></code></pre></figure>
 
 <p>It counts how many times a specific operation runs in approximately 5 seconds.  Is it really doing that?  What happens if ‘createRandom()’ takes longer to execute than performOperation()?  Then you are measuring the overhead of the benchmark and not operation itself.  The same is true for ‘System.currentTimeMillis()’ and for the overhead caused by the use of an interface instead of directly calling the function.</p>
 
 <p>In general large matrices and expensive operations are not significantly affected by this issue.  It can even be interesting to measure the runtime of individual operations for large matrices since more accurate information on the variance can be computed.  However for fast operations or small matrices it is significant.</p>
 
-<h3 id="the-java-matrix-benchmark-approach-2">1.3.1 The Java Matrix Benchmark Approach</h3>
+<h3 id="131-the-java-matrix-benchmark-approach">1.3.1 The Java Matrix Benchmark Approach</h3>
 
 <p>A key design requirement of this benchmark was accurate results for small matrices.  All previously know Java benchmarks effectively ignored small matrices and/or had significant overhead in the benchmark.  This was handled by making direct calls to the library’s functions between the time samples:</p>
 
-<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">long</span> <span class="nf">process</span><span class="o">(</span><span class="n">DenseMatrix64F</span><span class="o">[]</span><span class="n">inputs</span><span class="o">,</span> <span class="kt">long</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">long</span> <span class="nf">process</span><span class="o">(</span><span class="n">DenseMatrix64F</span><span class="o">[]</span><span class="n">inputs</span><span class="o">,</span> <span class="kt">long</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">Matrix</span> <span class="n">matA</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
     <span class="n">Matrix</span> <span class="n">matB</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
 
@@ -265,33 +264,33 @@ Size 1000 elapsed time:  13574   3562   3491
         <span class="n">matA</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="n">matB</span><span class="o">);</span>
     <span class="o">}</span>
     <span class="k">return</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">prev</span><span class="o">;</span>
-<span class="o">}</span></code></pre></div>
+<span class="o">}</span></code></pre></figure>
 
 <p>The above is the benchmark code is used to evaluate Jama’s addition operator.  Note the for loop is the only overhead that is included the elapsed time measurement.</p>
 
 <p>The disadvantage of this approach is that only a few different matrices can be used in testing.  Some algorithm’s runtime is dependent on the input they are given.  More matrices that they are evaluated against the better the results will be.  One way around this problem would be to generate a random matrix and then measure the time for a single operation.  For small matrices the execution time is too small to be measured this way and the benchmark will take much longer to run.</p>
 
-<h2 id="a-name1414-repeatability"><a name="1.4"></a>1.4 Repeatability</h2>
+<h2 id="14-repeatability"><a name="1.4"></a>1.4 Repeatability</h2>
 
 <p>Modern operating systems and applications running on them perform many tasks automatically and periodically.  An application could decide that the middle of your benchmark is a good time to download, decompress, and install its latest update.  The OS might decide to update some file indexes.  Some of these can be controlled by turning off services and quitting applications.</p>
 
 <p>Unfortunately this is a tedious task that often requires intimate knowledge the operating system to effective do.  It is often the case that these tasks will run for a relatively short period of time.  So only one library or set of applications would be influenced.</p>
 
-<h3 id="the-java-matrix-benchmark-approach-3">1.4.1 The Java Matrix Benchmark Approach</h3>
+<h3 id="141-the-java-matrix-benchmark-approach">1.4.1 The Java Matrix Benchmark Approach</h3>
 
 <p>Java Matrix Benchmark can not eliminate this problem by itself.  It is best for the user to close and kill all non essential applications and processes before running the benchmark.  It does take steps to mitigate the issue by randomizing the order in which it evaluates operations within a library.</p>
 
 <p>By randomizing the order it is less likely that all the individual tests will be slowed down by a short process that suddenly starts up and stops.  A process that takes a lot of time to run will significantly change the results and can be hard to detect.  An additional step that could be taken to improve the situation is to only measure the benchmark application’s CPU usage time.  Many operating systems provide this functionality, and ways to get access to that information in an OS independent way inside of Java are being investigated.</p>
 
-<h2 id="a-name1515-exception-handling"><a name="1.5"></a>1.5 Exception Handling</h2>
+<h2 id="15-exception-handling"><a name="1.5"></a>1.5 Exception Handling</h2>
 
 <p>No library is perfect and things will go wrong.  A good benchmark will be able to handle these problems and continue running.  In Java, typical problems include a RuntimeException being thrown, an algorithm not stopping, or threads not terminating.</p>
 
-<h3 id="the-java-matrix-benchmark-approach-4">1.5.1 The Java Matrix Benchmark Approach</h3>
+<h3 id="151-the-java-matrix-benchmark-approach">1.5.1 The Java Matrix Benchmark Approach</h3>
 
 <p>RuntimeExceptions can be caught with a simple try catch block.  An algorithm caught in an infinite loop is more problematic.  Since each test is a new Java instance it can be easily killed by the master benchmark program if it is taking too long.  All of these exceptions are logged for later debugging of the library or explaining why it went wrong.</p>
 
-<h1 id="summary">2 Summary</h1>
+<h1 id="2-summary">2 Summary</h1>
 
 <p>Here is a summary of how Java Matrix Benchmark evaluates each library:</p>
 
