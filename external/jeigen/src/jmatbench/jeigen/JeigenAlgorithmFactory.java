@@ -10,8 +10,8 @@ import jmbench.tools.BenchmarkConstants;
 /**
  * @author Peter Abeles
  */
-// TODO fix solve solveOver()  crashes hard
-    // TODO fix SVD
+// TODO SVD is generate large error
+// TODO Eigen is generate large error
 public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
@@ -55,7 +55,7 @@ public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
             long elapsed = System.nanoTime()-prev;
             if( outputs != null ) {
                 outputs[0] = new JeigenBenchmarkMatrix(results.U);
-                outputs[1] = new JeigenBenchmarkMatrix(results.S);
+                outputs[1] = new JeigenBenchmarkMatrix(results.S.diag());
                 outputs[2] = new JeigenBenchmarkMatrix(results.V);
             }
             return elapsed;
@@ -88,7 +88,7 @@ public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
             long elapsed = System.nanoTime()-prev;
             if( outputs != null ) {
                 outputs[0] = new JeigenBenchmarkMatrix(results.vectors.real());
-                outputs[1] = new JeigenBenchmarkMatrix(results.values.real());
+                outputs[1] = new JeigenBenchmarkMatrix(results.values.real().diag());
             }
             return elapsed;
         }
@@ -241,15 +241,10 @@ public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public MatrixProcessorInterface solveExact() {
-        return new Solve(); // TODO no specialized?
+        return new SolveExact(); // TODO no specialized?
     }
 
-    @Override
-    public MatrixProcessorInterface solveOver() {
-        return new Solve();
-    }
-
-    public static class Solve implements MatrixProcessorInterface {
+    public static class SolveExact implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             DenseMatrix matA = inputs[0].getOriginal();
@@ -261,6 +256,33 @@ public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
 
             for( long i = 0; i < numTrials; i++ ) {
                 result = matA.ldltSolve(matB);
+            }
+
+            long elapsed = System.nanoTime()-prev;
+            if( outputs != null ) {
+                outputs[0] = new JeigenBenchmarkMatrix(result);
+            }
+            return elapsed;
+        }
+    }
+
+    @Override
+    public MatrixProcessorInterface solveOver() {
+        return new SolveOver();
+    }
+
+    public static class SolveOver implements MatrixProcessorInterface {
+        @Override
+        public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
+            DenseMatrix matA = inputs[0].getOriginal();
+            DenseMatrix matB = inputs[1].getOriginal();
+
+            DenseMatrix result = null;
+
+            long prev = System.nanoTime();
+
+            for( long i = 0; i < numTrials; i++ ) {
+                result = matA.fullPivHouseholderQRSolve(matB);
             }
 
             long elapsed = System.nanoTime()-prev;

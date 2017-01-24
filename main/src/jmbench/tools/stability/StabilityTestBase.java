@@ -93,7 +93,7 @@ public abstract class StabilityTestBase extends EvaluationTest {
     }
 
     @Override
-    public void setupTrial() {
+    public void setupTest() {
     }
 
     @Override

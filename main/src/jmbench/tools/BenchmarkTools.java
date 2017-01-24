@@ -133,7 +133,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         test.init();
 
         for( int i = 0; i < numTests; i++ ) {
-            test.setupTrial();
+            test.setupTest();
             TestResults tr = test.evaluate();
             results.add(tr);
         }

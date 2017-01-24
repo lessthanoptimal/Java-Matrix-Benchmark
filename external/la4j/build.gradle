@@ -2,9 +2,3 @@ dependencies {
     compile project(':main')
     compile group: 'org.la4j', name: 'la4j', version: '0.6.0'
 }
-
-idea {
-    module {
-        name = "la4j"
-    }
-}

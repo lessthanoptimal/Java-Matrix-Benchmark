@@ -176,7 +176,7 @@ public class EvaluatorSlave {
         for( int i = 0; i < numTests; i++ ) {
             // create the matrix inputs for the algorithm.
             if( VERBOSE ) System.out.print("  Tests Number = "+i);
-            eval.setupTrial();
+            eval.setupTest();
 
             long before = System.currentTimeMillis();
             TestResults r = eval.evaluate();

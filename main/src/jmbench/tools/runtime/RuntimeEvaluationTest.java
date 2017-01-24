@@ -116,7 +116,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     }
 
     @Override
-    public void setupTrial()
+    public void setupTest()
     {
         Random rand = new Random(masterRand.nextLong());
 
@@ -136,7 +136,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
     /**
      * Computes the number of operations per second it takes to run the specified algortihm
-     * with the inputs specified in {@link #setupTrial()}.
+     * with the inputs specified in {@link #setupTest()}.
      *
      * @return Number of operations per second.
      */

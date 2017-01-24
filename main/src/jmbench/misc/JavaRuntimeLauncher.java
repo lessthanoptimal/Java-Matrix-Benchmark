@@ -162,8 +162,10 @@ public class JavaRuntimeLauncher {
                 pr.exitValue();
                 break;
             } catch( IllegalThreadStateException e) {
+                long ellapsedTime = System.currentTimeMillis() - startTime;
+
                 // check to see if the process is frozen
-                if(System.currentTimeMillis() - startTime > frozenTime ) {
+                if(ellapsedTime > frozenTime ) {
                     pr.destroy(); // kill the process
                     frozen = true;
                     break;
@@ -171,7 +173,8 @@ public class JavaRuntimeLauncher {
 
                 // let everyone know its still alive
                 if( System.currentTimeMillis() - lastAliveMessage > 60000 ) {
-                    System.out.println("\nMaster is still alive: "+new Date()+"  Press 'q' and enter to quit.");
+                    int percent = (int)(100*(ellapsedTime/(double)frozenTime));
+                    System.out.println("\nMaster is still alive: "+new Date()+"  Press 'q' and enter to quit. "+percent+"%");
                     lastAliveMessage = System.currentTimeMillis();
                 }
             }

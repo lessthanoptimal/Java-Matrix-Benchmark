@@ -71,7 +71,7 @@ public class MemoryTest extends EvaluationTest {
     }
 
     @Override
-    public void setupTrial() {
+    public void setupTest() {
     }
 
     @Override

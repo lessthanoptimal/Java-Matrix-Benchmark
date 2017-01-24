@@ -57,7 +57,7 @@ public abstract class EvaluationTest implements Serializable {
     /**
      * Called before a new trial is started.  This would be a good point to create new random inputs.
      */
-    public abstract void setupTrial();
+    public abstract void setupTest();
 
     /**
      * Prints information about what it is doing.

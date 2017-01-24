@@ -6,4 +6,8 @@ include 'external:jama'
 include 'external:parallelcolt'
 
 // the following algorithms require non-Maven dependencies
-include 'external:jeigen'
+if( file('external/jeigen/libs/Jeigen-onefat.jar').exists()) {
+    include 'external:jeigen'
+} else {
+    logger.warn("Skipping jeigen since local dependency can't be found")
+}

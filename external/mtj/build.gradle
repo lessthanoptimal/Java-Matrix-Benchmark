@@ -2,9 +2,3 @@ dependencies {
     compile project(':main')
     compile group: 'com.googlecode.matrix-toolkits-java', name: 'mtj', version: '1.0.4'
 }
-
-idea {
-    module {
-        name = "mtj"
-    }
-}

@@ -4,9 +4,3 @@ dependencies {
             each {String a ->compile group: 'org.ujmp', name: a, version: '0.3.0'}
     compile project(':main')
 }
-
-idea {
-    module {
-        name = "ujmp"
-    }
-}
