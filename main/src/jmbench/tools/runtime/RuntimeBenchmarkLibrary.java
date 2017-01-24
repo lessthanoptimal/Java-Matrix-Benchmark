@@ -380,13 +380,13 @@ public class RuntimeBenchmarkLibrary {
                                                int numberOfTests  ) {
         tooSlow = false;
         caseFailed = false;
+
+        tools.setFrozenTime( numberOfTests*test.getMaximumEvaluateTime());
         EvaluatorSlave.Results r;
         if( SPAWN_SLAVE )
             r = tools.runTest(test, numberOfTests);
         else
             r = tools.runTestNoSpawn(test, numberOfTests);
-
-        tools.setFrozenTime( numberOfTests*test.getMaximumEvaluateTime() );
 
         if( r == null ) {
             logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
