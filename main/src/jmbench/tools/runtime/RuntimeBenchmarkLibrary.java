@@ -386,7 +386,7 @@ public class RuntimeBenchmarkLibrary {
         else
             r = tools.runTestNoSpawn(test, numberOfTests);
 
-        tools.setFrozenTime( test.getMaximumEvaluateTime() );
+        tools.setFrozenTime( numberOfTests*test.getMaximumEvaluateTime() );
 
         if( r == null ) {
             logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
