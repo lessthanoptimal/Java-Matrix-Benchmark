@@ -172,7 +172,7 @@ public class JavaRuntimeLauncher {
                 }
 
                 // let everyone know its still alive
-                if( System.currentTimeMillis() - lastAliveMessage > 60000 ) {
+                if( System.currentTimeMillis() - lastAliveMessage > 300000 ) {
                     int percent = (int)(100*(ellapsedTime/(double)frozenTime));
                     System.out.println("\nMaster is still alive: "+new Date()+"  Press 'q' and enter to quit. "+percent+"%");
                     lastAliveMessage = System.currentTimeMillis();

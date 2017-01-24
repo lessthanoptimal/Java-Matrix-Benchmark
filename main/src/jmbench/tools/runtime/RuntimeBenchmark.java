@@ -118,13 +118,12 @@ public class RuntimeBenchmark {
         System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
         System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println("  --Seed=<number>          |  used to set the random seed to the specified value.");
-        System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000.");
+        System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000 ms.");
         System.out.println("  --MaxTime=<ms>           |  "+MiscTools.stringTimeArgumentHelp());
         System.out.println("  --Resume=<directory>     |  It will resume an unfinished benchmark at the specified directory.");
         System.out.println("  --Memory=<MB>            |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
         System.out.println("                           |  as large as possible with out exceeding the amount of physical memory on the system.");
         System.out.println("                           |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
-        System.out.println("  --SanityCheck=<boolean>  |  Should it check the output for correctness?  Adds time and memory.");
         System.out.println();
         System.out.println("The only option which must be specified is \"FixedMemory\".  If no other options are specified " +
                 "then a default configuration will be used and the results" +
