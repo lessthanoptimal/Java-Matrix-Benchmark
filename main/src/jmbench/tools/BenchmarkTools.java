@@ -35,27 +35,19 @@ import java.util.Random;
 // todo change random seed with each trial, optional
 public class BenchmarkTools extends JavaRuntimeLauncher {
 
+    public static final String RESULTS_NAME = "slave_results.xml";
+
     // used to ID stale results
     int requestID= new Random().nextInt();
-    // how many MC trials should the slave perform
-    int numTrials = 1;
     // if not zero it will allocate this much memory (MB)
     long overrideMemory = 0;
-    // amount of memory it always adds in megs
-    long baseMemory = 10;
-    // used to increase or decrease the added memory
-    long memoryScale = 8;
 
     boolean verbose = true;
 
     PrintStream errorStream = System.err;
 
-    public BenchmarkTools( int numTrials , long baseMemory , long memoryScale , List<String> pathJars ){
+    public BenchmarkTools( List<String> pathJars ){
         super(pathJars);
-
-        this.baseMemory = baseMemory;
-        this.numTrials = numTrials;
-        this.memoryScale = memoryScale;
     }
 
 
@@ -65,14 +57,6 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
 
     public void setErrorStream(PrintStream errorStream) {
         this.errorStream = errorStream;
-    }
-
-    public long getMemoryScale() {
-        return memoryScale;
-    }
-
-    public void setMemoryScale(long memoryScale) {
-        this.memoryScale = memoryScale;
     }
 
 
@@ -88,7 +72,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      * @return The results of the experiment.
      *
      */
-    public EvaluatorSlave.Results runTest( EvaluationTest test ) {
+    public EvaluatorSlave.Results runTest( EvaluationTest test , int numTests ) {
 
         requestID++;
 
@@ -96,7 +80,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         UtilXmlSerialization.serializeXml(test, "case.xml");
 
         // compute required memory in mega bytes
-        long allocatedMemory = overrideMemory > 0 ? overrideMemory : (test.getInputMemorySize()/1024/1024+baseMemory)*memoryScale;
+        long allocatedMemory = overrideMemory;
 
         if(verbose)
             System.out.println("Memory = "+allocatedMemory+" MB");
@@ -104,7 +88,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         setMemoryInMB(allocatedMemory);
 
         boolean skipReadXml = false;
-        switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTrials),Long.toString(requestID) ) )
+        switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTests),Long.toString(requestID) ) )
         {
             case FROZEN:
                 errorStream.println("BenchmarkTools: Slave froze and was killed");
@@ -121,7 +105,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         EvaluatorSlave.Results ret = null;
         if( !skipReadXml ) {
             // see if the user terminated the slave
-            ret = UtilXmlSerialization.deserializeXml("slave_results.xml");
+            ret = UtilXmlSerialization.deserializeXml(RESULTS_NAME);
             if (ret == null || ret.getRequestID() != requestID) {
                 if (ret == null)
                     errorStream.println("UtilXmlSerialization.deserializeXml returned null");
@@ -142,14 +126,14 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      * @param test A description of which is to be tested.
      * @return The results of the experiment.
      */
-    public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test ) {
+    public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test , int numTests ) {
         requestID++;
         List<TestResults> results = new ArrayList<TestResults>();
 
         test.init();
 
-        for( int i = 0; i < numTrials; i++ ) {
-            test.setupTrial();
+        for( int i = 0; i < numTests; i++ ) {
+            test.setupTest();
             TestResults tr = test.evaluate();
             results.add(tr);
         }
@@ -171,8 +155,12 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             System.out.println("Couldn't delete case.xml");
         }
 
-        if( !new File("slave_results.xml").delete() ) {
-            System.out.println("Couldn't delete slave_results.xml");
+        File results = new File(RESULTS_NAME);
+
+        if( !results.exists() )
+            System.out.println(results.getName()+" does not exist");
+        else if( !results.delete() ) {
+            System.out.println("Couldn't delete "+results.getName());
         }
     }
 }

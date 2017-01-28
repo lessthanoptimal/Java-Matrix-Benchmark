@@ -71,7 +71,7 @@ public class MemoryTest extends EvaluationTest {
     }
 
     @Override
-    public void setupTrial() {
+    public void setupTest() {
     }
 
     @Override
@@ -79,7 +79,7 @@ public class MemoryTest extends EvaluationTest {
     }
 
     @Override
-    public long getMaximumRuntime() {
+    public long getMaximumEvaluateTime() {
         return -1;
     }
 
@@ -92,7 +92,7 @@ public class MemoryTest extends EvaluationTest {
     public TestResults evaluate() {
         Random rand = new Random(randomSeed);
 
-        BenchmarkMatrix []inputs = gen != null ? gen.createInputs(factory,rand,false,size) : null;
+        BenchmarkMatrix []inputs = gen != null ? gen.createInputs(factory,rand, size) : null;
 
         double mod[] = null;
 

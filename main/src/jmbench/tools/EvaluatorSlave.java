@@ -162,21 +162,21 @@ public class EvaluatorSlave {
     /**
      * Evaluate each algorithm several times and result the results.
      */
-    private static Results evaluationLoop(int numTrials, EvaluationTest eval) {
+    private static Results evaluationLoop(int numTests, EvaluationTest eval) {
         // make sure it is in the correct state
         eval.init();
 
         // How long does it allow each test to run for
-        long maximumRuntime = eval.getMaximumRuntime();
+        long maximumEvaluate = eval.getMaximumEvaluateTime();
 
         List<TestResults> results = new ArrayList<TestResults>();
 
         FailReason fail = null;
 
-        for( int i = 0; i < numTrials; i++ ) {
+        for( int i = 0; i < numTests; i++ ) {
             // create the matrix inputs for the algorithm.
-            if( VERBOSE ) System.out.print("  Trial = "+i);
-            eval.setupTrial();
+            if( VERBOSE ) System.out.print("  Tests Number = "+i);
+            eval.setupTest();
 
             long before = System.currentTimeMillis();
             TestResults r = eval.evaluate();
@@ -185,11 +185,11 @@ public class EvaluatorSlave {
             if( VERBOSE ) System.out.print("  results = "+r);
             results.add(r);
 
-            if( maximumRuntime > -1 && (after-before) > maximumRuntime) {
+            if( maximumEvaluate > -1 && (after-before) > maximumEvaluate) {
                 fail = FailReason.TOO_SLOW;
                 // if a single trial takes too long then it is just stop
                 if( VERBOSE )
-                    System.out.println("\nSingle test too long: DT = "+(after-before)+" max = "+maximumRuntime);
+                    System.out.println("\nSingle test too long: DT = "+(after-before)+" max = "+maximumEvaluate);
                 break;
             }
 

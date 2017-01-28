@@ -11,9 +11,3 @@ dependencies {
     // 0.10.1 that was here before was broken
     compile group: 'incanter', name: 'parallelcolt', version: '0.9.4'
 }
-
-idea {
-    module {
-        name = "parallelcolt"
-    }
-}

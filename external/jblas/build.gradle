@@ -2,9 +2,3 @@ dependencies {
     compile project(':main')
     compile group: 'org.jblas', name: 'jblas', version: '1.2.4'
 }
-
-idea {
-    module {
-        name = "jblas"
-    }
-}

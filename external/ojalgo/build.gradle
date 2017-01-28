@@ -1,10 +1,4 @@
 dependencies {
     compile project(':main')
-    compile 'org.ojalgo:ojalgo:41.0.0-SNAPSHOT'
-}
-
-idea {
-    module {
-        name = "ojalgo"
-    }
+    compile 'org.ojalgo:ojalgo:40.0.0'
 }

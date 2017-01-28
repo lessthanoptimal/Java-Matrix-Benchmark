@@ -19,7 +19,6 @@
 
 package jmbench.tools.runtime.evaluation;
 
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeMeasurement;
 import jmbench.tools.runtime.RuntimeResults;
@@ -66,15 +65,12 @@ public class RuntimeResultsCsvIO {
                 int numResults = readInt(input);
                 if( numResults > 0 ) {
                     RuntimeEvaluationMetrics e = ret.metrics[i] = new RuntimeEvaluationMetrics();
-                    e.rawResults = new ArrayList<RuntimeMeasurement>();
+                    e.rawResults = new ArrayList<>();
 
                     for( int j = 0; j < numResults; j++ ) {
                         double opsPerSec = readDouble(input);
-                        String faultName = readString(input);
 
-                        OutputError error = faultName.compareTo("null") == 0 ? null : OutputError.valueOf(faultName);
-
-                        e.rawResults.add(new RuntimeMeasurement(opsPerSec,0,error));
+                        e.rawResults.add(new RuntimeMeasurement(opsPerSec,0));
                     }
 
                     e.computeStatistics();
@@ -181,11 +177,6 @@ public class RuntimeResultsCsvIO {
                 output.print('\n');
                 for (RuntimeMeasurement m : raw) {
                     output.print(m.getOpsPerSec());
-                    output.print('\t');
-                    if (m.getError() == null)
-                        out(output,"null");
-                    else
-                        out(output,m.getError().toString());
                     output.print('\n');
                 }
             }

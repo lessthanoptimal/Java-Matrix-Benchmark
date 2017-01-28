@@ -1,8 +1,13 @@
 include 'main'
 include 'external:mtj','external:la4j','external:jblas','external:commons-math', 'external:ejml'
 include 'external:ojalgo','external:ujmp'
-
-// the following algorithms require non-Maven dependencies
 include 'external:colt'
 include 'external:jama'
 include 'external:parallelcolt'
+
+// the following algorithms require non-Maven dependencies
+if( file('external/jeigen/libs/Jeigen-onefat.jar').exists()) {
+    include 'external:jeigen'
+} else {
+    logger.warn("Skipping jeigen since local dependency can't be found")
+}

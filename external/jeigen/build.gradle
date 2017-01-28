@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':main')
+    compile group: 'net.java.dev.jna', name: 'jna', version: '4.1.0'
+
+}

@@ -21,11 +21,7 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.matrix.RowMajorMatrix;
-import jmbench.matrix.RowMajorOps;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import jmbench.tools.stability.StabilityBenchmark;
 
 import java.util.Random;
 
@@ -37,12 +33,9 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class SolveEqGenerator implements InputOutputGenerator {
 
-    RowMajorMatrix A;
-    RowMajorMatrix B;
-
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[2];
 
         inputs[0] = factory.create(size,size);
@@ -51,36 +44,7 @@ public class SolveEqGenerator implements InputOutputGenerator {
         randomize(inputs[0],-1,1,rand);
         randomize(inputs[1],-1,1,rand);
 
-        if( checkResults ) {
-            A = new RowMajorMatrix(inputs[0]);
-            B = new RowMajorMatrix(inputs[1]);
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        if( output[0] == null ) {
-            return OutputError.MISC;
-        }
-
-        RowMajorMatrix X = new RowMajorMatrix(output[0]);
-
-        if(RowMajorOps.hasUncountable(X) ) {
-            return OutputError.UNCOUNTABLE;
-        }
-
-        RowMajorMatrix B_found = RowMajorOps.mult(A, X, null);
-
-
-        double error = StabilityBenchmark.residualError(B_found,B);
-        if( error > tol ) {
-//            P.print();
-            return OutputError.LARGE_ERROR;
-        }
-
-        return OutputError.NO_ERROR;
     }
 
     @Override

@@ -1,10 +1,8 @@
-- Add support for commercial libraries
- * Make it so everything will compile even if the library is not present.
+- Auto generate absolute plots
+  * Fix broken image for absolute manual/DescriptionRuntime/
 
 
-- Add benchmark for matrix creation time. 
-
-- applet for displaying results
+- Add benchmark for matrix creation time.
 
 - Randomly draw operation and matrix size
  * first do a run through until an exception occurs
@@ -18,7 +16,7 @@
 
 - convert results to excel format
 
-- Create a memory leak test
+- Create a memoryMB leak test
 
 - Guava StopWatch for timing
 
@@ -33,5 +31,5 @@
 - Fix summary plot by intelligently cropping the tail
 - Weights for each operation is based on their theoretical complexity and not the fastest library
 - Penalize libraries which fail stability
-- Merge runtime and memory interfaces
+- Merge runtime and memoryMB interfaces
 - Make it easier to add new operations

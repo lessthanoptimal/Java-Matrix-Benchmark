@@ -93,7 +93,7 @@ public abstract class StabilityTestBase extends EvaluationTest {
     }
 
     @Override
-    public void setupTrial() {
+    public void setupTest() {
     }
 
     @Override
@@ -101,7 +101,7 @@ public abstract class StabilityTestBase extends EvaluationTest {
     }
 
     @Override
-    public long getMaximumRuntime() {
+    public long getMaximumEvaluateTime() {
         return -1;
     }
 

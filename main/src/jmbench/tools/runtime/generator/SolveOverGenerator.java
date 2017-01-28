@@ -23,7 +23,6 @@ import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
 
 import java.util.Random;
@@ -36,11 +35,10 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  * @author Peter Abeles
  */
 public class SolveOverGenerator implements InputOutputGenerator {
-    RowMajorMatrix X;
 
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[2];
 
         inputs[0] = factory.create(3*size,size);  // A
@@ -57,18 +55,7 @@ public class SolveOverGenerator implements InputOutputGenerator {
 
         convertToBm(B,inputs[1]);
 
-        if( checkResults ) {
-            this.X = X;
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        RowMajorMatrix o = new RowMajorMatrix(output[0]);
-
-        return ResultsChecking.checkResult(o,X,tol);
     }
 
     @Override

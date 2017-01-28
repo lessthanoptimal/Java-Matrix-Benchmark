@@ -118,14 +118,12 @@ public class RuntimeBenchmark {
         System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
         System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println("  --Seed=<number>          |  used to set the random seed to the specified value.");
-        System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000.");
+        System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000 ms.");
         System.out.println("  --MaxTime=<ms>           |  "+MiscTools.stringTimeArgumentHelp());
         System.out.println("  --Resume=<directory>     |  It will resume an unfinished benchmark at the specified directory.");
         System.out.println("  --Memory=<MB>            |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
-        System.out.println("                           |  as large as possible with out exceeding the amount of physical memory on the system.  If zero is specified");
-        System.out.println("                           |  then the memory is dynamically determined.  It is recommended that a fixed amount be used.");
+        System.out.println("                           |  as large as possible with out exceeding the amount of physical memory on the system.");
         System.out.println("                           |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
-        System.out.println("  --SanityCheck=<boolean>  |  Should it check the output for correctness?  Adds time and memory.");
         System.out.println();
         System.out.println("The only option which must be specified is \"FixedMemory\".  If no other options are specified " +
                 "then a default configuration will be used and the results" +
@@ -178,9 +176,9 @@ public class RuntimeBenchmark {
                     failed = true; break;
                 }
                 if( splits.length != 1 ) {failed = true; break;}
-                config.maxTrials = 2;
-                config.numBlockTrials = 2;
-                config.trialTime = 1000;
+                config.totalTests = 2;
+                config.numTestsPerBlock = 2;
+                config.minimumTimePerTestMS = 1000;
                 System.out.println("Using quick and dirty config.");
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
@@ -203,12 +201,12 @@ public class RuntimeBenchmark {
                 System.out.println("Random seed set to "+config.seed);
             } else if( flag.compareTo("TrailTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.trialTime = Integer.parseInt(splits[1]);
-                System.out.println("Time per trial set to "+config.trialTime+" (ms).");
+                config.minimumTimePerTestMS = Integer.parseInt(splits[1]);
+                System.out.println("Time per trial set to "+config.minimumTimePerTestMS +" (ms).");
             } else if( flag.compareTo("MaxTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.maxTrialTime = (int)MiscTools.parseTime(splits[1]);
-                System.out.println("Max time per trial set to "+config.maxTrialTime+" (ms).");
+                config.maxTimePerTest = (int)MiscTools.parseTime(splits[1]);
+                System.out.println("Max time per test set to "+config.maxTimePerTest +" (ms).");
             }else if( flag.compareTo("Resume") == 0 ) {
                 if( splits.length != 2 || args.length != 1 ) {failed = true; break;}
                 System.out.println("Resuming a benchmark in dir "+splits[1]);
@@ -219,15 +217,11 @@ public class RuntimeBenchmark {
             } else if( flag.compareTo("Memory") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 memorySpecified = true;
-                config.memoryTrial = Integer.parseInt(splits[1]);
-                if( config.memoryTrial == 0 )
-                    System.out.println("Memory used will be dynamically determined. NOT RECOMMENDED.");
+                config.memoryMB = Integer.parseInt(splits[1]);
+                if( config.memoryMB <= 0 )
+                    System.out.println("Memory must be set to a value greater than zero");
                 else
-                    System.out.println("Memory used in each test will be "+config.memoryTrial +" (MB).");
-            } else if( flag.compareTo("SanityCheck") == 0 ) {
-                if( splits.length != 2 ) {failed = true; break;}
-                config.sanityCheck = Boolean.parseBoolean(splits[1]);
-                System.out.println("Sanity check output = "+config.sanityCheck);
+                    System.out.println("Memory used in each test will be "+config.memoryMB +" (MB).");
             } else {
                 System.out.println("Unknown flag: "+flag);
                 printHelp();

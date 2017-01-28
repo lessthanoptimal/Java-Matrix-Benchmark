@@ -33,10 +33,8 @@ public class StabilityBenchmarkConfig implements Serializable {
     public long randomSeed;
     public long maxProcessingTime;
 
-    // how much memory it will add to the operation requested memory
-    public long baseMemory;
-    // how much operation requested memory will be scaled
-    public long scaleMemory;
+    // How much memory it will allocate to the JVM
+    public long memory;
 
     // at which point is the error considered too large
     public double breakingPoint;
@@ -85,8 +83,7 @@ public class StabilityBenchmarkConfig implements Serializable {
         config.randomSeed = 0xdeadbeef;//new Random().nextLong();
         config.maxProcessingTime = 15*60*1000;
 
-        config.baseMemory = 200;
-        config.scaleMemory = 2;
+        config.memory = 1000;
 
         // some what arbitrary.  selected so that it will work on small and large
         // matrices with a generous cushion.  really should be a function of matrix size.
@@ -262,22 +259,6 @@ public class StabilityBenchmarkConfig implements Serializable {
 
     public void setOverFlowFactor(int overFlowFactor) {
         this.overFlowFactor = overFlowFactor;
-    }
-
-    public long getBaseMemory() {
-        return baseMemory;
-    }
-
-    public void setBaseMemory(long baseMemory) {
-        this.baseMemory = baseMemory;
-    }
-
-    public long getScaleMemory() {
-        return scaleMemory;
-    }
-
-    public void setScaleMemory(long scaleMemory) {
-        this.scaleMemory = scaleMemory;
     }
 
     public boolean isCheckAccuracy() {

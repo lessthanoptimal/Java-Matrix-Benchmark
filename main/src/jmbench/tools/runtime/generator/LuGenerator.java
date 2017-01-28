@@ -21,11 +21,7 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.matrix.RowMajorMatrix;
-import jmbench.matrix.RowMajorOps;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import jmbench.tools.stability.StabilityBenchmark;
 
 import java.util.Random;
 
@@ -37,58 +33,16 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class LuGenerator implements InputOutputGenerator {
 
-    RowMajorMatrix A;
-
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[1];
 
         inputs[0] = factory.create(size,size);
 
         randomize(inputs[0],-1,1,rand);
 
-        if( checkResults ) {
-            A = new RowMajorMatrix(inputs[0]);
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-
-        if( output[0] == null || output[1] == null ) {
-            return OutputError.MISC;
-        }
-
-        RowMajorMatrix L = new RowMajorMatrix(output[0]);
-        RowMajorMatrix U = new RowMajorMatrix(output[1]);
-        RowMajorMatrix P = output[2] != null ? new RowMajorMatrix(output[2]) : null;
-
-        if(RowMajorOps.hasUncountable(L) || RowMajorOps.hasUncountable(U) ) {
-            return OutputError.UNCOUNTABLE;
-        } else if( P != null && RowMajorOps.hasUncountable(P) )
-            return OutputError.UNCOUNTABLE;
-
-        if( P == null ) {
-            RowMajorMatrix found = RowMajorOps.mult(L,U,null);
-            double error = StabilityBenchmark.residualError(found,A);
-            if( error > tol ) {
-                return OutputError.LARGE_ERROR;
-            }
-        } else {
-            RowMajorMatrix P_tran = RowMajorOps.transpose(P,null);
-            RowMajorMatrix PL = RowMajorOps.mult(P_tran,L,null);
-            RowMajorMatrix found = RowMajorOps.mult(PL,U,null);
-
-            double error = StabilityBenchmark.residualError(found,A);
-            if( error > tol ) {
-                return OutputError.LARGE_ERROR;
-            }
-        }
-
-        return OutputError.NO_ERROR;
     }
 
     @Override

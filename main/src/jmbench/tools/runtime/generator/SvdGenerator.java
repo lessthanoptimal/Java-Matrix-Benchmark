@@ -21,11 +21,7 @@ package jmbench.tools.runtime.generator;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.interfaces.MatrixFactory;
-import jmbench.matrix.RowMajorMatrix;
-import jmbench.matrix.RowMajorOps;
-import jmbench.tools.OutputError;
 import jmbench.tools.runtime.InputOutputGenerator;
-import jmbench.tools.stability.StabilityBenchmark;
 
 import java.util.Random;
 
@@ -37,46 +33,16 @@ import static jmbench.misc.RandomizeMatrices.randomize;
  */
 public class SvdGenerator implements InputOutputGenerator {
 
-    RowMajorMatrix A;
-
     @Override
-    public BenchmarkMatrix[] createInputs( MatrixFactory factory , Random rand ,
-                                           boolean checkResults , int size ) {
+    public BenchmarkMatrix[] createInputs(MatrixFactory factory, Random rand,
+                                          int size) {
         BenchmarkMatrix[] inputs = new  BenchmarkMatrix[1];
 
         inputs[0] = factory.create(size,size);
 
         randomize(inputs[0],-1,1,rand);
 
-        if( checkResults ) {
-            A = new RowMajorMatrix(inputs[0]);
-        }
-
         return inputs;
-    }
-
-    @Override
-    public OutputError checkResults(BenchmarkMatrix[] output, double tol) {
-        if( output[0] == null || output[1] == null || output[2] == null) {
-            return OutputError.MISC;
-        }
-
-        RowMajorMatrix U = new RowMajorMatrix(output[0]);
-        RowMajorMatrix W = new RowMajorMatrix(output[1]);
-        RowMajorMatrix V = new RowMajorMatrix(output[2]);
-
-        RowMajorMatrix UW = RowMajorOps.mult(U, W, null);
-        RowMajorMatrix A_found = RowMajorOps.multTransB(UW, V, null);
-
-        if( RowMajorOps.hasUncountable(A_found) )
-            return OutputError.UNCOUNTABLE;
-
-        double error = StabilityBenchmark.residualError(A_found,A);
-        if( error > tol ) {
-            return OutputError.LARGE_ERROR;
-        }
-
-        return OutputError.NO_ERROR;
     }
 
     @Override

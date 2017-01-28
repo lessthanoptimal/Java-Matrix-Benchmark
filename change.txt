@@ -8,8 +8,11 @@
 - Removed dependency on DenseMatrix64F in RuntimePerformanceFactory
 - Changed default directory output naming scheme
 - Can launch plot stability from command line
+- added support for Jeigen
+- Removed ability to dynamically determine memory in runtime
+- Removed ability to check runtime results.  Stability handles this just fine now
 
-TODO https://github.com/hughperkins/jeigen
+TODO have MemoryBenchmarkTools extend JavaRuntimeLauncher?
 
 ----- Version 0.10
 

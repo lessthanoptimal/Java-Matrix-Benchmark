@@ -74,7 +74,8 @@ public class StabilityBenchmarkLibrary {
         this.directorySave = outputDir;
 
 
-        tools = new BenchmarkTools(1,config.baseMemory,config.scaleMemory,target.listOfJarFilePaths());
+        tools = new BenchmarkTools(target.listOfJarFilePaths());
+        tools.setOverrideMemory(config.memory);
         tools.setFrozenTime(config.maxProcessingTime);
 
         if( directorySave != null ) {
@@ -309,60 +310,50 @@ public class StabilityBenchmarkLibrary {
         fatalError = null;
         e.setRandomSeed(config.randomSeed);
 
-        for( int attempts = 0; attempts < 5; attempts++ ) {
+        EvaluatorSlave.Results results = spawnChild ? tools.runTest(e,1) : tools.runTestNoSpawn(e,1);
+        slaveMemoryMegaBytes = tools.getAllocatedMemoryInMB();
 
-            tools.setMemoryScale(attempts+1);
-            EvaluatorSlave.Results results = spawnChild ? tools.runTest(e) : tools.runTestNoSpawn(e);
-            slaveMemoryMegaBytes = tools.getAllocatedMemoryInMB();
-
-            if( results == null ) {
-                logStream.println("*** WTF runTest returned null = "+e.getTestName());
-                fatalError = FatalError.RETURNED_NULL;
-            } else if( results.failed == EvaluatorSlave.FailReason.USER_REQUESTED ) {
-                logStream.println("    Slave was killed by the user/OS.  Stopping the benchmark.  op = "+e.getTestName());
-                logStream.println("    error message: "+results.detailedError);
-                System.out.println("  Slave was killed by the user/OS.  Stopping the benchmark.");
-                System.out.println("    error message: "+results.detailedError);
-                System.exit(0);
-            } else if( results.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
-                System.out.println("  Not enough memory given to slave. Attempt "+attempts);
-                logStream.println("Not enough memory for op.  Attempt num "+attempts+"  op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
-                // have it run again, which will up the memory
-                continue;
-            } else {
-                if( results.failed != null ) {
-                    fatalError = FatalError.MISC;
-                    if( results.failed == EvaluatorSlave.FailReason.TOO_SLOW ) {
-                        logStream.println("    Slave: Case too slow = "+e.getTestName());
-                    } else if( results.failed == EvaluatorSlave.FailReason.FROZEN ) {
-                        logStream.println("    Slave: Frozen = "+e.getTestName());
-                        fatalError = FatalError.FROZE;
-                    } else {
-                        logStream.println("    Slave: Case failed = "+results.failed+" op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
-                        if( results.detailedError != null ) {
-                            logStream.println(results.detailedError);
-                        }
+        if( results == null ) {
+            logStream.println("*** WTF runTest returned null = "+e.getTestName());
+            fatalError = FatalError.RETURNED_NULL;
+        } else if( results.failed == EvaluatorSlave.FailReason.USER_REQUESTED ) {
+            logStream.println("    Slave was killed by the user/OS.  Stopping the benchmark.  op = "+e.getTestName());
+            logStream.println("    error message: "+results.detailedError);
+            System.out.println("  Slave was killed by the user/OS.  Stopping the benchmark.");
+            System.out.println("    error message: "+results.detailedError);
+            System.exit(0);
+        } else if( results.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
+            System.out.println("  Not enough memory given to slave. ");
+            logStream.println("Not enough memory for op.  "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
+        } else {
+            if( results.failed != null ) {
+                fatalError = FatalError.MISC;
+                if( results.failed == EvaluatorSlave.FailReason.TOO_SLOW ) {
+                    logStream.println("    Slave: Case too slow = "+e.getTestName());
+                } else if( results.failed == EvaluatorSlave.FailReason.FROZEN ) {
+                    logStream.println("    Slave: Frozen = "+e.getTestName());
+                    fatalError = FatalError.FROZE;
+                } else {
+                    logStream.println("    Slave: Case failed = "+results.failed+" op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
+                    if( results.detailedError != null ) {
+                        logStream.println(results.detailedError);
                     }
                 }
             }
-
-            // see if something very bad happened
-            if( fatalError != null )
-                return null;
-            
-            // collect all the results and return them
-            StabilityTrialResults all = new StabilityTrialResults();
-
-            for(TestResults t : results.getResults() ) {
-                StabilityTrialResults r =  (StabilityTrialResults)t;
-                all.addResults(r);
-            }
-
-            return all;
         }
 
-        fatalError = FatalError.OUT_OF_MEMORY;
+        // see if something very bad happened
+        if( fatalError != null )
+            return null;
+            
+        // collect all the results and return them
+        StabilityTrialResults all = new StabilityTrialResults();
 
-        return null;
+        for(TestResults t : results.getResults() ) {
+            StabilityTrialResults r =  (StabilityTrialResults)t;
+            all.addResults(r);
+        }
+
+        return all;
     }
 }
