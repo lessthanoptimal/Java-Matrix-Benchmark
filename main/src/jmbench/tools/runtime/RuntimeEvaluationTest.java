@@ -47,8 +47,8 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     // how long it should try to run the tests for in milliseconds
     private long goalRuntime;
 
-    // the max amount of time it will let a test run for
-    private long maxEvaluationTime;
+    // If a call to evaluate exceeds this time limit then the set of tests is aborted
+    private long maxEvaluationTimeMS;
     // randomly generated input matrices
     private volatile Random masterRand;
 
@@ -84,7 +84,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         this.nameAlgorithm = nameAlgorithm;
         this.generator = generator;
         this.goalRuntime = goalRuntime;
-        this.maxEvaluationTime = maxEvaluationTime;
+        this.maxEvaluationTimeMS = maxEvaluationTime;
     }
 
     public RuntimeEvaluationTest(){}
@@ -273,10 +273,10 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
     @Override
     public long getMaximumEvaluateTime() {
-        return maxEvaluationTime;
+        return maxEvaluationTimeMS;
     }
 
     public void setMaximumEvaluateTime(long maxRuntime) {
-        this.maxEvaluationTime = maxRuntime;
+        this.maxEvaluationTimeMS = maxRuntime;
     }
 }

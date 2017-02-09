@@ -72,7 +72,7 @@ public class RuntimeBenchmarkConfig implements Serializable {
     // the minimum amount of time each trials should last for (ms)
     public int minimumTimePerTestMS;
     // the maximum amount of time a trial can last for (ms)
-    public int maxTimePerTest;
+    public int maxTimePerTestMS;
 
     // specifies a fixed amount of memory that is to be allocated to the slave.
     // if set to zero then the memory will be dynamically allocated
@@ -96,7 +96,7 @@ public class RuntimeBenchmarkConfig implements Serializable {
         config.numTestsPerBlock = 5;
         config.totalTests = 25;
         config.minimumTimePerTestMS = 3000;
-        config.maxTimePerTest = 600000;
+        config.maxTimePerTestMS = 60*1000;
         config.memoryMB = 0;
         config.randizeOrder = true;
         config.maxMatrixSize = 10000;
@@ -326,12 +326,12 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.invertSymmPosDef = invertSymmPosDef;
     }
 
-    public int getMaxTimePerTest() {
-        return maxTimePerTest;
+    public int getMaxTimePerTestMS() {
+        return maxTimePerTestMS;
     }
 
-    public void setMaxTimePerTest(int maxTimePerTest) {
-        this.maxTimePerTest = maxTimePerTest;
+    public void setMaxTimePerTestMS(int maxTimePerTestMS) {
+        this.maxTimePerTestMS = maxTimePerTestMS;
     }
 
     public int getMemoryMB() {
