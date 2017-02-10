@@ -76,7 +76,6 @@ public class StabilityBenchmarkLibrary {
 
         tools = new BenchmarkTools(target.listOfJarFilePaths());
         tools.setOverrideMemory(config.memory);
-        tools.setFrozenTime(config.maxProcessingTime);
 
         if( directorySave != null ) {
             setupOutputDirectory();

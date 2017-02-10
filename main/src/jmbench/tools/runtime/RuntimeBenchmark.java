@@ -205,8 +205,8 @@ public class RuntimeBenchmark {
                 System.out.println("Time per trial set to "+config.minimumTimePerTestMS +" (ms).");
             } else if( flag.compareTo("MaxTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.maxTimePerTest = (int)MiscTools.parseTime(splits[1]);
-                System.out.println("Max time per test set to "+config.maxTimePerTest +" (ms).");
+                config.maxTimePerTestMS = (int)MiscTools.parseTime(splits[1]);
+                System.out.println("Max time per test set to "+config.maxTimePerTestMS +" (ms).");
             }else if( flag.compareTo("Resume") == 0 ) {
                 if( splits.length != 2 || args.length != 1 ) {failed = true; break;}
                 System.out.println("Resuming a benchmark in dir "+splits[1]);
