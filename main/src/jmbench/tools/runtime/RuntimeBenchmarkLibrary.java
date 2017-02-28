@@ -360,7 +360,7 @@ public class RuntimeBenchmarkLibrary {
                                                               long seed , int indexDimen, int completedTests , int performTests) {
 
 
-        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTestMS);
+        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTest);
         test.setRandomSeed(seed);
 
         int matrixSize = e.getDimens()[indexDimen];

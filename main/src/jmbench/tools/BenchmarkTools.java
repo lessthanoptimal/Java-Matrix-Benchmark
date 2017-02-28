@@ -87,6 +87,10 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
 
         setMemoryInMB(allocatedMemory);
 
+        // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
+        // and declare it frozen.  + 2000 to add some fudge for overhead
+        setFrozenTime(numTests*test.getMaximumEvaluateTime()+2000);
+
         boolean skipReadXml = false;
         switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTests),Long.toString(requestID) ) )
         {
