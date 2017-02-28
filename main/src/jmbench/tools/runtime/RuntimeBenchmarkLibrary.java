@@ -203,7 +203,7 @@ public class RuntimeBenchmarkLibrary {
                             for( RuntimeMeasurement r : rawResults ) {
                                 double time = 1.0/r.getOpsPerSec();
 
-                                if( time > config.getMaxTimePerTest() ) {
+                                if( time > config.getMaxTimePerTestMS() ) {
                                     cs.matrixIndex++;
                                     break;
                                 }
@@ -360,7 +360,7 @@ public class RuntimeBenchmarkLibrary {
                                                               long seed , int indexDimen, int completedTests , int performTests) {
 
 
-        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTest);
+        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTestMS);
         test.setRandomSeed(seed);
 
         int matrixSize = e.getDimens()[indexDimen];
