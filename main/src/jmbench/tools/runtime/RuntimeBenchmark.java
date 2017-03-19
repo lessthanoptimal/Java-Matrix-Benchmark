@@ -128,6 +128,8 @@ public class RuntimeBenchmark {
         System.out.println("The only option which must be specified is \"FixedMemory\".  If no other options are specified " +
                 "then a default configuration will be used and the results" +
                 "will be saved to a directory in results with the name of the current system time in milliseconds.");
+        System.out.println();
+        System.out.println("Example: java -jar benchmark.jar runtime --Size=2:40000 --MaxTime=10m --Memory=25600");
     }
 
     public static void main( String args[] ) throws IOException, InterruptedException {

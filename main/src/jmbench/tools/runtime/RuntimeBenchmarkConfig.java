@@ -96,10 +96,10 @@ public class RuntimeBenchmarkConfig implements Serializable {
         config.numTestsPerBlock = 5;
         config.totalTests = 25;
         config.minimumTimePerTestMS = 3000;
-        config.maxTimePerTestMS = 60*1000;
+        config.maxTimePerTestMS = 1000*60*10;
         config.memoryMB = 0;
         config.randizeOrder = true;
-        config.maxMatrixSize = 10000;
+        config.maxMatrixSize = 40000;
         config.minMatrixSize = 2;
 
 //        config.chol = true;

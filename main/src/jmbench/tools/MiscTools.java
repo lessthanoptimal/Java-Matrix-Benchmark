@@ -39,7 +39,7 @@ import java.util.List;
 public class MiscTools {
 
     public static String selectDirectoryName( String benchmarkName ) {
-        DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("MM-dd-yyyy-HH_mm_ss");
         Date today = Calendar.getInstance().getTime();
 
         return new File("results",benchmarkName+"_"+df.format(today)).getPath();
