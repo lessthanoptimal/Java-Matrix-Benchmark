@@ -29,6 +29,7 @@ import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ojalgo.OjAlgoUtils;
+import org.ojalgo.RecoverableCondition;
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.matrix.decomposition.*;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -37,7 +38,6 @@ import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.matrix.task.DeterminantTask;
 import org.ojalgo.matrix.task.InverterTask;
 import org.ojalgo.matrix.task.SolverTask;
-import org.ojalgo.matrix.task.TaskException;
 
 /**
  * @author Peter Abeles
@@ -159,7 +159,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpInverter.invert(matA, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -186,7 +186,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             for (long i = 0; i < numTrials; i++) {
                 try {
                     inverse = tmpInverter.invert(matA, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -345,7 +345,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpSolver.solve(matA, matB, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -373,7 +373,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpSolver.solve(matA, matB, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
