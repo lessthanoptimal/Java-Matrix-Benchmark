@@ -21,7 +21,7 @@ package jmatbench.ejml;
 
 import jmbench.interfaces.BenchmarkMatrix;
 import jmbench.matrix.RowMajorMatrix;
-import org.ejml.data.DenseMatrix64F;
+import org.ejml.data.DMatrixRMaj;
 import org.ejml.simple.SimpleMatrix;
 
 
@@ -30,14 +30,14 @@ import org.ejml.simple.SimpleMatrix;
  */
 public class EjmlBenchmarkMatrix implements BenchmarkMatrix {
 
-    DenseMatrix64F mat;
+    DMatrixRMaj mat;
 
-    public EjmlBenchmarkMatrix(DenseMatrix64F mat) {
+    public EjmlBenchmarkMatrix(DMatrixRMaj mat) {
         this.mat = mat;
     }
 
     public EjmlBenchmarkMatrix(RowMajorMatrix mat) {
-        this.mat = new DenseMatrix64F();
+        this.mat = new DMatrixRMaj();
         this.mat.numCols = mat.numCols;
         this.mat.numRows = mat.numRows;
         this.mat.data = mat.data;
