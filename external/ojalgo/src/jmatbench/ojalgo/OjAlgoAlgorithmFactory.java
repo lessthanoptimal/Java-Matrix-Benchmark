@@ -123,7 +123,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             MatrixStore<Double> D = null;
             MatrixStore<Double> V = null;
-            final Eigenvalue<Double> eig = Eigenvalue.make(matA);
+            final Eigenvalue<Double> eig = Eigenvalue.make(matA, true);
 
             final long prev = System.nanoTime();
 
