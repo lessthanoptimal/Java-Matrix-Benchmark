@@ -25,7 +25,8 @@ import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.BenchmarkConstants;
 import org.ejml.UtilEjml;
-import org.ejml.ops.EigenOps;
+import org.ejml.dense.row.EigenOps_DDRM;
+import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.simple.SimpleEVD;
 import org.ejml.simple.SimpleMatrix;
 import org.ejml.simple.SimpleSVD;
@@ -70,7 +71,7 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                SimpleSVD s = matA.svd();
+                SimpleSVD<SimpleMatrix> s = matA.svd();
                 U=s.getU();
                 W=s.getW();
                 V=s.getV();
@@ -108,8 +109,8 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
 
             long elapsedTime = System.nanoTime() - prev;
             if( outputs != null ) {
-                outputs[0] = new EjmlBenchmarkMatrix(EigenOps.createMatrixD(evd.getEVD()));
-                outputs[1] = new EjmlBenchmarkMatrix(EigenOps.createMatrixV(evd.getEVD()));
+                outputs[0] = new EjmlBenchmarkMatrix(EigenOps_DDRM.createMatrixD((EigenDecomposition_F64)evd.getEVD()));
+                outputs[1] = new EjmlBenchmarkMatrix(EigenOps_DDRM.createMatrixV((EigenDecomposition_F64)evd.getEVD()));
             }
             return elapsedTime;
         }
@@ -339,9 +340,9 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
         SimpleMatrix m = input.getOriginal();
 
         RowMajorMatrix out = new RowMajorMatrix(1,1);
-        out.data    = m.getMatrix().data;
-        out.numCols = m.getMatrix().numCols;
-        out.numRows = m.getMatrix().numRows;
+        out.data    = m.getDDRM().data;
+        out.numCols = m.getDDRM().numCols;
+        out.numRows = m.getDDRM().numRows;
 
         return out;
     }

@@ -25,16 +25,16 @@ import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.BenchmarkConstants;
+import org.ejml.LinearSolverSafe;
 import org.ejml.UtilEjml;
-import org.ejml.alg.dense.linsol.LinearSolverSafe;
-import org.ejml.data.DenseMatrix64F;
-import org.ejml.factory.DecompositionFactory;
-import org.ejml.factory.LinearSolverFactory;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.CovarianceOps_DDRM;
+import org.ejml.dense.row.EigenOps_DDRM;
+import org.ejml.dense.row.factory.DecompositionFactory_DDRM;
+import org.ejml.dense.row.factory.LinearSolverFactory_DDRM;
 import org.ejml.interfaces.decomposition.*;
-import org.ejml.interfaces.linsol.LinearSolver;
-import org.ejml.ops.CommonOps;
-import org.ejml.ops.CovarianceOps;
-import org.ejml.ops.EigenOps;
+import org.ejml.interfaces.linsol.LinearSolverDense;
 
 
 /**
@@ -45,12 +45,12 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public BenchmarkMatrix wrap(Object matrix) {
-        return new EjmlBenchmarkMatrix((DenseMatrix64F)matrix);
+        return new EjmlBenchmarkMatrix((DMatrixRMaj)matrix);
     }
 
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
-        DenseMatrix64F A = new DenseMatrix64F(numRows,numCols);
+        DMatrixRMaj A = new DMatrixRMaj(numRows,numCols);
         return wrap(A);
     }
 
@@ -62,16 +62,16 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Chol implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            CholeskyDecomposition<DenseMatrix64F> chol = DecompositionFactory.chol(matA.numRows, true);
+            CholeskyDecomposition_F64<DMatrixRMaj> chol = DecompositionFactory_DDRM.chol(matA.numRows, true);
 
-            DenseMatrix64F L = new DenseMatrix64F(matA.numRows,matA.numCols);
+            DMatrixRMaj L = new DMatrixRMaj(matA.numRows,matA.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !DecompositionFactory.decomposeSafe(chol,matA) ) {
+                if( !DecompositionFactory_DDRM.decomposeSafe(chol,matA) ) {
                     throw new DetectedException("Decomposition failed");
                 }
                 chol.getT(L);
@@ -93,23 +93,23 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class LU implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            LUDecomposition<DenseMatrix64F> lu = DecompositionFactory.lu(matA.numRows,matA.numCols);
+            LUDecomposition_F64<DMatrixRMaj> lu = DecompositionFactory_DDRM.lu(matA.numRows,matA.numCols);
 
-            DenseMatrix64F L = new DenseMatrix64F(matA.numRows,matA.numCols);
-            DenseMatrix64F U = new DenseMatrix64F(matA.numRows,matA.numCols);
-            DenseMatrix64F P = new DenseMatrix64F(matA.numRows,matA.numCols);
+            DMatrixRMaj L = new DMatrixRMaj(matA.numRows,matA.numCols);
+            DMatrixRMaj U = new DMatrixRMaj(matA.numRows,matA.numCols);
+            DMatrixRMaj P = new DMatrixRMaj(matA.numRows,matA.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !DecompositionFactory.decomposeSafe(lu,matA) )
+                if( !DecompositionFactory_DDRM.decomposeSafe(lu,matA) )
                     throw new DetectedException("Decomposition failed");
 
                 lu.getLower(L);
                 lu.getUpper(U);
-                lu.getPivot(P);
+                lu.getRowPivot(P);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -130,18 +130,18 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class SVD implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            SingularValueDecomposition<DenseMatrix64F> svd = DecompositionFactory.svd(matA.numRows,matA.numCols,true,true,false);
+            SingularValueDecomposition_F64<DMatrixRMaj> svd = DecompositionFactory_DDRM.svd(matA.numRows,matA.numCols,true,true,false);
 
-            DenseMatrix64F U = null;
-            DenseMatrix64F S = null;
-            DenseMatrix64F V = null;
+            DMatrixRMaj U = null;
+            DMatrixRMaj S = null;
+            DMatrixRMaj V = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !DecompositionFactory.decomposeSafe(svd,matA) )
+                if( !DecompositionFactory_DDRM.decomposeSafe(svd,matA) )
                     throw new DetectedException("Decomposition failed");
                 U = svd.getU(null, false);
                 S = svd.getW(S);
@@ -166,14 +166,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class MyEig implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            EigenDecomposition<DenseMatrix64F> eig = DecompositionFactory.eig(matA.numCols, true, true);
+            EigenDecomposition_F64<DMatrixRMaj> eig = DecompositionFactory_DDRM.eig(matA.numCols, true, true);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !DecompositionFactory.decomposeSafe(eig,matA) )
+                if( !DecompositionFactory_DDRM.decomposeSafe(eig,matA) )
                     throw new DetectedException("Decomposition failed");
                 // this isn't necessary since eigenvalues and eigenvectors are always computed
                 eig.getEigenvalue(0);
@@ -182,8 +182,8 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
 
             long elapsedTime = System.nanoTime() - prev;
             if( outputs != null ) {
-                outputs[0] = new EjmlBenchmarkMatrix(EigenOps.createMatrixD(eig));
-                outputs[1] = new EjmlBenchmarkMatrix(EigenOps.createMatrixV(eig));
+                outputs[0] = new EjmlBenchmarkMatrix(EigenOps_DDRM.createMatrixD(eig));
+                outputs[1] = new EjmlBenchmarkMatrix(EigenOps_DDRM.createMatrixV(eig));
             }
             return elapsedTime;
         }
@@ -197,16 +197,16 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class QR implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            QRDecomposition<DenseMatrix64F> qr = DecompositionFactory.qr(matA.numRows,matA.numCols);
-            DenseMatrix64F Q = null;
-            DenseMatrix64F R = null;
+            QRDecomposition<DMatrixRMaj> qr = DecompositionFactory_DDRM.qr(matA.numRows,matA.numCols);
+            DMatrixRMaj Q = null;
+            DMatrixRMaj R = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !DecompositionFactory.decomposeSafe(qr,matA) )
+                if( !DecompositionFactory_DDRM.decomposeSafe(qr,matA) )
                     throw new DetectedException("Decomposition failed");
 
                 Q = qr.getQ(null,true);
@@ -230,12 +230,12 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Det implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.det(matA);
+                CommonOps_DDRM.det(matA);
             }
 
             return System.nanoTime() - prev;
@@ -250,14 +250,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Inv implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numRows,matA.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numRows,matA.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !CommonOps.invert(matA,result) )
+                if( !CommonOps_DDRM.invert(matA,result) )
                     throw new DetectedException("Inversion failed");
             }
 
@@ -277,14 +277,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class InvSymmPosDef implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numRows,matA.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numRows,matA.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                if( !CovarianceOps.invert(matA,result) )
+                if( !CovarianceOps_DDRM.invert(matA,result) )
                     throw new RuntimeException("Inversion failed");
             }
 
@@ -304,15 +304,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Add implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
-            DenseMatrix64F matB = inputs[1].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
+            DMatrixRMaj matB = inputs[1].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA);
+            DMatrixRMaj result = new DMatrixRMaj(matA);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.add(matA,matB,result);
+                CommonOps_DDRM.add(matA,matB,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -331,15 +331,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Mult implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
-            DenseMatrix64F matB = inputs[1].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
+            DMatrixRMaj matB = inputs[1].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numRows,matB.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numRows,matB.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.mult(matA,matB,result);
+                CommonOps_DDRM.mult(matA,matB,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -358,15 +358,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class MulTranB implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
-            DenseMatrix64F matB = inputs[1].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
+            DMatrixRMaj matB = inputs[1].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numCols,matB.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numCols,matB.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.multTransB(matA,matB,result);
+                CommonOps_DDRM.multTransB(matA,matB,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -385,14 +385,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Scale implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numRows,matA.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numRows,matA.numCols);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.scale(BenchmarkConstants.SCALE,matA,result);
+                CommonOps_DDRM.scale(BenchmarkConstants.SCALE,matA,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -410,14 +410,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class SolveExact implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
-            DenseMatrix64F matB = inputs[1].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
+            DMatrixRMaj matB = inputs[1].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numCols,matB.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numCols,matB.numCols);
 
-            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.linear(matA.numRows);
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.linear(matA.numRows);
             // make sure the input is not modified
-            solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+            solver = new LinearSolverSafe<>(solver);
 
             long prev = System.nanoTime();
 
@@ -444,15 +444,15 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class SolveOver implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
-            DenseMatrix64F matB = inputs[1].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
+            DMatrixRMaj matB = inputs[1].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numCols,matB.numCols);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numCols,matB.numCols);
 
-            LinearSolver<DenseMatrix64F> solver = LinearSolverFactory.leastSquares(matA.numRows,matA.numCols);
+            LinearSolverDense<DMatrixRMaj> solver = LinearSolverFactory_DDRM.leastSquares(matA.numRows,matA.numCols);
 
             // make sure the input is not modified
-            solver = new LinearSolverSafe<DenseMatrix64F>(solver);
+            solver = new LinearSolverSafe<>(solver);
 
             long prev = System.nanoTime();
 
@@ -479,14 +479,14 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Transpose implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            DenseMatrix64F matA = inputs[0].getOriginal();
+            DMatrixRMaj matA = inputs[0].getOriginal();
 
-            DenseMatrix64F result = new DenseMatrix64F(matA.numCols,matA.numRows);
+            DMatrixRMaj result = new DMatrixRMaj(matA.numCols,matA.numRows);
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                CommonOps.transpose(matA,result);
+                CommonOps_DDRM.transpose(matA,result);
             }
 
             long elapsedTime = System.nanoTime() - prev;
@@ -504,7 +504,7 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public RowMajorMatrix convertToRowMajor(BenchmarkMatrix input) {
-        DenseMatrix64F m = ((EjmlBenchmarkMatrix)input).mat;
+        DMatrixRMaj m = ((EjmlBenchmarkMatrix)input).mat;
 
         RowMajorMatrix out = new RowMajorMatrix(1,1);
         out.data = m.data;
