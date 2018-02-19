@@ -108,14 +108,7 @@ public class JavaRuntimeLauncher {
             BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
 
             // print the output from the slave
-            if( !monitorSlave(pr, input, error) )
-                return Exit.FROZEN;
-
-            if( pr.exitValue() != 0 ) {
-                return Exit.RETURN_NOT_ZERO;
-            } else {
-                return Exit.NORMAL;
-            }
+            return monitorSlave(pr, input, error);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +120,7 @@ public class JavaRuntimeLauncher {
      *
      * @return true if successful or false if it was forced to kill the slave because it was frozen
      */
-    private boolean monitorSlave(Process pr,
+    private Exit monitorSlave(Process pr,
                                  BufferedReader input, BufferedReader error)
             throws IOException, InterruptedException {
 
@@ -137,7 +130,7 @@ public class JavaRuntimeLauncher {
         // If the total amount of time allocated to the slave exceeds the maximum number of trials multiplied
         // by the maximum runtime plus some fudge factor the slave is declared as frozen
 
-        boolean frozen = false;
+        Exit exit = Exit.NORMAL;
 
         long startTime = System.currentTimeMillis();
         long lastAliveMessage = startTime;
@@ -159,7 +152,8 @@ public class JavaRuntimeLauncher {
 
             try {
                 // exit value throws an exception is the process has yet to stop
-                pr.exitValue();
+                if( pr.exitValue() != 0 )
+                    exit = Exit.RETURN_NOT_ZERO;
                 break;
             } catch( IllegalThreadStateException e) {
                 long ellapsedTime = System.currentTimeMillis() - startTime;
@@ -167,7 +161,7 @@ public class JavaRuntimeLauncher {
                 // check to see if the process is frozen
                 if(ellapsedTime > frozenTime ) {
                     pr.destroy(); // kill the process
-                    frozen = true;
+                    exit = Exit.FROZEN;
                     break;
                 }
 
@@ -180,7 +174,7 @@ public class JavaRuntimeLauncher {
             }
         }
         durationMilli = System.currentTimeMillis()-startTime;
-        return !frozen;
+        return exit;
     }
 
     protected void printError(BufferedReader error) throws IOException {

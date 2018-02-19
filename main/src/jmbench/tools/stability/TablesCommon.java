@@ -62,7 +62,7 @@ public abstract class TablesCommon {
 //                System.out.println(level0);
 
                 for( String name2 : files2 ) {
-                    if( name2.contains(".xml") ) {
+                    if( !name2.startsWith("runtime_info") && name2.contains(".xml") ) {
 //                        System.out.print(name2+" ");
 
                         String stripName = name2.substring(0,name2.length()-4);

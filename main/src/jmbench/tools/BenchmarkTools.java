@@ -89,7 +89,8 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
 
         // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
         // and declare it frozen.  + 2000 to add some fudge for overhead
-        setFrozenTime(numTests*test.getMaximumEvaluateTime()+2000);
+        if( test.getMaximumEvaluateTime() > 0)
+            setFrozenTime(numTests*test.getMaximumEvaluateTime()+2000);
 
         boolean skipReadXml = false;
         switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTests),Long.toString(requestID) ) )
@@ -132,17 +133,22 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      */
     public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test , int numTests ) {
         requestID++;
-        List<TestResults> results = new ArrayList<TestResults>();
-
-        test.init();
-
-        for( int i = 0; i < numTests; i++ ) {
-            test.setupTest();
-            TestResults tr = test.evaluate();
-            results.add(tr);
-        }
+        List<TestResults> results = new ArrayList<>();
 
         EvaluatorSlave.Results slaveResults = new EvaluatorSlave.Results();
+
+        try {
+            test.init();
+
+            for (int i = 0; i < numTests; i++) {
+                test.setupTest();
+                TestResults tr = test.evaluate();
+                results.add(tr);
+            }
+        } catch( RuntimeException e ) {
+            e.printStackTrace();
+            slaveResults.failed = EvaluatorSlave.FailReason.MISC_EXCEPTION;
+        }
 
         slaveResults.results = results;
         slaveResults.requestID = requestID;

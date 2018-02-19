@@ -76,6 +76,7 @@ public class StabilityBenchmarkLibrary {
 
         tools = new BenchmarkTools(target.listOfJarFilePaths());
         tools.setOverrideMemory(config.memory);
+        tools.setFrozenTime(config.maxProcessingTime);
 
         if( directorySave != null ) {
             setupOutputDirectory();
@@ -126,7 +127,7 @@ public class StabilityBenchmarkLibrary {
     }
 
     private void createOperationsList(String library) {
-        operations = new ArrayList<StabilityTestBase>();
+        operations = new ArrayList<>();
 
         if( config.checkOverflow ) {
             if( config.checkLinear )
