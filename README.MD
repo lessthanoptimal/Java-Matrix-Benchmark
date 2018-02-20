@@ -14,8 +14,8 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
 
 1. Install [Gradle](http://gradle.org/) on to your system
 2. Manual download jars for libraries which haven't been posted on Maven central. (Just Jeigen)
-3. gradle createRuntimeJars
-4. gradle benchmarkJar
+3. ./gradlew createRuntimeJars
+4. ./gradlew benchmarkJar
 5. java -jar benchmark.jar
 6. Follow printed instructions for the benchmark you wish to run
 

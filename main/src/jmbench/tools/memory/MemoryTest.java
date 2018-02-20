@@ -58,9 +58,11 @@ public class MemoryTest extends EvaluationTest {
 
     @Override
     public void init() {
+        if( nameOperation == null )
+            return;
+
         try {
             factory = (RuntimePerformanceFactory)Class.forName(nameFactory).newInstance();
-
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {

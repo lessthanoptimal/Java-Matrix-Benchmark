@@ -1,22 +1,23 @@
 subprojects {
-    task createRuntimeJars( dependsOn: 'jar' ) << {
+    task createRuntimeJars( dependsOn: 'jar' ) {
+        doLast {
+            ext.listExternal = files(project.configurations.compile)
+            ext.listInternal = files(project.tasks.jar.archivePath)
 
-        ext.listExternal = files(project.configurations.compile)
-        ext.listInternal = files(project.tasks.jar.archivePath)
+            ext.listExternal = ext.listExternal - ext.listInternal
 
-        ext.listExternal = ext.listExternal - ext.listInternal
+            file('runtimeLibs').deleteDir()
+            file('runtimeLibs').mkdir()
 
-        file('runtimeLibs').deleteDir()
-        file('runtimeLibs').mkdir()
+            copy {
+                from ext.listExternal
+                into 'runtimeLibs'
+            }
 
-        copy {
-            from ext.listExternal
-            into 'runtimeLibs'
-        }
-
-        copy {
-            from ext.listInternal
-            into 'runtimeLibs'
+            copy {
+                from ext.listInternal
+                into 'runtimeLibs'
+            }
         }
     }
 }
