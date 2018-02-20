@@ -29,6 +29,7 @@ import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ojalgo.OjAlgoUtils;
+import org.ojalgo.RecoverableCondition;
 import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.matrix.decomposition.*;
 import org.ojalgo.matrix.store.MatrixStore;
@@ -37,7 +38,6 @@ import org.ojalgo.matrix.store.PrimitiveDenseStore;
 import org.ojalgo.matrix.task.DeterminantTask;
 import org.ojalgo.matrix.task.InverterTask;
 import org.ojalgo.matrix.task.SolverTask;
-import org.ojalgo.matrix.task.TaskException;
 
 /**
  * @author Peter Abeles
@@ -123,7 +123,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             MatrixStore<Double> D = null;
             MatrixStore<Double> V = null;
-            final Eigenvalue<Double> eig = Eigenvalue.make(matA);
+            final Eigenvalue<Double> eig = Eigenvalue.make(matA, true);
 
             final long prev = System.nanoTime();
 
@@ -152,14 +152,14 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> result = null;
 
             final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, false, false);
-            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
+            final PhysicalStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpInverter.invert(matA, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -179,14 +179,14 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> inverse = null;
 
             final InverterTask<Double> tmpInverter = InverterTask.PRIMITIVE.make(matA, true, true);
-            final DecompositionStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
+            final PhysicalStore<Double> tmpAlloc = tmpInverter.preallocate(matA);
 
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
                 try {
                     inverse = tmpInverter.invert(matA, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -338,14 +338,14 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> result = null;
 
             final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false, false);
-            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
+            final PhysicalStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpSolver.solve(matA, matB, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
@@ -366,14 +366,14 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> result = null;
 
             final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false, false);
-            final DecompositionStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
+            final PhysicalStore<Double> tmpAlloc = tmpSolver.preallocate(matA, matB);
 
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
                 try {
                     result = tmpSolver.solve(matA, matB, tmpAlloc);
-                } catch (final TaskException ex) {
+                } catch (final RecoverableCondition ex) {
                     throw new DetectedException(ex);
                 }
             }
