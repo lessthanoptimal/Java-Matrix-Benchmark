@@ -31,6 +31,7 @@ import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ojalgo.OjAlgoUtils;
 import org.ojalgo.RecoverableCondition;
 import org.ojalgo.function.PrimitiveFunction;
+import org.ojalgo.function.UnaryFunction;
 import org.ojalgo.matrix.decomposition.*;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -312,14 +313,13 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-            final Double tmpArg = ScaleGenerator.SCALE;
-
             final PrimitiveDenseStore result = FACTORY.copy(matA);
+            UnaryFunction<Double> multiplier = PrimitiveFunction.MULTIPLY.second(ScaleGenerator.SCALE);
 
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
-                result.fillMatching(matA, PrimitiveFunction.MULTIPLY, tmpArg);
+                result.fillMatching(multiplier, matA);
             }
 
             final long elapsedTime = System.nanoTime() - prev;
