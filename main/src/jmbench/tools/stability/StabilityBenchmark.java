@@ -96,7 +96,7 @@ public class StabilityBenchmark {
                                     int sizeMin , int sizeMax ,
                                     int numTrialsSolve , int numTrialsSvd) {
         for( LibraryDescription desc : libs ) {
-            String libOutputDir = directorySave+"/"+dirSize+"/"+desc.directory;
+            String libOutputDir = directorySave+"/"+dirSize+"/"+desc.info.outputDirectory();
 
             StabilityBenchmarkLibrary benchmark = new StabilityBenchmarkLibrary(
                     libOutputDir,config,desc,sizeMin,sizeMax,

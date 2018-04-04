@@ -8,7 +8,7 @@
   <jmbench.impl.LibraryStringInfo>
     <factory>jmatbench.ejml.EjmlSimpleAlgorithmFactory</factory>
     <nameFull>EJML-SimpleMatrix</nameFull>
-    <nameShort>SimpleMatrix</nameShort>
+    <nameShort>EJML-S</nameShort>
     <namePlot>SM</namePlot>
   </jmbench.impl.LibraryStringInfo>
 </list>

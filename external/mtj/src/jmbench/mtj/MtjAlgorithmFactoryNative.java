@@ -10,9 +10,9 @@ import com.github.fommil.netlib.LAPACK;
 public class MtjAlgorithmFactoryNative extends MtjAlgorithmFactory {
     @Override
     public void init() {
-        BLAS.getInstance();
-        LAPACK.getInstance();
-        ARPACK.getInstance();
+        System.out.println("BLAS = "+BLAS.getInstance().getClass().getName());
+        System.out.println("LAPACK = "+LAPACK.getInstance().getClass().getName());
+        System.out.println("ARPACK = "+ARPACK.getInstance().getClass().getName());
     }
 
     @Override

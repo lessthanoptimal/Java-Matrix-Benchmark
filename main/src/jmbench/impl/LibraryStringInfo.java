@@ -69,4 +69,8 @@ public class LibraryStringInfo implements Serializable{
     public void setNamePlot(String namePlot) {
         this.namePlot = namePlot;
     }
+
+    public String outputDirectory() {
+        return nameShort.replaceAll("[-:]","_");
+    }
 }

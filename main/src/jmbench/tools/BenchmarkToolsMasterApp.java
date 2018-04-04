@@ -19,6 +19,8 @@
 
 package jmbench.tools;
 
+import jmbench.impl.LibraryDescription;
+import jmbench.impl.LibraryManager;
 import jmbench.tools.memory.MemoryBenchmark;
 import jmbench.tools.memory.PlotMemoryResultsXml;
 import jmbench.tools.runtime.RuntimeBenchmark;
@@ -52,8 +54,9 @@ public class BenchmarkToolsMasterApp {
         System.out.println("  checkRuntime       Outputs the runtime sanity check results.");
         System.out.println("  plotRuntime        Generates plots from runtime results.");
         System.out.println("  plotMemory         Generates a plot from memory benchmark results.");
-        System.out.println("  compareRuntime   Compares runtime performance for a single library across different platforms.");
+        System.out.println("  compareRuntime     Compares runtime performance for a single library across different platforms.");
         System.out.println("  displayStability   Prints out tables showing stability results.");
+        System.out.println("  libraries          Lists all the libraries it can find.");
         System.out.println();
         System.out.println("For example to run the runtime benchmark type:");
         System.out.println("  java -jar benchmark.jar runtime");
@@ -62,6 +65,22 @@ public class BenchmarkToolsMasterApp {
         System.out.println("  java -jar <tool> help");
         System.out.println();
         System.exit(0);
+    }
+
+    public static void listLibraries() {
+        LibraryManager manager = new LibraryManager();
+
+        System.out.println("Library   Directory            Factory");
+        System.out.println("===========================================================");
+        for(LibraryDescription lib : manager.getAll() ) {
+            System.out.printf("%8s %12s %s\n",lib.info.nameShort,lib.directory,lib.info.factory);
+        }
+        System.out.println();
+        System.out.println("Defaults:");
+        for(LibraryDescription lib : manager.getAll() ) {
+            System.out.print(lib.info.nameShort+" ");
+        }
+        System.out.println("\n");
     }
 
     public static void main( String args[] ) throws IOException, InterruptedException {
@@ -91,6 +110,8 @@ public class BenchmarkToolsMasterApp {
             ComparePlatformResults.main(pruned);
         } else if( tool.compareToIgnoreCase("displayStability") == 0) {
             DisplayStability.main(pruned);
+        } else if( tool.compareToIgnoreCase("libraries") == 0 ) {
+            listLibraries();
         } else {
             System.out.println("Unknown tool '"+args[0]+"'");
         }

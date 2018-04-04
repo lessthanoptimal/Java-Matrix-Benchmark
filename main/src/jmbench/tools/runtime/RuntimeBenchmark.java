@@ -73,7 +73,7 @@ public class RuntimeBenchmark {
 
         for( LibraryDescription desc : libs ) {
 
-            String libOutputDir = directorySave+"/"+desc.info.nameShort;
+            String libOutputDir = directorySave+"/"+desc.info.outputDirectory();
 
             // save the description so that where this came from can be easily extracted
             String outputFile = libOutputDir+".xml";

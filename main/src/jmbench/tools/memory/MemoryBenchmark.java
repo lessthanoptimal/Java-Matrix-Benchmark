@@ -95,7 +95,7 @@ public class MemoryBenchmark {
             for( LibraryDescription desc : libs ) {
 
                 // run the benchmark
-                String libOutputDir = directorySave+"/"+size+"/"+desc.directory;
+                String libOutputDir = directorySave+"/"+size+"/"+desc.info.outputDirectory();
 
                 MemoryBenchmarkLibrary bench = new MemoryBenchmarkLibrary(config,desc,libOutputDir,size,overhead);
 
