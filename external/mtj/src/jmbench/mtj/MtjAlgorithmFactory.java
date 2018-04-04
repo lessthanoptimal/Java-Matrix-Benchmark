@@ -47,9 +47,9 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
         System.setProperty("com.github.fommil.netlib.LAPACK","com.github.fommil.netlib.F2jLAPACK");
         System.setProperty("com.github.fommil.netlib.ARPACK","com.github.fommil.netlib.F2jARPACK");
 
-        BLAS.getInstance();
-        LAPACK.getInstance();
-        ARPACK.getInstance();
+        System.out.println("BLAS = "+BLAS.getInstance().getClass().getName());
+        System.out.println("LAPACK = "+LAPACK.getInstance().getClass().getName());
+        System.out.println("ARPACK = "+ARPACK.getInstance().getClass().getName());
     }
 
     @Override
