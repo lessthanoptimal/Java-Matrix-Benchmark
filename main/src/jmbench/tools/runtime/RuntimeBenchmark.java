@@ -171,6 +171,7 @@ public class RuntimeBenchmark {
             String flag = splits[0];
 
             if( flag.length() < 2 || flag.charAt(0) != '-' || flag.charAt(0) != '-') {
+                System.out.println("Failed to understand "+args[i]);
                 failed = true;
                 break;
             }
@@ -193,7 +194,7 @@ public class RuntimeBenchmark {
                 System.out.println("Set min/max matrix size to: "+config.minMatrixSize+" "+config.maxMatrixSize);
             } else if( flag.compareTo("Quick") == 0 ) {
                 if( i != 0 ) {
-                    System.out.println("quick must be the first argument specified.");
+                    System.out.println("*** Quick must be the first argument specified ***");
                     failed = true; break;
                 }
                 if( splits.length != 1 ) {failed = true; break;}
@@ -253,16 +254,17 @@ public class RuntimeBenchmark {
         double hours = (config.maximumTimePerTrialMS*config.totalTests)/1000.0/60.0/60.0;
 
         System.out.println("\n** Done parsing command line **\n");
-        System.out.println();
-        System.out.printf("Maximum time to complete a single benchmark for an operation/matrix size is %.3f hrs\n",hours);
-
-        System.out.println();
-        System.out.println(" To safely quit the benchmark process 'q' and enter.");
-        System.out.println();
 
         if( failed ) {
             System.out.println("Unable to parse command.  Try --Help");
         } else {
+            System.out.println();
+            System.out.printf("Maximum time to complete a single benchmark for an operation/matrix size is %.3f hrs\n",hours);
+
+            System.out.println();
+            System.out.println(" To safely quit the benchmark process 'q' and enter.");
+            System.out.println();
+
             if( !configFileSpecified && !memorySpecified ) {
                 System.out.println("The amount of memory must be specified using \"--Memory=<MB>\"!");
             } else {
