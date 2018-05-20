@@ -205,8 +205,13 @@ public class OperationsVersusSizePlot
             case 12:
                 return new Color(120,255,0);
             
-            default:
-                throw new RuntimeException("add some more");
+            default: {
+                int n = num-11;
+                int r = Math.abs(125*n)%256;
+                int g = Math.abs(255-10*n)%256;
+                int b = Math.abs(40*n)%256;
+                return new Color(r,g,b);
+            }
         }
     }
 
@@ -252,7 +257,7 @@ public class OperationsVersusSizePlot
                 return SimpleStrokeFactory.createStroke("--",size,patternSize);
 
             default:
-                throw new RuntimeException("add some more: "+num);
+                return SimpleStrokeFactory.createStroke("-",size,patternSize);
         }
     }
 }
