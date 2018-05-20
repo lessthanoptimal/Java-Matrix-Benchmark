@@ -89,7 +89,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
         // and declare it frozen.  + 2000 to add some fudge for overhead
         if( test.getMaximumEvaluateTime() > 0)
-            setFrozenTime(test.getMaximumEvaluateTime()+2000);
+            setFrozenTimeMS(test.getMaximumEvaluateTime()+2000);
 
         boolean skipReadXml = false;
         switch(launch(EvaluatorSlave.class,"case.xml",Long.toString(requestID) ) )
@@ -141,6 +141,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             slaveResults.results = test.evaluate();
         } catch( RuntimeException e ) {
             e.printStackTrace();
+            e.printStackTrace(errorStream);
             slaveResults.failed = EvaluatorSlave.FailReason.MISC_EXCEPTION;
         }
 

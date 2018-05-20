@@ -163,11 +163,11 @@ public class RuntimeEvaluationTest extends EvaluationTest {
             // nano is more precise than the millisecond timer
             long elapsedTimeNS = alg.process(inputs, outputs, numTrials);
 
-//            System.out.printf("SLAVE: elapsed_fraction=%4.2f warmup=%d\n",(elapsedTime/(double)goalDuration),warmup);
+//            System.out.printf("SLAVE: elapsed_fraction=%4.2f warmup=%d\n",(elapsedTimeNS/(double)goalDurationNS),warmup);
 
             if( elapsedTimeNS > goalDurationNS*0.9 ) {
-                // The warm up is a fuzzy function of time and number of tests
-                if( elapsedTimeNS > goalDurationNS*30 ) {
+                // If it took much longer than the goal just skip the warm up
+                if( elapsedTimeNS > goalDurationNS*30 || warmup <= 0 ) {
                     return compileResults((double)numTrials/(elapsedTimeNS/1e9));
                 } else {
                     warmup = Math.max(0,warmup - (int)(elapsedTimeNS/(goalDurationNS*0.9)));

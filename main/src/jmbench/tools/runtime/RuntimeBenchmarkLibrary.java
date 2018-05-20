@@ -378,7 +378,7 @@ public class RuntimeBenchmarkLibrary {
         tooSlow = false;
         caseFailed = false;
 
-        tools.setFrozenTime( test.getMaximumEvaluateTime());
+        tools.setFrozenTimeMS( (long)(test.getMaximumEvaluateTime()*1.2));
         EvaluatorSlave.Results r;
         if( SPAWN_SLAVE )
             r = tools.runTest(test);

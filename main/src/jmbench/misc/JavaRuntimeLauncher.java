@@ -37,7 +37,7 @@ public class JavaRuntimeLauncher {
     // amount of memory allocated to the JVM
     private long memoryInMB = 200;
     // if the process doesn't finish in this number of milliesconds it's considered frozen and killed
-    private long frozenTime = 60*1000;
+    private long frozenTimeMS = 60*1000;
 
     // amount of time it actually took to execute in milliseconds
     private long durationMilli;
@@ -67,8 +67,8 @@ public class JavaRuntimeLauncher {
      * will be killed
      * @param frozenTime time in milliseconds
      */
-    public void setFrozenTime(long frozenTime) {
-        this.frozenTime = frozenTime;
+    public void setFrozenTimeMS(long frozenTime) {
+        this.frozenTimeMS = frozenTime;
     }
 
     /**
@@ -159,7 +159,7 @@ public class JavaRuntimeLauncher {
                 long ellapsedTime = System.currentTimeMillis() - startTime;
 
                 // check to see if the process is frozen
-                if(ellapsedTime > frozenTime ) {
+                if(ellapsedTime > frozenTimeMS) {
                     pr.destroy(); // kill the process
                     exit = Exit.FROZEN;
                     break;
@@ -167,7 +167,7 @@ public class JavaRuntimeLauncher {
 
                 // let everyone know its still alive
                 if( System.currentTimeMillis() - lastAliveMessage > 300000 ) {
-                    int percent = (int)(100*(ellapsedTime/(double)frozenTime));
+                    int percent = (int)(100*(ellapsedTime/(double) frozenTimeMS));
                     System.out.println("\nMaster is still alive: "+new Date()+"  Press 'q' and enter to quit. "+percent+"%");
                     lastAliveMessage = System.currentTimeMillis();
                 }
@@ -222,8 +222,8 @@ public class JavaRuntimeLauncher {
         return memoryInMB;
     }
 
-    public long getFrozenTime() {
-        return frozenTime;
+    public long getFrozenTimeMS() {
+        return frozenTimeMS;
     }
 
     public String[] getArguments() {
