@@ -27,7 +27,6 @@ import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -111,19 +110,36 @@ public class RuntimeBenchmark {
     }
 
     public static void printHelp() {
+        System.out.println("The runtime benchmark works by measuring the ops/second for a specific operation given");
+        System.out.println("an input matrix of a specific size. A single measurement is done using a test. A test");
+        System.out.println("has a minimum time and a maximum time. A single test is contrained to last for a minimum");
+        System.out.println("amount of time. If that time is not meet by a single trial then the number of trials is");
+        System.out.println("increased until it does. The JVM might also be optimizing the code at the same time making");
+        System.out.println("a single trial faster. This is taken in account. A slow operation might have no warm up");
+        System.out.println("period because the amount of time it takes");
+        System.out.println();
+        System.out.println("Summary of steps:");
+        System.out.println("1) Launch a new JVM to run tests inside of");
+        System.out.println("2) Determine number of trials needed to meet minimum time (this is the warm up)");
+        System.out.println("3) Run the test and compute ops/second");
+        System.out.println("4) Exist the slave JVM, record performance, select next op to test");
+        System.out.println();
+        System.out.println("If a single test exceeds the maximum test time the benchmark will end");
+        System.out.println("Otherwise the benchmark will end when the maximum matrix size exceeds a user specifid value");
+        System.out.println();
         System.out.println("The following options are valid for runtime benchmark:");
-        System.out.println("  --Config=<file>          |  Configure using the specified xml file.");
-        System.out.println("  --Size=min:max           |  Test matrices from the specified minimum size to the specified maximum size.");
-        System.out.println("  --Quick                  |  Generate results much faster by sacrificing accuracy/stability of the results.");
-        System.out.println("  --Library=<lib>          |  To run a specific library only.  --Library=? will print a list");
-        System.out.println("                           |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
-        System.out.println("  --Seed=<number>          |  used to set the random seed to the specified value.");
-        System.out.println("  --TrailTime=<ms>         |  The minimum amount of time spent in each trial.  Typical is 3000 ms.");
-        System.out.println("  --MaxTime=<ms>           |  "+MiscTools.stringTimeArgumentHelp());
-        System.out.println("  --Resume=<directory>     |  It will resume an unfinished benchmark at the specified directory.");
-        System.out.println("  --Memory=<MB>            |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
-        System.out.println("                           |  as large as possible with out exceeding the amount of physical memory on the system.");
-        System.out.println("                           |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
+        System.out.println("  --Config=<file>           |  Configure using the specified xml file.");
+        System.out.println("  --Size=min:max            |  Test matrices from the specified minimum size to the specified maximum size.");
+        System.out.println("  --Quick                   |  Generate results much faster by sacrificing accuracy/stability of the results.");
+        System.out.println("  --Library=<lib>           |  To run a specific library only.  --Library=? will print a list");
+        System.out.println("                            |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
+        System.out.println("  --Seed=<number>           |  used to set the random seed to the specified value.");
+        System.out.println("  --MinTestTime=<ms>        |  The minimum amount of time spent in a single test.  Typical is 3000 ms.");
+        System.out.println("  --MaxTestTime=<time|unit> |  "+MiscTools.stringTimeArgumentHelp());
+        System.out.println("  --Resume=<directory>      |  It will resume an unfinished benchmark at the specified directory.");
+        System.out.println("  --Memory=<MB>             |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
+        System.out.println("                            |  as large as possible with out exceeding the amount of physical memory on the system.");
+        System.out.println("                            |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
         System.out.println();
         System.out.println("The only option which must be specified is \"FixedMemory\".  If no other options are specified " +
                 "then a default configuration will be used and the results" +
@@ -132,10 +148,11 @@ public class RuntimeBenchmark {
         System.out.println("Example: java -jar benchmark.jar runtime --Size=2:40000 --MaxTime=10m --Memory=25600");
     }
 
-    public static void main( String args[] ) throws IOException, InterruptedException {
+    public static void main( String args[] ) {
         if( args.length == 0 ) {
             printHelp();
             System.exit(0);
+            return;
         }
 
         LibraryManager manager = new LibraryManager();
@@ -165,6 +182,8 @@ public class RuntimeBenchmark {
                 configFileSpecified = true;
                 System.out.println("Loading config: "+splits[1]);
                 config = UtilXmlSerialization.deserializeXml(splits[1]);
+                if( config == null )
+                    throw new RuntimeException("Failed to load configuration");
             } else if( flag.compareTo("Size") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 String rangeStr[] = splits[1].split(":");
@@ -179,7 +198,6 @@ public class RuntimeBenchmark {
                 }
                 if( splits.length != 1 ) {failed = true; break;}
                 config.totalTests = 2;
-                config.numTestsPerBlock = 2;
                 config.minimumTimePerTestMS = 1000;
                 System.out.println("Using quick and dirty config.");
             } else if( flag.compareTo("Library") == 0 ) {
@@ -201,14 +219,14 @@ public class RuntimeBenchmark {
                 if( splits.length != 2 ) {failed = true; break;}
                 config.seed = Long.parseLong(splits[1]);
                 System.out.println("Random seed set to "+config.seed);
-            } else if( flag.compareTo("TrailTime") == 0 ) {
+            } else if( flag.compareTo("MinTestTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 config.minimumTimePerTestMS = Integer.parseInt(splits[1]);
-                System.out.println("Time per trial set to "+config.minimumTimePerTestMS +" (ms).");
-            } else if( flag.compareTo("MaxTime") == 0 ) {
+                System.out.println("Minimum time per test set to "+config.minimumTimePerTestMS +" (ms).");
+            } else if( flag.compareTo("MaxTestTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.maxTimePerTestMS = (int)MiscTools.parseTime(splits[1]);
-                System.out.println("Max time per test set to "+config.maxTimePerTestMS +" (ms).");
+                config.maximumTimePerTrialMS = (int)MiscTools.parseTime(splits[1]);
+                System.out.println("Maximum time per test set to "+config.maximumTimePerTrialMS +" (ms).");
             }else if( flag.compareTo("Resume") == 0 ) {
                 if( splits.length != 2 || args.length != 1 ) {failed = true; break;}
                 System.out.println("Resuming a benchmark in dir "+splits[1]);
@@ -231,7 +249,14 @@ public class RuntimeBenchmark {
                 break;
             }
         }
+
+        double hours = (config.maximumTimePerTrialMS*config.totalTests)/1000.0/60.0/60.0;
+
         System.out.println("\n** Done parsing command line **\n");
+        System.out.println();
+        System.out.printf("Maximum time to complete a single benchmark for an operation/matrix size is %.3f hrs\n",hours);
+
+        System.out.println();
         System.out.println(" To safely quit the benchmark process 'q' and enter.");
         System.out.println();
 

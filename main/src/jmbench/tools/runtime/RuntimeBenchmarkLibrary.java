@@ -201,9 +201,10 @@ public class RuntimeBenchmarkLibrary {
                         } else {
                             // see if any of the current results are too long and it should move on
                             for( RuntimeMeasurement r : rawResults ) {
-                                double time = 1.0/r.getOpsPerSec();
+                                // Convert the duration from ops/sec into total time for trial in milliseconds
+                                double timeMS = 1000.0/r.getOpsPerSec();
 
-                                if( time > config.getMaxTimePerTestMS() ) {
+                                if( timeMS > config.getMaximumTimePerTrialMS() ) {
                                     cs.matrixIndex++;
                                     break;
                                 }
@@ -322,20 +323,16 @@ public class RuntimeBenchmarkLibrary {
     private RuntimeResults computeResults( RuntimeEvaluationCase e , int matrixIndex ,
                                            long randSeed ,
                                            RuntimeEvaluationMetrics score[] , List<RuntimeMeasurement> rawResults )
-            throws FileNotFoundException {
-
-        // compute how many tests it should perform in this JVM instance
-        int numTests = Math.min(config.numTestsPerBlock, config.totalTests - rawResults.size());
-
+    {
         // compute the results for all the tests
-        List<RuntimeMeasurement> opsPerSecond = evaluateCaseFixedMemory( e , randSeed , matrixIndex , rawResults.size(),numTests  );
+        RuntimeMeasurement opsPerSecond = evaluateCaseFixedMemory( e , randSeed , matrixIndex , rawResults.size());
 
-        if( caseFailed ) {
+        if( opsPerSecond == null || caseFailed ) {
             System.out.println("      ---- ***** -----");
             System.out.println("Evaluation Case Failed ");
             System.out.println("      ---- ***** -----");
         } else {
-            rawResults.addAll(opsPerSecond);
+            rawResults.add(opsPerSecond);
         }
 
         // see if there are any results to save
@@ -356,37 +353,37 @@ public class RuntimeBenchmarkLibrary {
      * @return The operations per second for this case.
      */
     @SuppressWarnings({"RedundantCast", "unchecked"})
-    private List<RuntimeMeasurement> evaluateCaseFixedMemory( RuntimeEvaluationCase e ,
-                                                              long seed , int indexDimen, int completedTests , int performTests) {
+    private RuntimeMeasurement evaluateCaseFixedMemory( RuntimeEvaluationCase e ,
+                                                              long seed , int indexDimen, int completedTests )
+    {
 
-
-        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,performTests*config.maxTimePerTestMS);
+        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,
+                config.maximumTimePerTrialMS);
         test.setRandomSeed(seed);
 
         int matrixSize = e.getDimens()[indexDimen];
 
         tools.setOverrideMemory(config.memoryMB);
 
-        EvaluatorSlave.Results r = callRunTest(e, test, matrixSize, performTests);
+        EvaluatorSlave.Results r = callRunTest(e, test, matrixSize);
 
         if( caseFailed ) {
             return null;
         }
 
-        return (List<RuntimeMeasurement>)((List)r.results);
+        return (RuntimeMeasurement)r.results;
     }
 
-    private EvaluatorSlave.Results callRunTest(RuntimeEvaluationCase e, RuntimeEvaluationTest test, int matrixSize,
-                                               int numberOfTests  ) {
+    private EvaluatorSlave.Results callRunTest(RuntimeEvaluationCase e, RuntimeEvaluationTest test, int matrixSize ) {
         tooSlow = false;
         caseFailed = false;
 
-        tools.setFrozenTime( numberOfTests*test.getMaximumEvaluateTime());
+        tools.setFrozenTime( test.getMaximumEvaluateTime());
         EvaluatorSlave.Results r;
         if( SPAWN_SLAVE )
-            r = tools.runTest(test, numberOfTests);
+            r = tools.runTest(test);
         else
-            r = tools.runTestNoSpawn(test, numberOfTests);
+            r = tools.runTestNoSpawn(test);
 
         if( r == null ) {
             logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
@@ -424,16 +421,13 @@ public class RuntimeBenchmarkLibrary {
         } else {
             // See if the slave caught an error.  Typically this will be the operation isn't supported or
             // sanity check failed
-            for( TestResults tr : r.getResults() ) {
-                RuntimeMeasurement rm = (RuntimeMeasurement)tr;
+            RuntimeMeasurement rm = (RuntimeMeasurement)r.getResults();
 
-                if( rm.error != null ) {
-                    String message = "    Case failed Slave: op = "+e.getOpName()+" reason "+rm.error+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb";
-                    logStream.println(message);
-                    System.out.println(message);
-                    caseFailed = true;
-                    break;
-                }
+            if( rm.error != null ) {
+                String message = "    Case failed Slave: op = "+e.getOpName()+" reason "+rm.error+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb";
+                logStream.println(message);
+                System.out.println(message);
+                caseFailed = true;
             }
         }
         return r;

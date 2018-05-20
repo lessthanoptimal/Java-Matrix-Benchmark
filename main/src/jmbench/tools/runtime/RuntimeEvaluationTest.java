@@ -45,7 +45,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     private String classFactory;
     private InputOutputGenerator generator;
     // how long it should try to run the tests for in milliseconds
-    private long goalRuntime;
+    private long goalRuntimeMS;
 
     // If a call to evaluate exceeds this time limit then the set of tests is aborted
     private long maxEvaluationTimeMS;
@@ -55,10 +55,6 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     private volatile BenchmarkMatrix inputs[];
     private volatile BenchmarkMatrix outputs[];
     private volatile RuntimePerformanceFactory factory;
-
-    // an estimate of how many cycles it will take to finish the test in the desired
-    // amount of time
-    private volatile long estimatedTrials;
 
     /**
      * Creates a new evaluation test.
@@ -83,7 +79,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         this.classFactory = classFactory;
         this.nameAlgorithm = nameAlgorithm;
         this.generator = generator;
-        this.goalRuntime = goalRuntime;
+        this.goalRuntimeMS = goalRuntime;
         this.maxEvaluationTimeMS = maxEvaluationTime;
     }
 
@@ -109,7 +105,6 @@ public class RuntimeEvaluationTest extends EvaluationTest {
             throw new RuntimeException(e);
         }
 
-        estimatedTrials = 0;
         masterRand = new Random(randomSeed);
         for(int i = 0; i < completedTrials; i++ )
             masterRand.nextLong();
@@ -135,7 +130,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     }
 
     /**
-     * Computes the number of operations per second it takes to run the specified algortihm
+     * Computes the number of operations per second it takes to run the specified algorithm
      * with the inputs specified in {@link #setupTest()}.
      *
      * @return Number of operations per second.
@@ -144,11 +139,8 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     public TestResults evaluate()
     {
         int cycles = 0;
-        long numTrials = estimatedTrials;
-
-        if( numTrials <= 0 ) {
-            numTrials = 1;
-        }
+        // Number of trial's its estimated to meet the minimum time requirement
+        long numTrials=1;
 
         // try to purge all temporary data that has yet to be clean up so that the GC won't run
         // while performance is being measured
@@ -162,26 +154,33 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         }
 
         // translate it to nanoseconds
-        long goalDuration = this.goalRuntime*1000000;
+        long goalDurationNS = this.goalRuntimeMS*1_000_000;
+
+        // number of warm up trials it should shoot for
+        int warmup = 4;
 
         while( true ) {
             // nano is more precise than the millisecond timer
-            long elapsedTime = alg.process(inputs, outputs, numTrials);
+            long elapsedTimeNS = alg.process(inputs, outputs, numTrials);
 
-//            System.out.println("elapsed time = "+elapsedTime + "  completedTrials "+completedTrials+"  ops/sec "+(double)completedTrials/(elapsedTime/1e9));
-//            System.out.println("  in seconds "+(elapsedTime/1e9));
-            if( elapsedTime > goalDuration*0.9 )  {
-                estimatedTrials = (long)Math.ceil(goalDuration * (double)numTrials / (double)elapsedTime);
-//                System.out.println("  elapsedTime = "+elapsedTime);
-                return compileResults((double)numTrials/(elapsedTime/1e9));
-            } else {  // 0.2 seconds
-                // if enough time has elapsed use a linear model to predict how many trials it will take
-                long oldNumTrials = numTrials;
-                
-                numTrials = (long)Math.ceil(goalDuration * (double)numTrials / (double)elapsedTime);
-                if( oldNumTrials > numTrials ) {
-                    numTrials = oldNumTrials;
+//            System.out.printf("SLAVE: elapsed_fraction=%4.2f warmup=%d\n",(elapsedTime/(double)goalDuration),warmup);
+
+            if( elapsedTimeNS > goalDurationNS*0.9 ) {
+                // The warm up is a fuzzy function of time and number of tests
+                if( elapsedTimeNS > goalDurationNS*30 ) {
+                    return compileResults((double)numTrials/(elapsedTimeNS/1e9));
+                } else {
+                    warmup = Math.max(0,warmup - (int)(elapsedTimeNS/(goalDurationNS*0.9)));
                 }
+            }
+
+            // use a linear model to estimate the number of trials needed. The JVM might be optimizing the code
+            // so this will be a bit chaotic in the beginning
+            long oldNumTrials = numTrials;
+                
+            numTrials = (long)Math.ceil(goalDurationNS * (double)numTrials / (double)elapsedTimeNS);
+            if( oldNumTrials > numTrials ) {
+                numTrials = oldNumTrials;
             }
             runGarbageCollector();
 
@@ -255,12 +254,12 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         this.generator = generator;
     }
 
-    public long getGoalRuntime() {
-        return goalRuntime;
+    public long getGoalRuntimeMS() {
+        return goalRuntimeMS;
     }
 
-    public void setGoalRuntime(long goalRuntime) {
-        this.goalRuntime = goalRuntime;
+    public void setGoalRuntimeMS(long goalRuntimeMS) {
+        this.goalRuntimeMS = goalRuntimeMS;
     }
 
     public int getCompletedTrials() {

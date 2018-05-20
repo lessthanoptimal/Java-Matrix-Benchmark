@@ -24,7 +24,6 @@ import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -72,7 +71,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      * @return The results of the experiment.
      *
      */
-    public EvaluatorSlave.Results runTest( EvaluationTest test , int numTests ) {
+    public EvaluatorSlave.Results runTest( EvaluationTest test ) {
 
         requestID++;
 
@@ -90,10 +89,10 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
         // and declare it frozen.  + 2000 to add some fudge for overhead
         if( test.getMaximumEvaluateTime() > 0)
-            setFrozenTime(numTests*test.getMaximumEvaluateTime()+2000);
+            setFrozenTime(test.getMaximumEvaluateTime()+2000);
 
         boolean skipReadXml = false;
-        switch(launch(EvaluatorSlave.class,"case.xml",Integer.toString(numTests),Long.toString(requestID) ) )
+        switch(launch(EvaluatorSlave.class,"case.xml",Long.toString(requestID) ) )
         {
             case FROZEN:
                 errorStream.println("BenchmarkTools: Slave froze and was killed");
@@ -131,26 +130,20 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      * @param test A description of which is to be tested.
      * @return The results of the experiment.
      */
-    public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test , int numTests ) {
+    public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test ) {
         requestID++;
-        List<TestResults> results = new ArrayList<>();
 
         EvaluatorSlave.Results slaveResults = new EvaluatorSlave.Results();
 
         try {
             test.init();
-
-            for (int i = 0; i < numTests; i++) {
-                test.setupTest();
-                TestResults tr = test.evaluate();
-                results.add(tr);
-            }
+            test.setupTest();
+            slaveResults.results = test.evaluate();
         } catch( RuntimeException e ) {
             e.printStackTrace();
             slaveResults.failed = EvaluatorSlave.FailReason.MISC_EXCEPTION;
         }
 
-        slaveResults.results = results;
         slaveResults.requestID = requestID;
 
         return slaveResults;

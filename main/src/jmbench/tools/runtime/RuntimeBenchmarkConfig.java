@@ -65,14 +65,12 @@ public class RuntimeBenchmarkConfig implements Serializable {
     // A trial is a test where it benchmarks how many iterations it can perform in at least 'minimumTimePerTestMS'
     // Max trial time is the maximum amount of time a single trial is allowed to take before it's declared frozen
 
-    // how many performance trials should it run in a block
-    public int numTestsPerBlock;
-    // it will stop processing a matrix size if this number of trials has been exceeded
+    // it will stop processing a matrix size if this number of tests has been exceeded
     public int totalTests;
-    // the minimum amount of time each trials should last for (ms)
+    // the minimum amount of time a single test should last for (ms)
     public int minimumTimePerTestMS;
-    // the maximum amount of time a trial can last for (ms)
-    public int maxTimePerTestMS;
+    // the maximum amount of time a single trial can last for (ms)
+    public int maximumTimePerTrialMS;
 
     // specifies a fixed amount of memory that is to be allocated to the slave.
     // if set to zero then the memory will be dynamically allocated
@@ -93,10 +91,9 @@ public class RuntimeBenchmarkConfig implements Serializable {
         RuntimeBenchmarkConfig config = new RuntimeBenchmarkConfig();
 
         config.seed = 0xDEADBEEF;//new Random().nextLong();
-        config.numTestsPerBlock = 5;
         config.totalTests = 25;
         config.minimumTimePerTestMS = 3000;
-        config.maxTimePerTestMS = 1000*60*10;
+        config.maximumTimePerTrialMS = 1000*60*10;
         config.memoryMB = 0;
         config.randizeOrder = true;
         config.maxMatrixSize = 40000;
@@ -278,14 +275,6 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.randizeOrder = randizeOrder;
     }
 
-    public int getNumTestsPerBlock() {
-        return numTestsPerBlock;
-    }
-
-    public void setNumTestsPerBlock(int numTestsPerBlock) {
-        this.numTestsPerBlock = numTestsPerBlock;
-    }
-
     public int getTotalTests() {
         return totalTests;
     }
@@ -326,12 +315,12 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.invertSymmPosDef = invertSymmPosDef;
     }
 
-    public int getMaxTimePerTestMS() {
-        return maxTimePerTestMS;
+    public int getMaximumTimePerTrialMS() {
+        return maximumTimePerTrialMS;
     }
 
-    public void setMaxTimePerTestMS(int maxTimePerTestMS) {
-        this.maxTimePerTestMS = maxTimePerTestMS;
+    public void setMaximumTimePerTrialMS(int maximumTimePerTrialMS) {
+        this.maximumTimePerTrialMS = maximumTimePerTrialMS;
     }
 
     public int getMemoryMB() {

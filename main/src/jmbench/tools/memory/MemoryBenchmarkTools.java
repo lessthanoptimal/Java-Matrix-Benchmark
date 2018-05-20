@@ -21,7 +21,6 @@ package jmbench.tools.memory;
 
 import jmbench.tools.EvaluationTest;
 import jmbench.tools.EvaluatorSlave;
-import jmbench.tools.TestResults;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.*;
@@ -528,16 +527,13 @@ public class MemoryBenchmarkTools {
                 }  else {
                     // See if the slave caught an error.  Typically this will be the operation isn't supported or
                     // sanity check failed
-                    for( TestResults tr : results.getResults() ) {
-                        MemoryTest.Results rm = (MemoryTest.Results)tr;
+                    MemoryTest.Results rm = (MemoryTest.Results)results.getResults();
 
-                        if( rm.elapsedTime < 0 ) {
-                            String message = "    Case failed: Operation Not Supported: "+nameOp;
-                            errorStream.println(message);
-                            System.out.println(message);
-                            memoryUsage = -1;
-                            break;
-                        }
+                    if( rm.elapsedTime < 0 ) {
+                        String message = "    Case failed: Operation Not Supported: "+nameOp;
+                        errorStream.println(message);
+                        System.out.println(message);
+                        memoryUsage = -1;
                     }
                 }
             }

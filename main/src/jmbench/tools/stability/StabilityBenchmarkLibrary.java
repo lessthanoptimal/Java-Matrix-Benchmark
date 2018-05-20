@@ -23,7 +23,6 @@ import jmbench.impl.LibraryDescription;
 import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluatorSlave;
-import jmbench.tools.TestResults;
 import jmbench.tools.runtime.LibraryRuntimeInfo;
 import jmbench.tools.stability.tests.*;
 
@@ -310,7 +309,7 @@ public class StabilityBenchmarkLibrary {
         fatalError = null;
         e.setRandomSeed(config.randomSeed);
 
-        EvaluatorSlave.Results results = spawnChild ? tools.runTest(e,1) : tools.runTestNoSpawn(e,1);
+        EvaluatorSlave.Results results = spawnChild ? tools.runTest(e) : tools.runTestNoSpawn(e);
         slaveMemoryMegaBytes = tools.getAllocatedMemoryInMB();
 
         if( results == null ) {
@@ -349,10 +348,8 @@ public class StabilityBenchmarkLibrary {
         // collect all the results and return them
         StabilityTrialResults all = new StabilityTrialResults();
 
-        for(TestResults t : results.getResults() ) {
-            StabilityTrialResults r =  (StabilityTrialResults)t;
-            all.addResults(r);
-        }
+        StabilityTrialResults r =  (StabilityTrialResults)results.getResults();
+        all.addResults(r);
 
         return all;
     }

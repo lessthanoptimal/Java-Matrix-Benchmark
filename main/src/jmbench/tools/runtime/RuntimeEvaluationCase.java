@@ -59,7 +59,7 @@ public class RuntimeEvaluationCase implements Serializable {
         theTest.setNameAlgorithm(nameAlgorithm);
         theTest.setClassFactory(classFactory);
         theTest.setGenerator(generator);
-        theTest.setGoalRuntime(goalDurrationMS);
+        theTest.setGoalRuntimeMS(goalDurrationMS);
         theTest.setMaximumEvaluateTime(maxEvaluateTimeMS);
 
         return theTest;

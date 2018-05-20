@@ -23,8 +23,6 @@ import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -61,12 +59,11 @@ public class EvaluatorSlave {
 //        install("TERM");
 
         // parse the input arguments
-        if( args.length != 3 ) {
-            throw new IllegalArgumentException("Unexpected number of arguments");
+        if( args.length != 2 ) {
+            throw new IllegalArgumentException("Unexpected number of arguments. Got"+args.length);
         }
         String fileName = args[0];
-        int numTrials = Integer.parseInt(args[1]);
-        requestID = Long.parseLong(args[2]);
+        requestID = Long.parseLong(args[1]);
 
         // load the plan
         EvaluationTest eval = UtilXmlSerialization.deserializeXml(fileName);
@@ -78,13 +75,12 @@ public class EvaluatorSlave {
         }
 
         if( VERBOSE ) {
-            System.out.println("numTrials = "+numTrials);
             eval.printInfo();
         }
 
         // evalute
         try {
-            Results r = evaluationLoop(numTrials, eval);
+            Results r = evaluationLoop(eval);
 
             // save the results
             if( VERBOSE ) System.out.println("Slave done");
@@ -110,46 +106,6 @@ public class EvaluatorSlave {
         System.exit(0);
     }
 
-//    public static MySignalHandler install(String signalName) {
-//        Signal diagSignal = new Signal(signalName);
-//        MySignalHandler diagHandler = new MySignalHandler();
-//        diagHandler.oldHandler = Signal.handle(diagSignal,diagHandler);
-//        return diagHandler;
-//    }
-//
-//    /**
-//     * Catches control-c signals and let's the master know what happened. If this is not done
-//     * then some times when the used hits control-c the benchmark will think the slave failed and stop
-//     * the benchmark there.
-//     */
-//    public static class MySignalHandler implements SignalHandler {
-//
-//        public SignalHandler oldHandler;
-//
-//        @Override
-//        public void handle(Signal signal) {
-//            System.out.println("Diagnostic Signal handler called for signal "+signal);
-//            try {
-//                // Output information for each thread
-//                Thread[] threadArray = new Thread[Thread.activeCount()];
-//                int numThreads = Thread.enumerate(threadArray);
-//                System.out.println("Current threads:");
-//                for (int i=0; i < numThreads; i++) {
-//                    System.out.println("    "+threadArray[i]);
-//                }
-//                writeOutFailure(requestID,FailReason.USER_REQUESTED,"Caught signal: "+signal.getName());
-//
-//                // Chain back to previous handler, if one exists
-//                if ( oldHandler != SIG_DFL && oldHandler != SIG_IGN ) {
-//                    oldHandler.handle(signal);
-//                }
-//
-//
-//            } catch (Exception e) {
-//                System.out.println("Signal handler failed, reason "+e);
-//            }
-//        }
-//    }
 
     private static void writeOutFailure( long requestID , FailReason reason , String message ) throws FileNotFoundException {
         Results r = new Results();
@@ -162,46 +118,23 @@ public class EvaluatorSlave {
     /**
      * Evaluate each algorithm several times and result the results.
      */
-    private static Results evaluationLoop(int numTests, EvaluationTest eval) {
+    private static Results evaluationLoop(EvaluationTest eval) {
         // make sure it is in the correct state
         eval.init();
 
-        // How long does it allow each test to run for
-        long maximumEvaluate = eval.getMaximumEvaluateTime();
+        // create the matrix inputs for the algorithm.
+        eval.setupTest();
 
-        List<TestResults> results = new ArrayList<TestResults>();
-
-        FailReason fail = null;
-
-        for( int i = 0; i < numTests; i++ ) {
-            // create the matrix inputs for the algorithm.
-            if( VERBOSE ) System.out.print("  Tests Number = "+i);
-            eval.setupTest();
-
-            long before = System.currentTimeMillis();
-            TestResults r = eval.evaluate();
-            long after = System.currentTimeMillis();
-
-            if( VERBOSE ) System.out.print("  results = "+r);
-            results.add(r);
-
-            if( maximumEvaluate > -1 && (after-before) > maximumEvaluate) {
-                fail = FailReason.TOO_SLOW;
-                // if a single trial takes too long then it is just stop
-                if( VERBOSE )
-                    System.out.println("\nSingle test too long: DT = "+(after-before)+" max = "+maximumEvaluate);
-                break;
-            }
-
-
-            if( VERBOSE ) System.out.println("  DT = "+(after-before));
+        Results results = new Results();
+        try {
+            results.results = eval.evaluate();
+            if( VERBOSE ) System.out.print("  results = "+results.results);
+        } catch( RuntimeException e ) {
+            e.printStackTrace();
+            results.failed = FailReason.MISC_EXCEPTION;
         }
 
-        Results r = new Results();
-        r.results = results;
-        r.failed = fail;
-
-        return r;
+        return results;
     }
 
     /**
@@ -217,15 +150,15 @@ public class EvaluatorSlave {
         public FailReason failed;
 
         // results from each trial
-        public List<TestResults> results;
+        public TestResults results;
 
         public String detailedError;
 
-        public List<TestResults> getResults() {
+        public TestResults getResults() {
             return results;
         }
 
-        public void setResults(List<TestResults> results) {
+        public void setResults(TestResults results) {
             this.results = results;
         }
 
