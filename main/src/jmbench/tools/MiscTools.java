@@ -62,6 +62,32 @@ public class MiscTools {
         return Long.parseLong(message)*multiplier;
     }
 
+    public static long parseMemoryMB( String message ) {
+        long divisor = 1;
+        long multiplier = 1;
+        int truncate = 0;
+
+        message = message.toLowerCase();
+
+        if( message.endsWith("mb")) {
+            truncate = 2;
+        } else if( message.endsWith("m")) {
+            truncate = 1;
+        } else if ( message.endsWith("gb")) {
+            multiplier = 1024;
+            truncate = 2;
+        } else if ( message.endsWith("g")) {
+            multiplier = 1024;
+            truncate = 1;
+        } else if ( message.endsWith("b")) {
+            divisor = 1024*1024;
+            truncate = 1;
+        }
+        if( truncate > 0 )
+            message = message.substring(0, message.length()-truncate);
+        return Long.parseLong(message)*multiplier/divisor;
+    }
+
     public static String stringTimeArgumentHelp() {
         return "Maximum time on a single test. <value><unit> Units: ms = milliseconds, s = seconds, m = minutes.  Default is ms";
     }

@@ -137,7 +137,7 @@ public class RuntimeBenchmark {
         System.out.println("  --MinTestTime=<ms>        |  The minimum amount of time spent in a single test.  Typical is 3000 ms.");
         System.out.println("  --MaxTestTime=<time|unit> |  "+MiscTools.stringTimeArgumentHelp());
         System.out.println("  --Resume=<directory>      |  It will resume an unfinished benchmark at the specified directory.");
-        System.out.println("  --Memory=<MB>             |  Sets the amount of memory allocated to java for each trial in megabytes.  This number should be");
+        System.out.println("  --Memory=<size|unit>      |  Sets the amount of memory allocated.  Default is MB. Recognizes suffixes for m,mb,g,gb,b.");
         System.out.println("                            |  as large as possible with out exceeding the amount of physical memory on the system.");
         System.out.println("                            |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
         System.out.println();
@@ -238,7 +238,7 @@ public class RuntimeBenchmark {
             } else if( flag.compareTo("Memory") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 memorySpecified = true;
-                config.memoryMB = Integer.parseInt(splits[1]);
+                config.memoryMB = (int)MiscTools.parseMemoryMB(splits[1]);
                 if( config.memoryMB <= 0 )
                     System.out.println("Memory must be set to a value greater than zero");
                 else

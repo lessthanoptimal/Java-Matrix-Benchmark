@@ -45,6 +45,9 @@ public class JavaRuntimeLauncher {
     // save for future debugging
     private String[] jvmArgs;
 
+    // optional message which describes the task being performed
+    private String messageTask = "";
+
     /**
      * Constructor.  Configures which library it is to be launching a class from/related to
      * @param pathJars List of paths to all the jars
@@ -169,6 +172,8 @@ public class JavaRuntimeLauncher {
                 if( System.currentTimeMillis() - lastAliveMessage > 300000 ) {
                     int percent = (int)(100*(ellapsedTime/(double) frozenTimeMS));
                     System.out.println("\nMaster is still alive: "+new Date()+"  Press 'q' and enter to quit. "+percent+"%");
+                    if( messageTask != null && messageTask.length() > 0 )
+                        System.out.println(messageTask);
                     lastAliveMessage = System.currentTimeMillis();
                 }
             }
@@ -228,6 +233,10 @@ public class JavaRuntimeLauncher {
 
     public String[] getArguments() {
         return jvmArgs;
+    }
+
+    public void setMessageTask(String messageTask) {
+        this.messageTask = messageTask;
     }
 
     public enum Exit

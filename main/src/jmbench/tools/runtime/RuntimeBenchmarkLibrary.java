@@ -155,7 +155,7 @@ public class RuntimeBenchmarkLibrary {
 
                 CaseState s = states.get(index);
 
-                if( evaluateOneBlock(s)) {
+                if( evaluateOneTest(s)) {
                     states.remove(index);
                 }
             }
@@ -273,14 +273,17 @@ public class RuntimeBenchmarkLibrary {
      * @throws java.io.FileNotFoundException
      * @return true if the case has finished
      */
-    private boolean evaluateOneBlock( CaseState state ) throws FileNotFoundException {
+    private boolean evaluateOneTest(CaseState state ) throws FileNotFoundException {
 
         RuntimeEvaluationCase e = state.evalCase;
         int matDimen[] = e.getDimens();
 
         RuntimeEvaluationMetrics score[] = state.score;
 
-        System.out.println("#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" Performed "+state.results.size()+"/"+config.totalTests+"  ####");
+        // Let the user know what it's doing
+        String taskDescription = "#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" Performed "+state.results.size()+"/"+config.totalTests+"  ####";
+        System.out.println(taskDescription);
+        tools.setMessageTask(taskDescription); // this will be periodically printed out
 
         RuntimeResults r = computeResults(e, state.matrixIndex , randSeedTrials , score , state.results);
 
