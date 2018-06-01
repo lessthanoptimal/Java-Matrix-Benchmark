@@ -143,7 +143,7 @@ public class RuntimeBenchmark {
         System.out.println("                            |  as large as possible with out exceeding the amount of physical memory on the system.");
         System.out.println("                            |  specified since the dynamic algorithm will slow down the benchmark and has some known issues.");
         System.out.println();
-        System.out.println("The only option which must be specified is \"FixedMemory\".  If no other options are specified " +
+        System.out.println("The only option which must be specified is \"Memory\".  If no other options are specified " +
                 "then a default configuration will be used and the results" +
                 "will be saved to a directory in results with the name of the current system time in milliseconds.");
         System.out.println();
