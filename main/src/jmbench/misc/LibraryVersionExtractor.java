@@ -66,7 +66,7 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
      * Feed standard out into a string.
      */
     @Override
-    protected void printInputBuffer(BufferedReader input) throws IOException {
+    protected void printToStdOut(BufferedReader input) throws IOException {
         while( input.ready() ) {
             int val = input.read();
             if( val < 0 ) break;
