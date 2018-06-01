@@ -76,6 +76,7 @@ public class StabilityBenchmark {
 
         System.out.println();
         System.out.println("Elapsed time "+MiscTools.milliToHuman(timeAfter-timeBefore)+"\n");
+        MiscTools.sendFinishedEmail("Stability",timeBefore);
     }
 
     private void processLibraries( List<LibraryDescription> libs, StabilityBenchmarkConfig config ) {

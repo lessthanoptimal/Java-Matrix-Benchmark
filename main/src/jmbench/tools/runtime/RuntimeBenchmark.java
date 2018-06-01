@@ -63,8 +63,10 @@ public class RuntimeBenchmark {
 
         long startTime = System.currentTimeMillis();
         processLibraries(config.getTargets(),config);
+        long elapsedTime = System.currentTimeMillis()-startTime;
+        System.out.println("Elapsed time "+MiscTools.milliToHuman(elapsedTime)+"\n");
 
-        System.out.println("Elapsed time "+MiscTools.milliToHuman(System.currentTimeMillis()-startTime)+"\n");
+        MiscTools.sendFinishedEmail("Runtime",startTime);
     }
 
     private void processLibraries( List<LibraryDescription> libs, RuntimeBenchmarkConfig config ) {

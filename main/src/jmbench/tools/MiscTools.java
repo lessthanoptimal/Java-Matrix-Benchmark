@@ -22,16 +22,16 @@ package jmbench.tools;
 import com.thoughtworks.xstream.XStream;
 import jmbench.impl.LibraryStringInfo;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Peter Abeles
@@ -122,5 +122,52 @@ public class MiscTools {
     public static List<LibraryStringInfo> loadLibraryInfo(File file) {
         XStream xstream = new XStream();
         return (List<LibraryStringInfo>)xstream.fromXML(file);
+    }
+
+    public static void sendFinishedEmail( String benchmark , long startTime ) {
+        File f = new File("email_login.txt");
+        try {
+            if (f.exists()) {
+                BufferedReader reader = new BufferedReader(new FileReader(f));
+
+                String emailUsername = reader.readLine();
+                String emailPassword = reader.readLine();
+                String emailDestination = reader.readLine();
+
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.socketFactory.port", "465");
+                props.put("mail.smtp.socketFactory.class",
+                        "javax.net.ssl.SSLSocketFactory");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.port", "465");
+
+                Session session = Session.getDefaultInstance(props,
+                        new javax.mail.Authenticator() {
+                            protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(emailUsername, emailPassword);
+                            }
+                        });
+
+                long elapsedTime = System.currentTimeMillis()-startTime;
+
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(emailUsername + "@gmail.com"));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailDestination));
+                message.setSubject("Java Matrix Benchmark Completed: " + benchmark);
+                message.setText(benchmark+" has finished.\n\n"+
+                        "Start Date "+new Date(startTime)+"\n\n"+
+                        "Elapsed Time: "+MiscTools.milliToHuman(elapsedTime));
+
+                Transport.send(message);
+
+                System.out.println("Sent summary to " + emailDestination);
+            } else {
+                System.out.println("\n\n*** email_login.txt doesn't exist ***");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Something went wrong when trying to e-mail");
+        }
     }
 }

@@ -79,6 +79,7 @@ public class MemoryBenchmark {
 
         System.out.println("Finished Benchmark");
         System.out.println("Elapsed time "+MiscTools.milliToHuman(System.currentTimeMillis()-startTime)+"\n");
+        MiscTools.sendFinishedEmail("Memory",startTime);
     }
 
     private void processLibraries( List<LibraryDescription> libs, MemoryConfig config , long overhead ) {

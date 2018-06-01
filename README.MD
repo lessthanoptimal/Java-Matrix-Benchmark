@@ -19,6 +19,15 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
 5. java -jar benchmark.jar
 6. Follow printed instructions for the benchmark you wish to run
 
+# Settings Up Results E-Mailing
+
+Create a file called "email_login.txt". DO NOT ADD TO GIT.
+* First line is your login.
+* Second line is your password. 
+* Third line is the destination e-mail.
+
+This is configured for gmail only right now. You need to turn on "Allow less secure apps" by going to
+https://myaccount.google.com/security
 
 # Adding Your Own Library
 

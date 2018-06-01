@@ -13,6 +13,7 @@
 - Removed ability to check runtime results.  Stability handles this just fine now
 - Runtime benchmark only runs a single test at a time in a single JVM. The block approach was complex.
 - Tweaked how warm up period is handled in runtime
+- Added optional e-mail upon completion
 
 TODO have MemoryBenchmarkTools extend JavaRuntimeLauncher?
 
