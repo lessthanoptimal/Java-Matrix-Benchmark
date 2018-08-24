@@ -25,8 +25,8 @@ import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.BenchmarkConstants;
+import org.ejml.EjmlVersion;
 import org.ejml.LinearSolverSafe;
-import org.ejml.UtilEjml;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.CovarianceOps_DDRM;
@@ -516,7 +516,7 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public String getLibraryVersion() {
-        return UtilEjml.VERSION;
+        return EjmlVersion.VERSION;
     }
 
     @Override

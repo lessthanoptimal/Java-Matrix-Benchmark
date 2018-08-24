@@ -24,7 +24,7 @@ import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorMatrix;
 import jmbench.tools.BenchmarkConstants;
-import org.ejml.UtilEjml;
+import org.ejml.EjmlVersion;
 import org.ejml.dense.row.EigenOps_DDRM;
 import org.ejml.interfaces.decomposition.EigenDecomposition_F64;
 import org.ejml.simple.SimpleEVD;
@@ -349,7 +349,7 @@ public class EjmlSimpleAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public String getLibraryVersion() {
-        return UtilEjml.VERSION;
+        return EjmlVersion.VERSION;
     }
 
     @Override
