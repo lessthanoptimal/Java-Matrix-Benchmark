@@ -12,12 +12,17 @@ however a few libraries aren't on Maven central so you need to download their ja
 libraries "libs/" directory.  Instructions for where to download the latest jar is typically provided in the
 "libs/source.txt".  After those jars have been downloaded gradle will be able to compile the project.
 
-1. Install [Gradle](http://gradle.org/) on to your system
-2. Manual download jars for libraries which haven't been posted on Maven central. (Just Jeigen)
+1. Install dependencies required by tested libraries
+    ```bash
+    sudo apt-get install libblas-dev liblapack-dev
+    ``` 
+2. Manual download jars for libraries which haven't been posted on Maven central
+    * jeigen: See its readme.md
 3. ./gradlew createRuntimeJars
 4. ./gradlew benchmarkJar
 5. java -jar benchmark.jar
 6. Follow printed instructions for the benchmark you wish to run
+
 
 # Settings Up Results E-Mailing
 
