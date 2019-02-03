@@ -1,6 +1,8 @@
+(year/month/day)
+
 ----- Version 0.11
 
-2016/
+2019/02/03
 
 - Converted build over to Gradle
   * Changed directory structure
@@ -14,8 +16,6 @@
 - Runtime benchmark only runs a single test at a time in a single JVM. The block approach was complex.
 - Tweaked how warm up period is handled in runtime
 - Added optional e-mail upon completion
-
-TODO have MemoryBenchmarkTools extend JavaRuntimeLauncher?
 
 ----- Version 0.10
 
