@@ -131,13 +131,15 @@ public class RuntimeBenchmark {
         System.out.println();
         System.out.println("The following options are valid for runtime benchmark:");
         System.out.println("  --Config=<file>           |  Configure using the specified xml file.");
+        System.out.println("  --TotalTests=<num>        |  Total number of tests for each operation + matrix size combo. Default 15");
         System.out.println("  --Size=min:max            |  Test matrices from the specified minimum size to the specified maximum size.");
         System.out.println("  --Quick                   |  Generate results much faster by sacrificing accuracy/stability of the results.");
         System.out.println("  --Library=<lib>           |  To run a specific library only.  --Library=? will print a list");
         System.out.println("                            |  Use a comma to specify multiple libraries, e.g. 'ejml,ojalgo'");
         System.out.println("  --Seed=<number>           |  used to set the random seed to the specified value.");
-        System.out.println("  --MinTestTime=<ms>        |  The minimum amount of time spent in a single test.  Typical is 3000 ms.");
+        System.out.println("  --MinTestTime=<ms>        |  The minimum amount of time spent in a single test.  Default is 3000 ms.");
         System.out.println("  --MaxTestTime=<time|unit> |  "+MiscTools.stringTimeArgumentHelp());
+        System.out.println("                            |  Default is 15 minutes");
         System.out.println("  --Resume=<directory>      |  It will resume an unfinished benchmark at the specified directory.");
         System.out.println("  --Memory=<size|unit>      |  Sets the amount of memory allocated.  Default is MB. Recognizes suffixes for m,mb,g,gb,b.");
         System.out.println("                            |  as large as possible with out exceeding the amount of physical memory on the system.");
@@ -222,6 +224,8 @@ public class RuntimeBenchmark {
                 if( splits.length != 2 ) {failed = true; break;}
                 config.seed = Long.parseLong(splits[1]);
                 System.out.println("Random seed set to "+config.seed);
+            } else if( flag.compareTo("TotalTests") == 0 ) {
+                config.totalTests = Integer.parseInt(splits[1]);
             } else if( flag.compareTo("MinTestTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
                 config.minimumTimePerTestMS = Integer.parseInt(splits[1]);

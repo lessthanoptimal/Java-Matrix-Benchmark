@@ -91,9 +91,9 @@ public class RuntimeBenchmarkConfig implements Serializable {
         RuntimeBenchmarkConfig config = new RuntimeBenchmarkConfig();
 
         config.seed = 0xDEADBEEF;//new Random().nextLong();
-        config.totalTests = 25;
+        config.totalTests = 15;
         config.minimumTimePerTestMS = 3000;
-        config.maximumTimePerTrialMS = 1000*60*10;
+        config.maximumTimePerTrialMS = 1000*60*15;
         config.memoryMB = 0;
         config.randizeOrder = true;
         config.maxMatrixSize = 40000;
