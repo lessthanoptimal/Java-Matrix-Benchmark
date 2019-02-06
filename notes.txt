@@ -1,0 +1,8 @@
+
+- Ubuntu 18.04
+
+sudo apt-get install nodejs ruby-dev
+sudo gem install jekyll
+
+jekyll serve
+
