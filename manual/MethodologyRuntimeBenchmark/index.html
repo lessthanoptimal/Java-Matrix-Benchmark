@@ -123,10 +123,9 @@
 <p>where ‘t_m’ is the measured time, ‘t_0’ is the true time, and N(t_0) is a noise process that may be dependent on when it is called.  This issue is exaggerated in Java due to the abstraction from the systems hardware, preventing very low level system calls from being called.</p>
 
 <p>In Java a common function to measure time is System.currentTimeMillis() and it has an unspecified accuracy that is assumed to be within milliseconds.  In practice its accuracy is variable depending on which operations/hardware it is run on.  System.nanoTime() returns a more precise time measurement, but its documentation explicitly states that its accuracy is not defined, see the excerpt from its documentation below:</p>
-<div class="highlighter-rouge"><pre class="highlight"><code>This method can only be used to measure elapsed time and is not related to any other.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This method can only be used to measure elapsed time and is not related to any other.
 This method provides nanosecond precision, but not necessarily nanosecond accuracy. 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>One way to handle this problem is to simply increase the length of the benchmark until the noise is insignificant.  As previously mentioned, the number of trials that this requires is dependent on the system it is run on.</p>
 
