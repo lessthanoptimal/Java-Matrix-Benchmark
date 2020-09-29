@@ -10,6 +10,8 @@
   * TODO after the first trial use previous results to guess how many trials are needed in an attempt to speed it up
   * TODO get resume working again
   * TODO runtime - specify number of warm up, max warm up length, and number of trials in a fork.
+  * TODO save more detailed OS info. lsb_release -a
+  * TODO Add ND4J
 
 
 ----- Version 0.11
