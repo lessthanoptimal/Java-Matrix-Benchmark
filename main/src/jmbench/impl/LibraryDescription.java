@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author Peter Abeles
  */
-public class LibraryDescription {
+public class LibraryDescription implements Comparable<LibraryDescription> {
     public LibraryStringInfo info;
     public String directory;
 
@@ -41,5 +41,11 @@ public class LibraryDescription {
             }
         }
         return jars;
+    }
+
+
+    @Override
+    public int compareTo(LibraryDescription o) {
+        return directory.compareTo(o.directory);
     }
 }

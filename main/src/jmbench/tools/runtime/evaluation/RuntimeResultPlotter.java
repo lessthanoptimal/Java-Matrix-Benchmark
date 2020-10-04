@@ -20,7 +20,6 @@
 package jmbench.tools.runtime.evaluation;
 
 import jmbench.impl.LibraryDescription;
-import jmbench.impl.LibraryManager;
 import jmbench.plots.OperationsVersusSizePlot;
 import jmbench.plots.OverallRelativeAreaPlot;
 import jmbench.plots.SummaryWhiskerPlot;
@@ -28,6 +27,8 @@ import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeResults;
 
 import java.util.*;
+
+import static jmbench.tools.runtime.evaluation.PlotRuntimeResults.findLibraryIndex;
 
 
 /**
@@ -52,7 +53,7 @@ public class RuntimeResultPlotter {
         }
 
         // find the relative speed of each operation for each matrix size so that they can be weighted
-        double slowestOperationByMatrix[] = new double[ numMatrices ];
+        double[] slowestOperationByMatrix = new double[ numMatrices ];
         for( RuntimePlotData opResults : allResults ) {
             for( int i = 0; i < numMatrices; i++ ) {
                 double bestSpeed = opResults.findBest(i);
@@ -73,7 +74,7 @@ public class RuntimeResultPlotter {
 
             // find the performance for each matrix size that each library will
             // be compared against
-            double refValue[] = new double[ numMatrixSizes ];
+            double[] refValue = new double[ numMatrixSizes ];
             computeReferenceValues(opResults, referenceType, -1, numMatrixSizes, refValue);
 
             // find the largest matrix with results in it
@@ -143,7 +144,7 @@ public class RuntimeResultPlotter {
 
         // find the number of matrices sizes tested
         int numMatrices = 0;
-        int sizes[] = null;
+        int[] sizes = null;
         for( RuntimePlotData opResults : allResults ) {
             if( opResults.matrixSize.length > numMatrices ) {
                 numMatrices = opResults.matrixSize.length;
@@ -152,7 +153,7 @@ public class RuntimeResultPlotter {
         }
 
         // find the relative speed of each operation for each matrix size so that they can be weighted
-        double slowestOperationByMatrix[] = new double[ numMatrices ];
+        double[] slowestOperationByMatrix = new double[ numMatrices ];
         for( RuntimePlotData opResults : allResults ) {
             for( int i = 0; i < numMatrices; i++ ) {
                 double bestSpeed = opResults.findBest(i);
@@ -173,7 +174,7 @@ public class RuntimeResultPlotter {
 
             // find the performance for each matrix size that each library will
             // be compared against
-            double refValue[] = new double[ numMatrixSizes ];
+            double[] refValue = new double[ numMatrixSizes ];
             computeReferenceValues(opResults, referenceType, -1, numMatrixSizes, refValue);
 
             for( RuntimePlotData.SourceResults r : opResults.libraries ) {
@@ -218,7 +219,7 @@ public class RuntimeResultPlotter {
         orderedNames.addAll( overallResults.keySet());
         Collections.sort(orderedNames);
 
-        double total[] = new double[ sizes.length ];
+        double[] total = new double[ sizes.length ];
         for( String libName : orderedNames ) {
             OverallSizeData libOverall = overallResults.get(libName);
 
@@ -233,8 +234,8 @@ public class RuntimeResultPlotter {
         for( String libName : orderedNames ) {
             OverallSizeData libOverall = overallResults.get(libName);
 
-            double scoresLine[] = new double[ sizes.length ];
-            double scoresArea[] = new double[ sizes.length ];
+            double[] scoresLine = new double[ sizes.length ];
+            double[] scoresArea = new double[ sizes.length ];
 
             for( int i = 0; i < sizes.length; i++ ) {
                 double w = libOverall.weights[i];
@@ -307,8 +308,8 @@ public class RuntimeResultPlotter {
 
     private static class OverallSizeData
     {
-        double weights[];
-        double scoreWeighted[];
+        double[] weights;
+        double[] scoreWeighted;
         int plotLineType;
 
         public OverallSizeData( int numSizes ) {
@@ -318,7 +319,7 @@ public class RuntimeResultPlotter {
     }
 
     public static void variabilityPlots( List<RuntimeResults> data ,
-                                         List<String> libraryNames ,
+                                         List<LibraryDescription> libraryDescriptions ,
                                          String fileName ,
                                          boolean savePDF ,
                                          boolean showWindow )
@@ -331,8 +332,8 @@ public class RuntimeResultPlotter {
 
         int numMatrixSizes = getNumMatrices(data);
 
-        double results[] = new double[ numMatrixSizes ];
-        int matDimen[] = new int[ numMatrixSizes ];
+        double[] results = new double[ numMatrixSizes ];
+        int[] matDimen = new int[ numMatrixSizes ];
 
         if( fileName == null ) {
             fileName = opName;
@@ -359,9 +360,8 @@ public class RuntimeResultPlotter {
                 }
             }
 
-            LibraryManager manager = new LibraryManager();
-            LibraryDescription desc = manager.lookup(ops.getLibraryName());
-            int libraryIndex = libraryNames.indexOf(ops.getLibraryName());
+            int libraryIndex = findLibraryIndex(ops.getLibraryName(), libraryDescriptions);
+            LibraryDescription desc = libraryDescriptions.get(libraryIndex);
             splot.addResults(matDimen,results,desc.info.getNamePlot(),numMatrixSizes,libraryIndex);
         }
 
@@ -383,8 +383,8 @@ public class RuntimeResultPlotter {
 
         int numMatrixSizes = data.matrixSize.length;
 
-        double results[] = new double[ numMatrixSizes ];
-        int matDimen[] = data.matrixSize;
+        double[] results = new double[ numMatrixSizes ];
+        int[] matDimen = data.matrixSize;
 
         if( fileName == null ) {
             fileName = opName;
@@ -432,9 +432,9 @@ public class RuntimeResultPlotter {
 
         int numMatrixSizes = data.matrixSize.length;
 
-        double results[] = new double[ numMatrixSizes ];
-        double refValue[] = new double[ numMatrixSizes ];
-        int matDimen[] = data.matrixSize;
+        double[] results = new double[ numMatrixSizes ];
+        double[] refValue = new double[ numMatrixSizes ];
+        int[] matDimen = data.matrixSize;
 
         if( fileName == null ) {
             fileName = opName;
@@ -484,7 +484,7 @@ public class RuntimeResultPlotter {
         int max = 0;
 
         for( RuntimeResults d : data ) {
-            int sizes[] = d.getMatDimen();
+            int[] sizes = d.getMatDimen();
 
             if( sizes.length > max )
                 max = sizes.length;
@@ -496,7 +496,7 @@ public class RuntimeResultPlotter {
     private static int getMatrixSize( List<RuntimeResults> data , int index)
     {
         for( RuntimeResults d : data ) {
-            int sizes[] = d.getMatDimen();
+            int[] sizes = d.getMatDimen();
 
             if( sizes.length > index ) {
                 return sizes[index];
