@@ -21,6 +21,7 @@ package jmbench.tools.stability;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import jmbench.tools.MiscTools;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,7 +32,7 @@ import java.io.FileReader;
  */
 public class UtilXmlSerialization {
     public static void serializeXml( Object o , String fileName ) {
-        XStream xstream = new XStream(new DomDriver());
+        XStream xstream = MiscTools.createXStream(new DomDriver());
 
         try {
             xstream.toXML(o,new FileOutputStream(fileName));
@@ -41,7 +42,7 @@ public class UtilXmlSerialization {
     }
 
     public static <T> T deserializeXml( String fileName ) {
-        XStream xstream = new XStream(new DomDriver());
+        XStream xstream = MiscTools.createXStream(new DomDriver());
 
         try {
             return (T)xstream.fromXML(new FileReader(fileName));

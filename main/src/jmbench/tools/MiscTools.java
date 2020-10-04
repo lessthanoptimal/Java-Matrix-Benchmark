@@ -20,6 +20,10 @@
 package jmbench.tools;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.security.NoTypePermission;
+import com.thoughtworks.xstream.security.NullPermission;
+import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import jmbench.impl.LibraryStringInfo;
 
 import javax.mail.Message;
@@ -102,13 +106,25 @@ public class MiscTools {
     }
 
     public static void saveLibraryInfo(String directory, List<LibraryStringInfo> tests) throws IOException {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream(null);
         String string = xstream.toXML(tests);
 
         File f = new File("external/"+directory+"/TestSetInfo.txt");
         BufferedWriter out = new BufferedWriter(new FileWriter(f));
         out.write(string);
         out.close();
+    }
+
+    public static XStream createXStream(HierarchicalStreamDriver driver) {
+        XStream xstream = driver == null ? new XStream() : new XStream(driver);
+        xstream.addPermission(NoTypePermission.NONE);
+        xstream.addPermission(NullPermission.NULL);
+        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
+        xstream.allowTypeHierarchy(Collection.class);
+        xstream.allowTypesByWildcard(new String[] {
+                "jmbench.**"
+        });
+        return xstream;
     }
 
     public static void saveLibraryInfo(String directory, LibraryStringInfo... tests) throws IOException {
@@ -120,7 +136,7 @@ public class MiscTools {
     }
 
     public static List<LibraryStringInfo> loadLibraryInfo(File file) {
-        XStream xstream = new XStream();
+        XStream xstream = createXStream(null);
         return (List<LibraryStringInfo>)xstream.fromXML(file);
     }
 
