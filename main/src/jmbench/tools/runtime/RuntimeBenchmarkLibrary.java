@@ -126,7 +126,7 @@ public class RuntimeBenchmarkLibrary {
     }
 
     /**
-     * Perform the benchmark tests against all the different algortihms
+     * Perform the benchmark tests against all the different algorithms
      */
     public void performBenchmark() throws FileNotFoundException {
         setupLog();

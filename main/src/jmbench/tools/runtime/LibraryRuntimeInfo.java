@@ -30,7 +30,11 @@ import java.io.Serializable;
  * @author Peter Abeles
  */
 public class LibraryRuntimeInfo implements Serializable {
+    // Official library version
     public String version;
+    // If available, the hashcode of the source it was built from
+    public String sourceHash;
+    // If the library includes native code or not
     public boolean isNative;
 
     public String getVersion() {
@@ -49,6 +53,14 @@ public class LibraryRuntimeInfo implements Serializable {
         this.isNative = aNative;
     }
 
+    public String getSourceHash() {
+        return sourceHash;
+    }
+
+    public void setSourceHash(String sourceHash) {
+        this.sourceHash = sourceHash;
+    }
+
     public static void main(String[] args) {
         String factoryName = args[0];
         String path = args[1];
@@ -57,12 +69,14 @@ public class LibraryRuntimeInfo implements Serializable {
             RuntimePerformanceFactory factory = (RuntimePerformanceFactory)Class.forName(factoryName).newInstance();
 
             System.out.println("LibraryRuntimeInfo factory "+factoryName);
-            System.out.println("                   native "+factory.isNative());
-
+            System.out.println("                   version "+factory.getLibraryVersion());
+            System.out.println("                   native  "+factory.isNative());
+            System.out.println("                   hash    "+factory.getSourceHash());
 
             LibraryRuntimeInfo info = new LibraryRuntimeInfo();
             info.isNative = factory.isNative();
             info.version = factory.getLibraryVersion();
+            info.sourceHash = factory.getSourceHash();
 
             UtilXmlSerialization.serializeXml(info,path);
         } catch (Exception e) {

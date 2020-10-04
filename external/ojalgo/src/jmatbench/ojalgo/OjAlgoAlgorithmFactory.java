@@ -567,4 +567,9 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
     public boolean isNative() {
         return false;
     }
+
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
 }

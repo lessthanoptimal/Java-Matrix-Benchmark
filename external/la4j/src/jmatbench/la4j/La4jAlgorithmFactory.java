@@ -447,6 +447,11 @@ public class La4jAlgorithmFactory implements RuntimePerformanceFactory {
         return false;
     }
 
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
+
     public static Matrix ejmlToLa4j( RowMajorMatrix orig ) {
         Matrix m = new Basic2DMatrix(orig.numRows, orig.numCols);
 

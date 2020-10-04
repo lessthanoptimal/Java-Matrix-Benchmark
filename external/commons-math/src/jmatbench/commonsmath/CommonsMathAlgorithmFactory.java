@@ -505,6 +505,11 @@ public class CommonsMathAlgorithmFactory implements RuntimePerformanceFactory {
         return false;
     }
 
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
+
     /**
      * Converts BenchmarkMatrix used in EML into a RealMatrix found in commons-math.
      *

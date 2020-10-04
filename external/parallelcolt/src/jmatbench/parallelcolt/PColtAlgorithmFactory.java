@@ -486,6 +486,11 @@ public class PColtAlgorithmFactory implements RuntimePerformanceFactory {
         return false;
     }
 
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
+
     public static cern.colt.matrix.tdouble.DoubleMatrix2D convertToParallelColt( RowMajorMatrix orig )
     {
         DenseDoubleMatrix2D mat = createMatrix(orig.numRows,orig.numCols);

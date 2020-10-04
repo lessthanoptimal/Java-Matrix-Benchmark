@@ -473,6 +473,11 @@ public class JamaAlgorithmFactory implements RuntimePerformanceFactory {
         return false;
     }
 
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
+
     public static Matrix convertToJama( RowMajorMatrix orig )
     {
         Matrix ret = new Matrix(orig.getNumRows(),orig.getNumCols());

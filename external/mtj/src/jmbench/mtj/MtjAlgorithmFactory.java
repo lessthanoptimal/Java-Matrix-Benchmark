@@ -512,6 +512,11 @@ public class MtjAlgorithmFactory implements RuntimePerformanceFactory {
         return false;
     }
 
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
+
     /**
      * Converts a BenchmarkMatrix in EML into a DenseMatrix in MTJ
      *

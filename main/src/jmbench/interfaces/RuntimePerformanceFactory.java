@@ -144,7 +144,19 @@ public interface RuntimePerformanceFactory extends LibraryFactory , MatrixFactor
 
     RowMajorMatrix convertToRowMajor(BenchmarkMatrix input);
 
+    /**
+     * String which represents the official library version
+     */
     String getLibraryVersion();
 
+    /**
+     * The hashcode (i.e. Git SHA) of the source used generate this library. If not available then return an empty
+     * string.
+     */
+    String getSourceHash();
+
+    /**
+     * If native code is invoked or not
+     */
     boolean isNative();
 }

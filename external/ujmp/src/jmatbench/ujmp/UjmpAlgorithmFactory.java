@@ -474,6 +474,11 @@ public class UjmpAlgorithmFactory implements RuntimePerformanceFactory {
 	}
 
 	@Override
+	public String getSourceHash() {
+		return "";
+	}
+
+	@Override
 	public boolean isNative() {
 		return UJMPSettings.getInstance().isUseJBlas();
 	}

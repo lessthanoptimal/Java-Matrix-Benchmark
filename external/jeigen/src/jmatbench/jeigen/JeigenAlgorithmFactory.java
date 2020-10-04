@@ -353,4 +353,9 @@ public class JeigenAlgorithmFactory implements RuntimePerformanceFactory {
     public boolean isNative() {
         return true;
     }
+
+    @Override
+    public String getSourceHash() {
+        return "";
+    }
 }

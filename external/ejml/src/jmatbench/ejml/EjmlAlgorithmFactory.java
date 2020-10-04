@@ -520,6 +520,11 @@ public class EjmlAlgorithmFactory implements RuntimePerformanceFactory {
     }
 
     @Override
+    public String getSourceHash() {
+        return EjmlVersion.GIT_SHA;
+    }
+
+    @Override
     public boolean isNative() {
         return false;
     }
