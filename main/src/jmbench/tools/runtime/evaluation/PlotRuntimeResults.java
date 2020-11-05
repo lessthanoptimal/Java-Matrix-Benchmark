@@ -105,6 +105,9 @@ public class PlotRuntimeResults {
 
                         RuntimeResults r = RuntimeResultsCsvIO.read(new File(name2));
 
+                        // override the name in the csv file with the name in the description
+                        r.libraryName = desc.info.nameShort;
+
                         List l;
                         if( opMap.containsKey(stripName) ) {
                             l = opMap.get(stripName);
