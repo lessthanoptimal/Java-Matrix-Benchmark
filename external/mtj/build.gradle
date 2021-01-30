@@ -1,4 +1,4 @@
 dependencies {
     compile project(':main')
-    compile group: 'io.github.andreas-solti.matrix-toolkits-java', name: 'mtj', version: '1.0.7'
+    compile group: 'io.github.andreas-solti.matrix-toolkits-java', name: 'mtj', version: '1.0.8'
 }
