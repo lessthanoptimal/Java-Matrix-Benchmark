@@ -35,7 +35,7 @@ import org.ojalgo.function.UnaryFunction;
 import org.ojalgo.matrix.decomposition.*;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
-import org.ojalgo.matrix.store.PrimitiveDenseStore;
+import org.ojalgo.matrix.store.Primitive64Store;
 import org.ojalgo.matrix.task.DeterminantTask;
 import org.ojalgo.matrix.task.InverterTask;
 import org.ojalgo.matrix.task.SolverTask;
@@ -44,7 +44,6 @@ import org.ojalgo.matrix.task.SolverTask;
  * @author Peter Abeles
  * @author Anders Peterson (apete)
  */
-@SuppressWarnings({ "unchecked" })
 public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
     public static class OpAdd implements MatrixProcessorInterface {
@@ -54,7 +53,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             final MatrixStore<Double> matB = inputs[1].getOriginal();
 
-            final PrimitiveDenseStore result = FACTORY.copy(matA);
+            final Primitive64Store result = FACTORY.copy(matA);
 
             final long prev = System.nanoTime();
 
@@ -241,7 +240,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             final MatrixStore<Double> matB = inputs[1].getOriginal();
 
-            final PrimitiveDenseStore result = FACTORY.makeZero(matA.countRows(), matB.countColumns());
+            final Primitive64Store result = FACTORY.makeZero(matA.countRows(), matB.countColumns());
 
             final long prev = System.nanoTime();
 
@@ -263,7 +262,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             final MatrixStore<Double> matB = inputs[1].getOriginal();
 
-            final PrimitiveDenseStore result = FACTORY.makeZero(matA.countRows(), matB.countRows());
+            final Primitive64Store result = FACTORY.makeZero(matA.countRows(), matB.countRows());
 
             final long prev = System.nanoTime();
 
@@ -313,7 +312,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-            final PrimitiveDenseStore result = FACTORY.copy(matA);
+            final Primitive64Store result = FACTORY.copy(matA);
             UnaryFunction<Double> multiplier = PrimitiveFunction.MULTIPLY.second(ScaleGenerator.SCALE);
 
             final long prev = System.nanoTime();
@@ -333,8 +332,8 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
         public long process(final BenchmarkMatrix[] inputs, final BenchmarkMatrix[] outputs, final long numTrials) {
 
-            final PrimitiveDenseStore matA = inputs[0].getOriginal();
-            final PrimitiveDenseStore matB = inputs[1].getOriginal();
+            final Primitive64Store matA = inputs[0].getOriginal();
+            final Primitive64Store matB = inputs[1].getOriginal();
             MatrixStore<Double> result = null;
 
             final SolverTask<Double> tmpSolver = SolverTask.PRIMITIVE.make(matA, matB, false, false);
@@ -424,7 +423,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-            final PrimitiveDenseStore result = FACTORY.makeZero(matA.countColumns(), matA.countRows());
+            final Primitive64Store result = FACTORY.makeZero(matA.countColumns(), matA.countRows());
 
             final long prev = System.nanoTime();
 
@@ -439,9 +438,9 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
         }
     }
 
-    static final PhysicalStore.Factory<Double, PrimitiveDenseStore> FACTORY = PrimitiveDenseStore.FACTORY;
+    static final PhysicalStore.Factory<Double, Primitive64Store> FACTORY = Primitive64Store.FACTORY;
 
-    public static PrimitiveDenseStore convertToOjAlgo(final RowMajorMatrix orig) {
+    public static Primitive64Store convertToOjAlgo(final RowMajorMatrix orig) {
 
         final double[][] raw = PackageMatrixConversion.convertToArray2D(orig);
 
