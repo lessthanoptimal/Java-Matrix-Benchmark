@@ -37,27 +37,19 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
     public static final String RESULTS_NAME = "slave_results.xml";
 
     // used to ID stale results
-    int requestID= new Random().nextInt();
+    int requestID = new Random().nextInt();
     // if not zero it will allocate this much memory (MB)
     long overrideMemory = 0;
 
     boolean verbose = true;
 
-    PrintStream errorStream = System.err;
-
-    public BenchmarkTools( List<String> pathJars ){
+    public BenchmarkTools(List<String> pathJars) {
         super(pathJars);
     }
-
 
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
-
-    public void setErrorStream(PrintStream errorStream) {
-        this.errorStream = errorStream;
-    }
-
 
     public void setOverrideMemory(long overrideMemory) {
         this.overrideMemory = overrideMemory;
@@ -69,9 +61,8 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
      *
      * @param test A description of which is to be tested by the slave
      * @return The results of the experiment.
-     *
      */
-    public EvaluatorSlave.Results runTest( EvaluationTest test ) {
+    public EvaluatorSlave.Results runTest(EvaluationTest test) {
 
         requestID++;
 
@@ -81,19 +72,18 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
         // compute required memory in mega bytes
         long allocatedMemory = overrideMemory;
 
-        if(verbose)
-            System.out.println("Memory = "+allocatedMemory+" MB");
+        if (verbose)
+            System.out.println("Memory = " + allocatedMemory + " MB");
 
         setMemoryInMB(allocatedMemory);
 
         // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
         // and declare it frozen.  + 2000 to add some fudge for overhead
-        if( test.getMaximumEvaluateTime() > 0)
-            setFrozenTimeMS(test.getMaximumEvaluateTime()+2000);
+        if (test.getMaximumEvaluateTime() > 0)
+            setFrozenTimeMS(test.getMaximumEvaluateTime() + 2000);
 
         boolean skipReadXml = false;
-        switch(launch(EvaluatorSlave.class,"case.xml",Long.toString(requestID) ) )
-        {
+        switch (launch(EvaluatorSlave.class, "case.xml", Long.toString(requestID))) {
             case FROZEN:
                 errorStream.println("BenchmarkTools: Slave froze and was killed");
                 skipReadXml = true;
@@ -103,11 +93,12 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
                 errorStream.println("BenchmarkTools: Slave exited with non-zero value");
                 break;
 
-            case NORMAL:break;
+            case NORMAL:
+                break;
         }
 
         EvaluatorSlave.Results ret = null;
-        if( !skipReadXml ) {
+        if (!skipReadXml) {
             // see if the user terminated the slave
             ret = UtilXmlSerialization.deserializeXml(RESULTS_NAME);
             if (ret == null || ret.getRequestID() != requestID) {
@@ -124,13 +115,13 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
     }
 
     /**
-     * Runs the tests but does not spawn a new processes to do so.  This is usefull for debugging
+     * Runs the tests but does not spawn a new processes to do so.  This is useful for debugging
      * purposes.
      *
      * @param test A description of which is to be tested.
      * @return The results of the experiment.
      */
-    public EvaluatorSlave.Results runTestNoSpawn( EvaluationTest test ) {
+    public EvaluatorSlave.Results runTestNoSpawn(EvaluationTest test) {
         requestID++;
 
         EvaluatorSlave.Results slaveResults = new EvaluatorSlave.Results();
@@ -139,7 +130,7 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             test.init();
             test.setupTest();
             slaveResults.results = test.evaluate();
-        } catch( RuntimeException e ) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             e.printStackTrace(errorStream);
             slaveResults.failed = EvaluatorSlave.FailReason.MISC_EXCEPTION;
@@ -154,17 +145,30 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
     /**
      * Delete temporary files that it created to pass information between the master and the slave.
      */
-    private static void cleanup() {
-        if( !new File("case.xml").delete() ) {
-            System.out.println("Couldn't delete case.xml");
-        }
+    private void cleanup() {
+        delete(new File("case.xml"));
 
         File results = new File(RESULTS_NAME);
 
-        if( !results.exists() )
-            System.out.println(results.getName()+" does not exist");
-        else if( !results.delete() ) {
-            System.out.println("Couldn't delete "+results.getName());
+        if (!results.exists())
+            System.out.println(results.getName() + " does not exist");
+        else {
+            delete(results);
+        }
+    }
+
+    private void delete(File file) {
+        for (int attempt = 0; attempt < 5; attempt++) {
+            if (!file.exists() || file.delete()) {
+                break;
+            }
+            errorStream.println("Attempt " + attempt + ": Couldn't delete "+file.getName());
+            System.out.println("Attempt " + attempt + ": Couldn't delete "+file.getName());
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

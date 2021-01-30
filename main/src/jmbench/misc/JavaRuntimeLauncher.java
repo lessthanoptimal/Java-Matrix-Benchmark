@@ -22,6 +22,7 @@ package jmbench.misc;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,8 @@ public class JavaRuntimeLauncher {
     // optional message which describes the task being performed
     private String messageTask = "";
 
+    public PrintStream errorStream = System.err;
+
     /**
      * Constructor.  Configures which library it is to be launching a class from/related to
      * @param pathJars List of paths to all the jars
@@ -63,6 +66,10 @@ public class JavaRuntimeLauncher {
                 classPath = classPath + sep + s;
             }
         }
+    }
+
+    public void setErrorStream(PrintStream errorStream) {
+        this.errorStream = errorStream;
     }
 
     /**
@@ -145,9 +152,9 @@ public class JavaRuntimeLauncher {
                 }
             }
 
-            printToStdOut(error);
+            printToStream(error, errorStream);
             if( input.ready() ) {
-                printToStdOut(input);
+                printToStream(input, System.out);
             } else {
                 Thread.sleep(500);
             }
@@ -170,8 +177,8 @@ public class JavaRuntimeLauncher {
                         if( !pr.destroyForcibly().isAlive() ) {
                             success = true;
                         } else {
-                            printToStdOut(error);
-                            printToStdOut(input);
+                            printToStream(error, errorStream);
+                            printToStream(input, System.out);
                             Thread.sleep(500);
                         }
                     }
@@ -197,12 +204,12 @@ public class JavaRuntimeLauncher {
         return exit;
     }
 
-    protected void printToStdOut(BufferedReader reader) throws IOException
+    protected void printToStream(BufferedReader reader, PrintStream stream) throws IOException
     {
         while( reader.ready() ) {
             int val = reader.read();
             if( val <= 0 ) break;
-            System.out.print(Character.toChars(val));
+            stream.print(Character.toChars(val));
         }
     }
 

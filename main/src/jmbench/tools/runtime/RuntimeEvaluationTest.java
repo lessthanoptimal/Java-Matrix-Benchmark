@@ -52,8 +52,8 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     // randomly generated input matrices
     private volatile Random masterRand;
 
-    private volatile BenchmarkMatrix inputs[];
-    private volatile BenchmarkMatrix outputs[];
+    private volatile BenchmarkMatrix[] inputs;
+    private volatile BenchmarkMatrix[] outputs;
     private volatile RuntimePerformanceFactory factory;
 
     /**
@@ -97,11 +97,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     public void init() {
         try {
             factory = (RuntimePerformanceFactory)Class.forName(classFactory).newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
@@ -213,11 +209,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         try {
             Method m = factory.getClass().getMethod(nameAlgorithm);
             return (MatrixProcessorInterface)m.invoke(factory);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }

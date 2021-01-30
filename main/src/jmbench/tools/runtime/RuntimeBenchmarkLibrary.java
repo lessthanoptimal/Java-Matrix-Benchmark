@@ -262,6 +262,8 @@ public class RuntimeBenchmarkLibrary {
         logStream.println("Current directory = "+new File(".").getAbsolutePath());
         logStream.println("Classpath:");
         logStream.println(tools.getClassPath());
+
+        tools.setErrorStream(logStream);
     }
 
 

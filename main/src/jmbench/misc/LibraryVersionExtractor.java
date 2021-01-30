@@ -66,7 +66,7 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
      * Feed standard out into a string.
      */
     @Override
-    protected void printToStdOut(BufferedReader input) throws IOException {
+    protected void printToStream(BufferedReader input, PrintStream stream) throws IOException {
         while( input.ready() ) {
             int val = input.read();
             if( val < 0 ) break;
@@ -80,13 +80,9 @@ public class LibraryVersionExtractor extends JavaRuntimeLauncher {
     }
 
     public static void main(String[] args) {
-
         LibraryManager manager = new LibraryManager();
-
         LibraryDescription target = manager.lookup("ejml");
-
         LibraryVersionExtractor app = new LibraryVersionExtractor(target);
-
         System.out.println(target.info.getNameFull()+": version = " + app.getVersion());
     }
 }
