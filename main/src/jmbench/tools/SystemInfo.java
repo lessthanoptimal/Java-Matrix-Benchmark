@@ -41,14 +41,16 @@ public class SystemInfo implements Serializable {
     private String osArch;
     private String osName;
     private String osVersion;
+    // Information accessed using system specific command line tools
+    private String sysName;
+    private String sysCpu;
 
     // how many cores/CPUs in the system
     private int numCPU;
     // what ever totalMemory says there is
     private long memory;
 
-    public SystemInfo() {
-    }
+    public SystemInfo() {}
 
     public void grabCurrentInfo() {
         time = System.currentTimeMillis();
@@ -64,6 +66,8 @@ public class SystemInfo implements Serializable {
         numCPU = Runtime.getRuntime().availableProcessors();
         memory = Runtime.getRuntime().totalMemory();
 
+        sysName = SystemSpecificInfo.readOSVersion();
+        sysCpu = SystemSpecificInfo.readCpu();
     }
 
     public String getJavaVersion() {
@@ -152,5 +156,21 @@ public class SystemInfo implements Serializable {
 
     public void setJavaVmVersion(String javaVmVersion) {
         this.javaVmVersion = javaVmVersion;
+    }
+
+    public void setSysName(String sysName) {
+        this.sysName = sysName;
+    }
+
+    public void setSysCpu(String sysCpu) {
+        this.sysCpu = sysCpu;
+    }
+
+    public String getSysName() {
+        return sysName;
+    }
+
+    public String getSysCpu() {
+        return sysCpu;
     }
 }

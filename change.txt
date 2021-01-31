@@ -9,10 +9,10 @@
   * Changed default to 15 trials to speed things up
   * Added sourceHash to library info to make it easier verify the exact code being used,
     if this tool is used during development
+  * Save more detailed OS info. E.g. lsb_release -a
   * TODO after the first trial use previous results to guess how many trials are needed in an attempt to speed it up
   * TODO get resume working again
   * TODO runtime - specify number of warm up, max warm up length, and number of trials in a fork.
-  * TODO save more detailed OS info. lsb_release -a
   * TODO Add ND4J
 
 
