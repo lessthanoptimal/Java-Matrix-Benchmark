@@ -2,7 +2,7 @@
 
 ----- Version 0.12
 
-2019/
+2021/
 
 - Runtime
   * Made total number of trials command line configurable
@@ -11,9 +11,9 @@
     if this tool is used during development
   * Save more detailed OS info. E.g. lsb_release -a
   * Simplified configuration and removed per operation maximum allowed time
+  * Reduced verbosity of frozen log message and it logs the exit status now
   * TODO get resume working again
   * TODO Add ND4J
-  * TODO Don't log failure due to timeout. Expected and its spamming the error log file
 
 ----- Version 0.11
 

@@ -51,6 +51,9 @@ public class JavaRuntimeLauncher {
 
     public PrintStream errorStream = System.err;
 
+    // Reason the slave stopped running
+    public Exit exit;
+
     /**
      * Constructor.  Configures which library it is to be launching a class from/related to
      * @param pathJars List of paths to all the jars
@@ -140,7 +143,7 @@ public class JavaRuntimeLauncher {
         // If the total amount of time allocated to the slave exceeds the maximum number of trials multiplied
         // by the maximum runtime plus some fudge factor the slave is declared as frozen
 
-        Exit exit = Exit.NORMAL;
+        exit = Exit.NORMAL;
 
         long startTime = System.currentTimeMillis();
         long lastAliveMessage = startTime;
@@ -249,6 +252,10 @@ public class JavaRuntimeLauncher {
 
     public void setMessageTask(String messageTask) {
         this.messageTask = messageTask;
+    }
+
+    public Exit getExit() {
+        return exit;
     }
 
     public enum Exit

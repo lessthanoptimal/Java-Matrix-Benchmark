@@ -21,6 +21,7 @@ package jmbench.tools.runtime;
 
 import jmbench.impl.LibraryDescription;
 import jmbench.impl.LibraryStringInfo;
+import jmbench.misc.JavaRuntimeLauncher;
 import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.BenchmarkTools;
 import jmbench.tools.EvaluatorSlave;
@@ -278,9 +279,9 @@ public class RuntimeBenchmarkLibrary {
     private boolean evaluateOneTest(CaseState state ) throws FileNotFoundException {
 
         RuntimeEvaluationCase e = state.evalCase;
-        int matDimen[] = e.getDimens();
+        int[] matDimen = e.getDimens();
 
-        RuntimeEvaluationMetrics score[] = state.score;
+        RuntimeEvaluationMetrics[] score = state.score;
 
         // Let the user know what it's doing
         String taskDescription = "#### "+info.namePlot+"  op "+e.getOpName()+"  Size "+matDimen[state.matrixIndex]+" Performed "+state.results.size()+"/"+config.totalTests+"  ####";
@@ -325,9 +326,9 @@ public class RuntimeBenchmarkLibrary {
     /**
      * Computes the current results
      */
-    private RuntimeResults computeResults( RuntimeEvaluationCase e , int matrixIndex ,
-                                           long randSeed ,
-                                           RuntimeEvaluationMetrics score[] , List<RuntimeMeasurement> rawResults )
+    private RuntimeResults computeResults(RuntimeEvaluationCase e , int matrixIndex ,
+                                          long randSeed ,
+                                          RuntimeEvaluationMetrics[] score, List<RuntimeMeasurement> rawResults )
     {
         // compute the results for all the tests
         RuntimeMeasurement opsPerSecond = evaluateCaseFixedMemory( e , randSeed , matrixIndex , rawResults.size());
@@ -391,13 +392,20 @@ public class RuntimeBenchmarkLibrary {
             r = tools.runTestNoSpawn(test);
 
         if( r == null ) {
-            logStream.println("*** RunTest returned null: op = "+e.getOpName()+" matrix size = "+matrixSize+" memory = "+tools.getAllocatedMemoryInMB()+" mb duration = "+tools.getDurationMilli());
-            String param[] = tools.getArguments();
-            logStream.println("Command line arguments:");
-            for( int i = 0; i < param.length; i++ ) {
-                logStream.println("["+i+"]   "+param[i]);
+            logStream.println("*** RunTest returned null: exit = "+tools.getExit()+
+                    " op = " + e.getOpName() + " matrix size = " + matrixSize + " memory = " +
+                    tools.getAllocatedMemoryInMB() + " mb duration = " + tools.getDurationMilli());
+
+            // It's expected for operations stop running because they time out, so no need to do a detailed log
+            // as that is simply spam which will make real issues harder to find
+            if (tools.getExit() != JavaRuntimeLauncher.Exit.FROZEN) {
+                String[] param = tools.getArguments();
+                logStream.println("Command line arguments:");
+                for (int i = 0; i < param.length; i++) {
+                    logStream.println("[" + i + "]   " + param[i]);
+                }
+                logStream.println("------------------------------------------------");
             }
-            logStream.println("------------------------------------------------");
 
             caseFailed = true;
         } else if( r.failed != null ) {
@@ -457,7 +465,7 @@ public class RuntimeBenchmarkLibrary {
 
         List<RuntimeMeasurement> results = new ArrayList<>();
 
-        RuntimeEvaluationMetrics score[];
+        RuntimeEvaluationMetrics[] score;
 
         int matrixIndex = 0;
 
@@ -467,7 +475,7 @@ public class RuntimeBenchmarkLibrary {
         }
     }
 
-    public static void main( String args[] ) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         File f = new File("results/temp");
 
