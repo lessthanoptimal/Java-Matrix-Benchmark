@@ -203,7 +203,7 @@ public class RuntimeBenchmark {
                 }
                 if( splits.length != 1 ) {failed = true; break;}
                 config.totalTests = 2;
-                config.minimumTimePerTestMS = 1000;
+                config.minimumTimePeriodMS = 1000;
                 System.out.println("Using quick and dirty config.");
             } else if( flag.compareTo("Library") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
@@ -228,12 +228,12 @@ public class RuntimeBenchmark {
                 config.totalTests = Integer.parseInt(splits[1]);
             } else if( flag.compareTo("MinTestTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.minimumTimePerTestMS = Integer.parseInt(splits[1]);
-                System.out.println("Minimum time per test set to "+config.minimumTimePerTestMS +" (ms).");
+                config.minimumTimePeriodMS = Integer.parseInt(splits[1]);
+                System.out.println("Minimum time per test set to "+config.minimumTimePeriodMS +" (ms).");
             } else if( flag.compareTo("MaxTestTime") == 0 ) {
                 if( splits.length != 2 ) {failed = true; break;}
-                config.maximumTimePerTrialMS = (int)MiscTools.parseTime(splits[1]);
-                System.out.println("Maximum time per test set to "+config.maximumTimePerTrialMS +" (ms).");
+                config.maximumTimeSlaveProcessingMS = (int)MiscTools.parseTime(splits[1]);
+                System.out.println("Maximum time per test set to "+config.maximumTimeSlaveProcessingMS +" (ms).");
             }else if( flag.compareTo("Resume") == 0 ) {
                 if( splits.length != 2 || args.length != 1 ) {failed = true; break;}
                 System.out.println("Resuming a benchmark in dir "+splits[1]);
@@ -257,7 +257,7 @@ public class RuntimeBenchmark {
             }
         }
 
-        double hours = (config.maximumTimePerTrialMS*config.totalTests)/1000.0/60.0/60.0;
+        double hours = (config.maximumTimeSlaveProcessingMS *config.totalTests)/1000.0/60.0/60.0;
 
         System.out.println("\n** Done parsing command line **\n");
 

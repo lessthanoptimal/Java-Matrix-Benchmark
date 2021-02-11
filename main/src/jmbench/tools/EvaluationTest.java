@@ -65,12 +65,6 @@ public abstract class EvaluationTest implements Serializable {
     public abstract void printInfo();
 
     /**
-     * Returns how long a call to evaluate is allowed to run for.  If there is no maximum runtime then
-     * -1 is returned.
-     */
-    public abstract long getMaximumEvaluateTime();
-
-    /**
      * Returns how much memory it is expected to use up in bytes.
      */
     public abstract long getInputMemorySize();

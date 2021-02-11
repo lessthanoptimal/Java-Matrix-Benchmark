@@ -10,11 +10,10 @@
   * Added sourceHash to library info to make it easier verify the exact code being used,
     if this tool is used during development
   * Save more detailed OS info. E.g. lsb_release -a
-  * TODO after the first trial use previous results to guess how many trials are needed in an attempt to speed it up
+  * Simplified configuration and removed per operation maximum allowed time
   * TODO get resume working again
-  * TODO runtime - specify number of warm up, max warm up length, and number of trials in a fork.
   * TODO Add ND4J
-
+  * TODO Don't log failure due to timeout. Expected and its spamming the error log file
 
 ----- Version 0.11
 

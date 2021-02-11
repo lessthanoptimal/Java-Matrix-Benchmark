@@ -68,9 +68,9 @@ public class RuntimeBenchmarkConfig implements Serializable {
     // it will stop processing a matrix size if this number of tests has been exceeded
     public int totalTests;
     // the minimum amount of time a single test should last for (ms)
-    public int minimumTimePerTestMS;
-    // the maximum amount of time a single trial can last for (ms)
-    public int maximumTimePerTrialMS;
+    public int minimumTimePeriodMS;
+    // The maximum amount of time a slave is allowed to run before it's killed, possible frozen (ms)
+    public int maximumTimeSlaveProcessingMS;
 
     // specifies a fixed amount of memory that is to be allocated to the slave.
     // if set to zero then the memory will be dynamically allocated
@@ -92,8 +92,8 @@ public class RuntimeBenchmarkConfig implements Serializable {
 
         config.seed = 0xDEADBEEF;//new Random().nextLong();
         config.totalTests = 15;
-        config.minimumTimePerTestMS = 3000;
-        config.maximumTimePerTrialMS = 1000*60*15;
+        config.minimumTimePeriodMS = 3000;
+        config.maximumTimeSlaveProcessingMS = 1000*60*15;
         config.memoryMB = 0;
         config.randizeOrder = true;
         config.maxMatrixSize = 40000;
@@ -283,12 +283,12 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.totalTests = totalTests;
     }
 
-    public int getMinimumTimePerTestMS() {
-        return minimumTimePerTestMS;
+    public int getMinimumTimePeriodMS() {
+        return minimumTimePeriodMS;
     }
 
-    public void setMinimumTimePerTestMS(int minimumTimePerTestMS) {
-        this.minimumTimePerTestMS = minimumTimePerTestMS;
+    public void setMinimumTimePeriodMS(int minimumTimePeriodMS) {
+        this.minimumTimePeriodMS = minimumTimePeriodMS;
     }
 
     public int getMaxMatrixSize() {
@@ -315,12 +315,12 @@ public class RuntimeBenchmarkConfig implements Serializable {
         this.invertSymmPosDef = invertSymmPosDef;
     }
 
-    public int getMaximumTimePerTrialMS() {
-        return maximumTimePerTrialMS;
+    public int getMaximumTimeSlaveProcessingMS() {
+        return maximumTimeSlaveProcessingMS;
     }
 
-    public void setMaximumTimePerTrialMS(int maximumTimePerTrialMS) {
-        this.maximumTimePerTrialMS = maximumTimePerTrialMS;
+    public void setMaximumTimeSlaveProcessingMS(int maximumTimeSlaveProcessingMS) {
+        this.maximumTimeSlaveProcessingMS = maximumTimeSlaveProcessingMS;
     }
 
     public int getMemoryMB() {

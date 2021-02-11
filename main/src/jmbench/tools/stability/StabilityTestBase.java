@@ -101,11 +101,6 @@ public abstract class StabilityTestBase extends EvaluationTest {
     }
 
     @Override
-    public long getMaximumEvaluateTime() {
-        return -1;
-    }
-
-    @Override
     public TestResults evaluate() {
         results = new StabilityTrialResults();
 

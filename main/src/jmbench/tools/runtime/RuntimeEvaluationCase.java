@@ -53,14 +53,13 @@ public class RuntimeEvaluationCase implements Serializable {
     public RuntimeEvaluationCase(){}
 
 
-    public RuntimeEvaluationTest createTest(int completedTrials, int dimenIndex, long goalDurrationMS, long maxEvaluateTimeMS) {
+    public RuntimeEvaluationTest createTest(int completedTrials, int dimenIndex, long minTestPeriodMS) {
         theTest.setCompletedTrials(completedTrials);
         theTest.setDimen(dimens[dimenIndex]);
         theTest.setNameAlgorithm(nameAlgorithm);
         theTest.setClassFactory(classFactory);
         theTest.setGenerator(generator);
-        theTest.setGoalRuntimeMS(goalDurrationMS);
-        theTest.setMaximumEvaluateTime(maxEvaluateTimeMS);
+        theTest.setMinTestPeriodMS(minTestPeriodMS);
 
         return theTest;
     }

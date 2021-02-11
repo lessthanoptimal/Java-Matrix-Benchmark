@@ -44,44 +44,15 @@ public class RuntimeEvaluationTest extends EvaluationTest {
     private int dimen;
     private String classFactory;
     private InputOutputGenerator generator;
-    // how long it should try to run the tests for in milliseconds
-    private long goalRuntimeMS;
+    // How long a test should run for. After warmed up, a test should run for this length of time or more.
+    private long minTestPeriodMS;
 
-    // If a call to evaluate exceeds this time limit then the set of tests is aborted
-    private long maxEvaluationTimeMS;
     // randomly generated input matrices
     private volatile Random masterRand;
 
     private volatile BenchmarkMatrix[] inputs;
     private volatile BenchmarkMatrix[] outputs;
     private volatile RuntimePerformanceFactory factory;
-
-    /**
-     * Creates a new evaluation test.
-     *
-     * @param dimen How big the matrices are that are being processed.
-     * @param nameAlgorithm The algorithm that is being processed.
-     * @param generator Creates the inputs and expected outputs for the tested operation
-     * @param goalRuntime  How long it wants to try to run the test for in milliseconds
-     * @param maxEvaluationTime  How long it will let a test run for in milliseconds
-     * @param randomSeed The random seed used for the tests.
-     */
-    public RuntimeEvaluationTest(int completedTrials,
-                                 int dimen ,
-                                 String classFactory,
-                                 String nameAlgorithm ,
-                                 InputOutputGenerator generator ,
-                                 long goalRuntime, long maxEvaluationTime, long randomSeed )
-    {
-        super(randomSeed);
-        this.completedTrials = completedTrials;
-        this.dimen = dimen;
-        this.classFactory = classFactory;
-        this.nameAlgorithm = nameAlgorithm;
-        this.generator = generator;
-        this.goalRuntimeMS = goalRuntime;
-        this.maxEvaluationTimeMS = maxEvaluationTime;
-    }
 
     public RuntimeEvaluationTest(){}
 
@@ -150,7 +121,7 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         }
 
         // translate it to nanoseconds
-        long goalDurationNS = this.goalRuntimeMS*1_000_000;
+        long goalDurationNS = this.minTestPeriodMS *1_000_000;
 
         // number of warm up trials it should shoot for
         int warmup = 4;
@@ -246,12 +217,12 @@ public class RuntimeEvaluationTest extends EvaluationTest {
         this.generator = generator;
     }
 
-    public long getGoalRuntimeMS() {
-        return goalRuntimeMS;
+    public long getMinTestPeriodMS() {
+        return minTestPeriodMS;
     }
 
-    public void setGoalRuntimeMS(long goalRuntimeMS) {
-        this.goalRuntimeMS = goalRuntimeMS;
+    public void setMinTestPeriodMS(long minTestPeriodMS) {
+        this.minTestPeriodMS = minTestPeriodMS;
     }
 
     public int getCompletedTrials() {
@@ -260,14 +231,5 @@ public class RuntimeEvaluationTest extends EvaluationTest {
 
     public void setCompletedTrials(int completedTrials) {
         this.completedTrials = completedTrials;
-    }
-
-    @Override
-    public long getMaximumEvaluateTime() {
-        return maxEvaluationTimeMS;
-    }
-
-    public void setMaximumEvaluateTime(long maxRuntime) {
-        this.maxEvaluationTimeMS = maxRuntime;
     }
 }

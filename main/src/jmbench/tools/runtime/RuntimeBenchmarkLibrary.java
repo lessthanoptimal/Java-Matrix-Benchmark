@@ -204,7 +204,7 @@ public class RuntimeBenchmarkLibrary {
                                 // Convert the duration from ops/sec into total time for trial in milliseconds
                                 double timeMS = 1000.0/r.getOpsPerSec();
 
-                                if( timeMS > config.getMaximumTimePerTrialMS() ) {
+                                if( timeMS > config.getMaximumTimeSlaveProcessingMS() ) {
                                     cs.matrixIndex++;
                                     break;
                                 }
@@ -362,8 +362,7 @@ public class RuntimeBenchmarkLibrary {
                                                               long seed , int indexDimen, int completedTests )
     {
 
-        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePerTestMS,
-                config.maximumTimePerTrialMS);
+        RuntimeEvaluationTest test = e.createTest(completedTests,indexDimen,config.minimumTimePeriodMS);
         test.setRandomSeed(seed);
 
         int matrixSize = e.getDimens()[indexDimen];
@@ -384,7 +383,7 @@ public class RuntimeBenchmarkLibrary {
         caseFailed = false;
 
         // requested max time + 30s to take in account some overhead
-        tools.setFrozenTimeMS( test.getMaximumEvaluateTime() + 30_000);
+        tools.setFrozenTimeMS( config.maximumTimeSlaveProcessingMS );
         EvaluatorSlave.Results r;
         if( SPAWN_SLAVE )
             r = tools.runTest(test);

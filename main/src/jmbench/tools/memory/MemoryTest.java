@@ -81,11 +81,6 @@ public class MemoryTest extends EvaluationTest {
     }
 
     @Override
-    public long getMaximumEvaluateTime() {
-        return -1;
-    }
-
-    @Override
     public long getInputMemorySize() {
         return -1;
     }

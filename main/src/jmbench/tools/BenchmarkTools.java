@@ -23,7 +23,6 @@ import jmbench.misc.JavaRuntimeLauncher;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
@@ -76,11 +75,6 @@ public class BenchmarkTools extends JavaRuntimeLauncher {
             System.out.println("Memory = " + allocatedMemory + " MB");
 
         setMemoryInMB(allocatedMemory);
-
-        // if the child takes longer than the total number of tests/calls to evaluate it's performing kill it
-        // and declare it frozen.  + 2000 to add some fudge for overhead
-        if (test.getMaximumEvaluateTime() > 0)
-            setFrozenTimeMS(test.getMaximumEvaluateTime() + 2000);
 
         boolean skipReadXml = false;
         switch (launch(EvaluatorSlave.class, "case.xml", Long.toString(requestID))) {
