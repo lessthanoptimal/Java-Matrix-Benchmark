@@ -20,7 +20,6 @@
 package jmbench.nd4j;
 
 import jmbench.interfaces.BenchmarkMatrix;
-import jmbench.interfaces.DetectedException;
 import jmbench.interfaces.MatrixProcessorInterface;
 import jmbench.interfaces.RuntimePerformanceFactory;
 import jmbench.matrix.RowMajorBenchmarkMatrix;
@@ -28,7 +27,12 @@ import jmbench.matrix.RowMajorMatrix;
 import jmbench.matrix.RowMajorOps;
 import jmbench.tools.BenchmarkConstants;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.custom.LinearSolve;
+import org.nd4j.linalg.api.ops.custom.Lu;
 import org.nd4j.linalg.api.ops.impl.transforms.Cholesky;
+import org.nd4j.linalg.api.ops.impl.transforms.custom.MatrixInverse;
+import org.nd4j.linalg.api.ops.impl.transforms.custom.Qr;
+import org.nd4j.linalg.api.ops.impl.transforms.custom.Svd;
 import org.nd4j.linalg.factory.Nd4j;
 
 
@@ -36,7 +40,6 @@ import org.nd4j.linalg.factory.Nd4j;
  * @author Peter Abeles
  */
 public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
-
     @Override
     public BenchmarkMatrix create(int numRows, int numCols) {
         return wrap(Nd4j.zeros(numRows, numCols));
@@ -57,22 +60,13 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             INDArray matA = inputs[0].getOriginal();
 
-            Cholesky cholesky = new Cholesky(matA);
-            LowerSPDINDArray uspd = new LowerSPDINDArray(matA);
-
             INDArray L = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                cholesky.
-                // the input matrix is over written
-                uspd.set(matA);
-                if( !cholesky.factor(uspd).isSPD() ) {
-                    throw new DetectedException("Is not SPD");
-                }
-
-                L = cholesky.getL();
+                Cholesky op = new Cholesky(matA);
+                L = Nd4j.getExecutioner().exec(op)[0];
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -93,34 +87,27 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             INDArray matA = inputs[0].getOriginal();
 
-            DenseLU lu = new DenseLU(matA.numRows(),matA.numColumns());
-            INDArray tmp = new INDArray(matA);
-
             INDArray L = null;
             INDArray U = null;
-            int pivots[] = null;
+            int[] pivots = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                // the input matrix is over written
-                tmp.set(matA);
-                lu.factor(tmp);
+                Lu op = new Lu(matA);
+                INDArray[] decomp = Nd4j.getExecutioner().exec(op);
 
-                L = lu.getL();
-                U = lu.getU();
-                pivots = lu.getPivots();
+                L = decomp[0];
+                U = decomp[1];
+                pivots = decomp[2].toIntVector();
             }
 
             long elapsedTime = System.nanoTime()-prev;
 
             if( outputs != null ) {
-                // I believe that MTJ is generating some buggy row pivots since they go outside
-                // the matrix bounds
-
                 outputs[0] = new Nd4JBenchmarkMatrix(L);
                 outputs[1] = new Nd4JBenchmarkMatrix(U);
-//            outputs[2] = SpecializedOps.pivotMatrix(null, pivots, pivots.length);
+                outputs[2] = new RowMajorBenchmarkMatrix(RowMajorOps.pivotMatrix(null, pivots, pivots.length, false));
             }
             return elapsedTime;
         }
@@ -136,35 +123,25 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             INDArray matA = inputs[0].getOriginal();
 
-            no.uib.cipr.matrix.SVD svd = new no.uib.cipr.matrix.SVD(matA.numRows(),matA.numColumns());
-            INDArray tmp = new INDArray(matA);
-
             INDArray U = null;
-            double[] S = null;
+            INDArray S = null;
             INDArray Vt = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                try {
-                    // the input matrix is over written
-                    tmp.set(matA);
-                    SVD s = svd.factor(tmp);
-                    U = s.getU();
-                    S = s.getS();
-                    Vt = s.getVt();
-                } catch (NotConvergedException e) {
-                    throw new RuntimeException(e);
-                }
+                Svd op = new Svd(matA, true, true, Svd.DEFAULT_SWITCHNUM);
+                INDArray[] decomp = Nd4j.getExecutioner().exec(op);
+
+                U = decomp[0];
+                S = decomp[1];
+                Vt = decomp[2];
             }
 
             long elapsedTime = System.nanoTime()-prev;
             if( outputs != null ) {
-                int m = matA.numRows();
-                int n = matA.numColumns();
-
                 outputs[0] = new Nd4JBenchmarkMatrix(U);
-                outputs[1] = new RowMajorBenchmarkMatrix(RowMajorOps.diagR(m, n, S));
+                outputs[1] = new Nd4JBenchmarkMatrix(S);
                 outputs[2] = new Nd4JBenchmarkMatrix(Vt.transpose());
             }
             return elapsedTime;
@@ -179,30 +156,31 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
     public static class Eig implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            INDArray matA = inputs[0].getOriginal();
-
-            INDArray V = null;
-            double []D = null;
-
-            long prev = System.nanoTime();
-
-            for( long i = 0; i < numTrials; i++ ) {
-                try {
-                    // the input matrix is over written
-                    SymmDenseEVD e = SymmDenseEVD.factorize(matA);
-                    V = e.getEigenvectors();
-                    D = e.getEigenvalues();
-                } catch (NotConvergedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            long elapsedTime = System.nanoTime()-prev;
-            if( outputs != null ) {
-                outputs[0] = new RowMajorBenchmarkMatrix(RowMajorOps.diag(D));
-                outputs[1] = new Nd4JBenchmarkMatrix(V);
-            }
-            return elapsedTime;
+            return 0;
+//            INDArray matA = inputs[0].getOriginal();
+//
+//            INDArray V = null;
+//            double []D = null;
+//
+//            long prev = System.nanoTime();
+//
+//            for( long i = 0; i < numTrials; i++ ) {
+//                try {
+//                    // the input matrix is over written
+//                    SymmDenseEVD e = SymmDenseEVD.factorize(matA);
+//                    V = e.getEigenvectors();
+//                    D = e.getEigenvalues();
+//                } catch (NotConvergedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//
+//            long elapsedTime = System.nanoTime()-prev;
+//            if( outputs != null ) {
+//                outputs[0] = new RowMajorBenchmarkMatrix(RowMajorOps.diag(D));
+//                outputs[1] = new Nd4JBenchmarkMatrix(V);
+//            }
+//            return elapsedTime;
         }
     }
 
@@ -216,21 +194,17 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             INDArray matA = inputs[0].getOriginal();
 
-            no.uib.cipr.matrix.QR qr = new no.uib.cipr.matrix.QR(matA.numRows(),matA.numColumns());
-            INDArray tmp = new INDArray(matA);
-
             INDArray Q = null;
             INDArray R = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                // the input matrix is over written
-                tmp.set(matA);
-                qr.factor(tmp);
+                Qr op = new Qr(matA);
+                INDArray[] decomp = Nd4j.getExecutioner().exec(op);
 
-                Q = qr.getQ();
-                R = qr.getR();
+                Q = decomp[0];
+                R = decomp[1];
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -257,13 +231,14 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
             INDArray matA = inputs[0].getOriginal();
 
-            INDArray I = Matrices.identity(matA.numColumns());
-            INDArray inv = new INDArray(matA.numColumns(),matA.numColumns());
+            INDArray inv = null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                matA.solve(I,inv);
+                MatrixInverse op = new MatrixInverse(matA);
+                INDArray[] decomp = Nd4j.getExecutioner().exec(op);
+                inv = decomp[0];
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -282,30 +257,31 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
     public static class InvSymmPosDef implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
-            INDArray matA = inputs[0].getOriginal();
-
-            DenseCholesky cholesky = new DenseCholesky(matA.numRows(),false);
-            LowerSPDINDArray uspd = new LowerSPDINDArray(matA);
-
-            INDArray result = null;
-
-            long prev = System.nanoTime();
-
-            for( long i = 0; i < numTrials; i++ ) {
-                // the input matrix is over written
-                uspd.set(matA);
-                if( !cholesky.factor(uspd).isSPD() ) {
-                    throw new RuntimeException("Is not SPD");
-                }
-
-                result = cholesky.solve(Matrices.identity(matA.numColumns()));
-            }
-
-            long elapsedTime = System.nanoTime()-prev;
-            if( outputs != null ) {
-                outputs[0] = new Nd4JBenchmarkMatrix(result);
-            }
-            return elapsedTime;
+            return 0;
+//            INDArray matA = inputs[0].getOriginal();
+//
+//            DenseCholesky cholesky = new DenseCholesky(matA.numRows(),false);
+//            LowerSPDINDArray uspd = new LowerSPDINDArray(matA);
+//
+//            INDArray result = null;
+//
+//            long prev = System.nanoTime();
+//
+//            for( long i = 0; i < numTrials; i++ ) {
+//                // the input matrix is over written
+//                uspd.set(matA);
+//                if( !cholesky.factor(uspd).isSPD() ) {
+//                    throw new RuntimeException("Is not SPD");
+//                }
+//
+//                result = cholesky.solve(Matrices.identity(matA.numColumns()));
+//            }
+//
+//            long elapsedTime = System.nanoTime()-prev;
+//            if( outputs != null ) {
+//                outputs[0] = new Nd4JBenchmarkMatrix(result);
+//            }
+//            return elapsedTime;
         }
     }
 
@@ -428,12 +404,14 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
             INDArray matA = inputs[0].getOriginal();
             INDArray matB = inputs[1].getOriginal();
 
-            INDArray result = new INDArray(matA.numColumns(),matB.numColumns());
+            INDArray result=null;
 
             long prev = System.nanoTime();
 
             for( long i = 0; i < numTrials; i++ ) {
-                matA.solve(matB,result);
+                LinearSolve op = new LinearSolve(matA,matB);
+                INDArray[] decomp = Nd4j.getExecutioner().exec(op);
+                result = decomp[0];
             }
 
             long elapsedTime = System.nanoTime()-prev;
@@ -481,6 +459,11 @@ public class Nd4JAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public String getLibraryVersion() {
+        return "1.0.2";
+    }
+
+    @Override
+    public String getSourceHash() {
         return "1.0.2";
     }
 
