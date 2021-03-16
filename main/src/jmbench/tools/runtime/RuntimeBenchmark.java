@@ -71,9 +71,7 @@ public class RuntimeBenchmark {
 
     private void processLibraries( List<LibraryDescription> libs, RuntimeBenchmarkConfig config ) {
 
-
         for( LibraryDescription desc : libs ) {
-
             String libOutputDir = directorySave+"/"+desc.info.outputDirectory();
 
             // save the description so that where this came from can be easily extracted
