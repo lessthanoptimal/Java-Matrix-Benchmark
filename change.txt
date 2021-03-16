@@ -12,8 +12,9 @@
   * Save more detailed OS info. E.g. lsb_release -a
   * Simplified configuration and removed per operation maximum allowed time
   * Reduced verbosity of frozen log message and it logs the exit status now
-  * TODO get resume working again
   * TODO Add ND4J
+- TODO Ensure stability works
+- TODO Ensure memory works
 
 ----- Version 0.11
 

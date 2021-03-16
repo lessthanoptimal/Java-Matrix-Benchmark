@@ -61,9 +61,9 @@ public class RuntimeBenchmarkConfig implements Serializable {
     // which libraries are to be evaluated
     public List<LibraryDescription> targets;
 
-    // Block Trials are the number of trials it will perform in a single JVM instance
-    // A trial is a test where it benchmarks how many iterations it can perform in at least 'minimumTimePerTestMS'
-    // Max trial time is the maximum amount of time a single trial is allowed to take before it's declared frozen
+    // Each test/time trial is done in a single JVM fork
+    // It does warm up trials and attempts to get a stable measurement that lasts at least minimumTimePeriodMS
+    // After that it will record the ops/sec and return that.
 
     // it will stop processing a matrix size if this number of tests has been exceeded
     public int totalTests;
@@ -90,7 +90,7 @@ public class RuntimeBenchmarkConfig implements Serializable {
     public static RuntimeBenchmarkConfig createAllConfig( List<LibraryDescription> targets ) {
         RuntimeBenchmarkConfig config = new RuntimeBenchmarkConfig();
 
-        config.seed = 0xDEADBEEF;//new Random().nextLong();
+        config.seed = 0xDEADBEEF;
         config.totalTests = 15;
         config.minimumTimePeriodMS = 3000;
         config.maximumTimeSlaveProcessingMS = 1000*60*15;
