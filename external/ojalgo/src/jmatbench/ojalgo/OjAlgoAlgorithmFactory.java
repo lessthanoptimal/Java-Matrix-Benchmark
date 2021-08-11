@@ -30,8 +30,8 @@ import jmbench.matrix.RowMajorOps;
 import jmbench.tools.runtime.generator.ScaleGenerator;
 import org.ojalgo.OjAlgoUtils;
 import org.ojalgo.RecoverableCondition;
-import org.ojalgo.function.PrimitiveFunction;
 import org.ojalgo.function.UnaryFunction;
+import org.ojalgo.function.constant.PrimitiveMath;
 import org.ojalgo.matrix.decomposition.*;
 import org.ojalgo.matrix.store.MatrixStore;
 import org.ojalgo.matrix.store.PhysicalStore;
@@ -58,7 +58,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final long prev = System.nanoTime();
 
             for (long i = 0; i < numTrials; i++) {
-                result.fillMatching(matA, PrimitiveFunction.ADD, matB);
+                result.fillMatching(matA, PrimitiveMath.ADD, matB);
             }
 
             final long elapsedTime = System.nanoTime() - prev;
@@ -76,7 +76,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
             MatrixStore<Double> L = null;
-            final Cholesky<Double> chol = Cholesky.make(matA);
+            final Cholesky<Double> chol = Cholesky.PRIMITIVE.make(matA);
 
             final long prev = System.nanoTime();
 
@@ -123,7 +123,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             MatrixStore<Double> D = null;
             MatrixStore<Double> V = null;
-            final Eigenvalue<Double> eig = Eigenvalue.make(matA, true);
+            final Eigenvalue<Double> eig = Eigenvalue.PRIMITIVE.make(matA, true);
 
             final long prev = System.nanoTime();
 
@@ -208,7 +208,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> L = null;
             MatrixStore<Double> U = null;
             int pivot[] = null;
-            final LU<Double> lu = LU.make(matA);
+            final LU<Double> lu = LU.PRIMITIVE.make(matA);
 
             final long prev = System.nanoTime();
 
@@ -240,7 +240,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             final MatrixStore<Double> matB = inputs[1].getOriginal();
 
-            final Primitive64Store result = FACTORY.makeZero(matA.countRows(), matB.countColumns());
+            final Primitive64Store result = FACTORY.make(matA.countRows(), matB.countColumns());
 
             final long prev = System.nanoTime();
 
@@ -262,7 +262,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
             final MatrixStore<Double> matB = inputs[1].getOriginal();
 
-            final Primitive64Store result = FACTORY.makeZero(matA.countRows(), matB.countRows());
+            final Primitive64Store result = FACTORY.make(matA.countRows(), matB.countRows());
 
             final long prev = System.nanoTime();
 
@@ -285,7 +285,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             MatrixStore<Double> Q = null;
             MatrixStore<Double> R = null;
-            final QR<Double> qr = QR.make(matA);
+            final QR<Double> qr = QR.PRIMITIVE.make(matA);
 
             final long prev = System.nanoTime();
 
@@ -313,7 +313,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
             final Primitive64Store result = FACTORY.copy(matA);
-            UnaryFunction<Double> multiplier = PrimitiveFunction.MULTIPLY.second(ScaleGenerator.SCALE);
+            UnaryFunction<Double> multiplier = PrimitiveMath.MULTIPLY.second(ScaleGenerator.SCALE);
 
             final long prev = System.nanoTime();
 
@@ -394,7 +394,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
             MatrixStore<Double> S = null;
             MatrixStore<Double> V = null;
 
-            final SingularValue<Double> svd = SingularValue.make(matA);
+            final SingularValue<Double> svd = SingularValue.PRIMITIVE.make(matA);
 
             final long prev = System.nanoTime();
 
@@ -402,9 +402,9 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
                 if (!svd.compute(matA)) {
                     throw new DetectedException("Decomposition failed");
                 }
-                U = svd.getQ1();
+                U = svd.getU();
                 S = svd.getD();
-                V = svd.getQ2();
+                V = svd.getV();
             }
 
             final long elapsedTime = System.nanoTime() - prev;
@@ -423,7 +423,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
             final MatrixStore<Double> matA = inputs[0].getOriginal();
 
-            final Primitive64Store result = FACTORY.makeZero(matA.countColumns(), matA.countRows());
+            final Primitive64Store result = FACTORY.make(matA.countColumns(), matA.countRows());
 
             final long prev = System.nanoTime();
 
@@ -486,7 +486,7 @@ public class OjAlgoAlgorithmFactory implements RuntimePerformanceFactory {
 
     @Override
     public BenchmarkMatrix create(final int numRows, final int numCols) {
-        return this.wrap(FACTORY.makeZero(numRows, numCols));
+        return this.wrap(FACTORY.make(numRows, numCols));
     }
 
     @Override
