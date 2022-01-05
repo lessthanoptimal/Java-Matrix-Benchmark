@@ -32,13 +32,14 @@ public class RuntimePlotData {
 
     // The name of the plot.  Typically this is the operation being evaluated
     public String plotName;
+    public boolean isNative;
     // size of the matrices evaluated (x-axis)
-    public int matrixSize[];
+    public int[] matrixSize;
 
     // results for each library
-    public List<SourceResults> libraries = new ArrayList<SourceResults>();
+    public List<SourceResults> libraries = new ArrayList<>();
 
-    public RuntimePlotData( int matrixSize[] ) {
+    public RuntimePlotData(int[] matrixSize) {
         this.matrixSize = matrixSize;
     }
 
@@ -99,7 +100,7 @@ public class RuntimePlotData {
         return -1;
     }
 
-    public static class SourceResults
+    public static class SourceResults implements Comparable<SourceResults>
     {
         int plotLineType;
         String label;
@@ -110,6 +111,11 @@ public class RuntimePlotData {
                 return Double.NaN;
 
             return results[index];
+        }
+
+        @Override
+        public int compareTo(SourceResults o) {
+            return Integer.compare(plotLineType, o.plotLineType);
         }
     }
 }

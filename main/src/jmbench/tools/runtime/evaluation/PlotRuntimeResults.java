@@ -24,6 +24,7 @@ import jmbench.tools.BenchmarkConstants;
 import jmbench.tools.runtime.LibraryRuntimeInfo;
 import jmbench.tools.runtime.RuntimeEvaluationMetrics;
 import jmbench.tools.runtime.RuntimeResults;
+import jmbench.tools.runtime.evaluation.RuntimeResultPlotter.LibraryPlotInfo;
 import jmbench.tools.stability.UtilXmlSerialization;
 
 import java.io.File;
@@ -75,9 +76,9 @@ public class PlotRuntimeResults {
     public void plot(int whichMetric) {
         String[] files = directory.list();
 
-        Map<String, List> opMap = new HashMap<String,List>();
+        Map<String, List> opMap = new HashMap<>();
 
-        List<LibraryDescription> libraryDescriptions = new ArrayList<>();
+        List<LibraryPlotInfo> libraryDescriptions = new ArrayList<>();
 
         for( String nameLevel0 : files ) {
             File level0 = new File(directory.getPath()+"/"+nameLevel0);
@@ -86,14 +87,19 @@ public class PlotRuntimeResults {
                 if( level0.getName().compareTo("plots") == 0 )
                     continue;
 
-                // see if it should include this library in the results or not
-                if( !checkIncludeLibrary(level0.getAbsolutePath()))
-                    continue;
+                LibraryRuntimeInfo info = UtilXmlSerialization.deserializeXml(new File(level0, BenchmarkConstants.RUNTIME_INFO_NAME).getPath());
+                if (info == null)
+                    throw new RuntimeException("Can't find library runtime info for "+level0.getParent());
 
                 LibraryDescription desc = UtilXmlSerialization.deserializeXml(level0.getParent()+"/"+level0.getName()+".xml");
                 if (desc==null)
                     throw new RuntimeException("Can't find LibraryDescription for "+level0.getParent());
-                libraryDescriptions.add(desc);
+
+                // see if it should include this library in the results or not
+                if( !checkIncludeLibrary(info, desc))
+                    continue;
+
+                libraryDescriptions.add(new LibraryPlotInfo(info.isNative, desc));
 
                 String []files2 = level0.list();
 
@@ -119,11 +125,15 @@ public class PlotRuntimeResults {
                     }
                 }
             }
-
         }
 
-        // TODO sort names and descriptions
+        // Sort to ensure the order is correct
         Collections.sort(libraryDescriptions);
+
+        System.out.println("Runtine plots stuff");
+        for (LibraryPlotInfo l : libraryDescriptions) {
+            System.out.printf("%s native=%s\n", l.desc.info.nameFull, l.nativeLibrary);
+        }
 
         createPlots(minMatrixSize,maxMatrixSize,directory,whichMetric, opMap, weightedSummary, libraryDescriptions);
     }
@@ -131,7 +141,7 @@ public class PlotRuntimeResults {
     public static void createPlots( int minMatrixSize , int maxMatrixSize ,
                                     File outputDirectory , int whichMetric,
                                     Map<String, List> opMap , boolean weightedSummary,
-                                    List<LibraryDescription> descriptions ) {
+                                    List<LibraryPlotInfo> descriptions ) {
         List<RuntimePlotData> allResults = new ArrayList<>();
 
         RuntimeResultPlotter.Reference refType = RuntimeResultPlotter.Reference.MAX;
@@ -192,7 +202,7 @@ public class PlotRuntimeResults {
     }
 
     public static RuntimePlotData convertToPlotData( List<RuntimeResults> results , int whichMetric,
-                                                     List<LibraryDescription> libraryDescriptions ) {
+                                                     List<LibraryPlotInfo> libraryDescriptions ) {
         final RuntimeResults a = results.get(0);
 
         RuntimePlotData ret = new RuntimePlotData(a.matDimen);
@@ -213,17 +223,20 @@ public class PlotRuntimeResults {
             }
 
             int lineIndex = findLibraryIndex(b.getLibraryName(), libraryDescriptions);
-            LibraryDescription desc = libraryDescriptions.get(lineIndex);
+            LibraryDescription desc = libraryDescriptions.get(lineIndex).desc;
             ret.addLibrary(desc.info.getNamePlot(),r,lineIndex);
         }
+
+        // Plots will now be in a consistent order
+        Collections.sort(ret.libraries);
 
         return ret;
     }
 
-    public static int findLibraryIndex( String name , List<LibraryDescription> libraryDescriptions)
+    public static int findLibraryIndex( String name , List<LibraryPlotInfo> libraryDescriptions)
     {
         for( int i = 0; i < libraryDescriptions.size(); i++ ) {
-            LibraryDescription d = libraryDescriptions.get(i);
+            LibraryDescription d = libraryDescriptions.get(i).desc;
             if (d.info.getNameShort().equals(name))
                 return i;
         }
@@ -232,26 +245,8 @@ public class PlotRuntimeResults {
 
     /**
      * Checks to see if the results from this library are being filters out or not
-     *
-     * @param pathDir Path to results directory
-     * @return true if it should be included
      */
-    private boolean checkIncludeLibrary(String pathDir) {
-        LibraryDescription target = UtilXmlSerialization.deserializeXml(pathDir + ".xml");
-
-        if( target == null ) {
-            // no library info associated with this directory so its probably not a results directory
-            return false;
-        }
-
-        LibraryRuntimeInfo info = UtilXmlSerialization.deserializeXml(
-                new File(pathDir, BenchmarkConstants.RUNTIME_INFO_NAME).getPath());
-
-        if( info == null ) {
-            System.err.println("Can't find runtime library info");
-            System.exit(-1);
-        }
-
+    private boolean checkIncludeLibrary(LibraryRuntimeInfo info, LibraryDescription desc) {
         return !(info.isNative() && !plotNativeLibraries);
     }
 

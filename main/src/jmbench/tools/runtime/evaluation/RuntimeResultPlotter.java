@@ -38,12 +38,13 @@ import static jmbench.tools.runtime.evaluation.PlotRuntimeResults.findLibraryInd
  */
 public class RuntimeResultPlotter {
 
-    public static void summaryPlots( List<RuntimePlotData> allResults , Reference referenceType , boolean weighted ,
+    public static void summaryPlots( List<RuntimePlotData> allResults ,
+                                     Reference referenceType , boolean weighted ,
                                      String outputDirectory ,
                                      boolean savePDF ,
                                      boolean showWindow ) {
 
-        Map<String,List<OverallData>> overallResults = new HashMap<String,List<OverallData>>();
+        Map<String,List<OverallData>> overallResults = new HashMap<>();
 
         // find the number of matrices sizes tested
         int numMatrices = 0;
@@ -84,7 +85,7 @@ public class RuntimeResultPlotter {
                 List<OverallData> libOverall;
 
                 if( !overallResults.containsKey(r.label)) {
-                    libOverall = new ArrayList<OverallData>();
+                    libOverall = new ArrayList<>();
                     overallResults.put(r.label,libOverall);
                 } else {
                     libOverall = overallResults.get(r.label);
@@ -115,9 +116,10 @@ public class RuntimeResultPlotter {
         SummaryWhiskerPlot plot = new SummaryWhiskerPlot(title,subtitle);
 
         // sort the names so that they appear in a consistent order
-        List<String> orderedNames = new ArrayList<String>();
-        orderedNames.addAll( overallResults.keySet());
-        Collections.sort(orderedNames);
+        List<String> orderedNames = new ArrayList<>();
+        for (RuntimePlotData.SourceResults r : allResults.get(0).libraries) {
+            orderedNames.add(r.label);
+        }
 
         for( String libName : orderedNames ) {
             List<OverallData> libOverall = overallResults.get(libName);
@@ -140,7 +142,7 @@ public class RuntimeResultPlotter {
                                         boolean savePDF ,
                                         boolean showWindow ) {
 
-        Map<String,OverallSizeData> overallResults = new HashMap<String,OverallSizeData>();
+        Map<String,OverallSizeData> overallResults = new HashMap<>();
 
         // find the number of matrices sizes tested
         int numMatrices = 0;
@@ -215,9 +217,10 @@ public class RuntimeResultPlotter {
         OverallRelativeAreaPlot plotArea = new OverallRelativeAreaPlot(title,sizes);
 
         // sort the names so that they appear in a consistent order
-        List<String> orderedNames = new ArrayList<String>();
-        orderedNames.addAll( overallResults.keySet());
-        Collections.sort(orderedNames);
+        List<String> orderedNames = new ArrayList<>();
+        for (RuntimePlotData.SourceResults r : allResults.get(0).libraries) {
+            orderedNames.add(r.label);
+        }
 
         double[] total = new double[ sizes.length ];
         for( String libName : orderedNames ) {
@@ -277,7 +280,7 @@ public class RuntimeResultPlotter {
      */
     private static List<Double> addSample( List<OverallData> results , int minIndex , int maxIndex , int maxSamples ) {
 
-        List<Double> ret = new ArrayList<Double>();
+        List<Double> ret = new ArrayList<>();
 
         for( OverallData d : results ) {
             if( d.matrixSize < minIndex || d.matrixSize >= maxIndex )
@@ -319,7 +322,7 @@ public class RuntimeResultPlotter {
     }
 
     public static void variabilityPlots( List<RuntimeResults> data ,
-                                         List<LibraryDescription> libraryDescriptions ,
+                                         List<LibraryPlotInfo> libraryDescriptions ,
                                          String fileName ,
                                          boolean savePDF ,
                                          boolean showWindow )
@@ -361,7 +364,7 @@ public class RuntimeResultPlotter {
             }
 
             int libraryIndex = findLibraryIndex(ops.getLibraryName(), libraryDescriptions);
-            LibraryDescription desc = libraryDescriptions.get(libraryIndex);
+            LibraryDescription desc = libraryDescriptions.get(libraryIndex).desc;
             splot.addResults(matDimen,results,desc.info.getNamePlot(),numMatrixSizes,libraryIndex);
         }
 
@@ -394,7 +397,7 @@ public class RuntimeResultPlotter {
             boolean allInvalid = true;
             for( int i = 0; i < numMatrixSizes; i++ ) {
                 double libResult = s.getResult(i);
-                
+
                 if( !Double.isNaN(libResult) && libResult > 0 ) {
                     allInvalid = false;
                     results[i] = 1.0/libResult;
@@ -455,7 +458,7 @@ public class RuntimeResultPlotter {
 
             splot.addResults(matDimen,results,s.label,numMatrixSizes, s.plotLineType);
         }
-        
+
         if( savePDF )
             splot.savePDF(fileName+".pdf",500,350);
         if( showWindow )
@@ -515,7 +518,7 @@ public class RuntimeResultPlotter {
             return data.libraries.get(refIndex).results[matrixSize];
         }
 
-        List<Double> results = new ArrayList<Double>();
+        List<Double> results = new ArrayList<>();
 
         // get results from each library at this matrix size
         for( int i = 0; i < data.libraries.size(); i++ ) {
@@ -550,7 +553,29 @@ public class RuntimeResultPlotter {
         throw new RuntimeException("Unknown reference type");
     }
 
-    public static enum Reference
+    /**
+     * Information needed when plotting results
+     */
+    public static class LibraryPlotInfo implements Comparable<LibraryPlotInfo> {
+        public boolean nativeLibrary;
+        public LibraryDescription desc;
+
+        public LibraryPlotInfo(boolean nativeLibrary, LibraryDescription desc) {
+            this.nativeLibrary = nativeLibrary;
+            this.desc = desc;
+        }
+
+        /** Put java libraries first. This keeps plot line colors consistent */
+        @Override
+        public int compareTo(LibraryPlotInfo o) {
+            if (nativeLibrary != o.nativeLibrary) {
+                return nativeLibrary ? 1 : -1;
+            }
+            return desc.info.nameFull.compareTo(o.desc.info.nameFull);
+        }
+    }
+
+    public enum Reference
     {
         NONE,
         LIBRARY,

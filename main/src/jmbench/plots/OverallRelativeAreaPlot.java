@@ -30,6 +30,8 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import java.awt.*;
 
+import static jmbench.plots.OperationsVersusSizePlot.getColor;
+
 
 /**
 * @author Peter Abeles
@@ -86,6 +88,7 @@ public class OverallRelativeAreaPlot {
         float STROKE_SIZE = 5f;
 
 //        renderer.setSeriesPaint(numDataSets, OperationsVersusSizePlot.getColor(seriesIndex));
+        renderer.setSeriesPaint(numDataSets, getColor(seriesIndex));
         renderer.setSeriesStroke(numDataSets,OperationsVersusSizePlot.getStroke(seriesIndex, STROKE_SIZE,STROKE_SIZE*2));
 
         numDataSets++;

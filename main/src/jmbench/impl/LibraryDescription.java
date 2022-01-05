@@ -33,7 +33,7 @@ public class LibraryDescription implements Comparable<LibraryDescription> {
     public String directory;
 
     public List<String> listOfJarFilePaths () {
-        File files[] = new File("external/"+directory+"/"+BenchmarkConstants.RUNTIME_LIBS).listFiles();
+        File[] files = new File("external/"+directory+"/"+BenchmarkConstants.RUNTIME_LIBS).listFiles();
         List<String> jars = new ArrayList<String>();
         for( File f : files ) {
             if( f.getName().endsWith(".jar")) {

@@ -12,6 +12,7 @@
   * Save more detailed OS info. E.g. lsb_release -a
   * Simplified configuration and removed per operation maximum allowed time
   * Reduced verbosity of frozen log message and it logs the exit status now
+  * Plots now have consistent library order and library color
   * TODO Add ND4J
 - TODO Ensure stability works
 - TODO Ensure memory works

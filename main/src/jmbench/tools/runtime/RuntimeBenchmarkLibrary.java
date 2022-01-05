@@ -346,9 +346,7 @@ public class RuntimeBenchmarkLibrary {
             score[matrixIndex] = new RuntimeEvaluationMetrics(rawResults);
         }
 
-        RuntimeResults results = new RuntimeResults(e.getOpName(),info.namePlot,e.getDimens(),score);
-
-        return results;
+        return new RuntimeResults(e.getOpName(),info.namePlot,e.getDimens(),score);
     }
 
 

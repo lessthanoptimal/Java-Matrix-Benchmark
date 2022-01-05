@@ -34,15 +34,15 @@ public class RuntimeResults implements Serializable {
     // The library's name
     public String libraryName;
     // size of the input matrices
-    public int matDimen[];
+    public int[] matDimen;
     // results by matrix size
-    public RuntimeEvaluationMetrics metrics[];
+    public RuntimeEvaluationMetrics[] metrics;
 
     // if true it finished computing all the results for this operation
     public boolean complete;
 
-    public RuntimeResults( String opName , String libraryName ,
-                             int matDimen[] ,  RuntimeEvaluationMetrics metrics[] )
+    public RuntimeResults(String opName , String libraryName ,
+                          int[] matDimen, RuntimeEvaluationMetrics[] metrics)
     {
         this.opName = opName;
         this.libraryName = libraryName;

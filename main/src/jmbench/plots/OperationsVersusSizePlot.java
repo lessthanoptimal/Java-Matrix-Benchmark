@@ -124,8 +124,8 @@ public class OperationsVersusSizePlot
         UtilPlotPdf.saveAsPdf(chart,fileName,width,height);
     }
 
-    public void addResults( int size[] , double opsPerSecond[], String name , int length , int seriesIndex ) {
-        double conv_x[] = new double[ size.length ];
+    public void addResults(int[] size, double[] opsPerSecond, String name , int length , int seriesIndex ) {
+        double[] conv_x = new double[ size.length ];
 
         for( int i = 0; i < size.length; i++ ) {
             conv_x[i] = size[i];
@@ -134,7 +134,7 @@ public class OperationsVersusSizePlot
         _addErrors(conv_x,opsPerSecond,length,name,seriesIndex);
     }
 
-    private void _addErrors( double x[] , double y[], int max , String name , int seriesIndex ) {
+    private void _addErrors(double[] x, double[] y, int max , String name , int seriesIndex ) {
         XYSeries series = createXY( x , y , max , name );
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
@@ -152,7 +152,7 @@ public class OperationsVersusSizePlot
         dataNames.add(name);
     }
 
-    public static XYSeries createXY( double x[], double y[] , int max , String name )
+    public static XYSeries createXY(double[] x, double[] y, int max , String name )
     {
         if( x.length < max || y.length < max )
             throw new IllegalArgumentException("The must have at least max elements");
