@@ -294,7 +294,7 @@ public class PlotRuntimeResults {
         System.out.println("                               : MAX,MIN,STDEV,MEDIAN,MEAN");
         System.out.println("--Display=<true|false>         : If true some results will be displayed.");
         System.out.println("--Size=min:max                 : Only plot data from matrix size min to max inclusive.");
-        System.out.println("--WeightedSummary=<true|false> : Should the summary chart weight operations more if they take longer?");
+        System.out.println("--WeightedSummary=<true|false> : Should the summary chart weight operations more if they take longer? Default: true");
         System.out.println();
         System.out.println("The last argument is the directory that contains the results.  If this is not specified");
         System.out.println("then the most recently modified directory is used.");
