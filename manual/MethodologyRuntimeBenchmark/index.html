@@ -74,15 +74,15 @@
 
 <p>In principle benchmarking an algorithm is a simple task.  Just measure how long it takes to perform an operation and save the results.  For this project we wanted measure how fast various matrix libraries are at performing different linear algebra operations across a variety of matrix sizes.  A very simple benchmark for this project might go something like:</p>
 
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">performBenchmark</span><span class="o">(</span> <span class="n">Libraries</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
-    <span class="k">for</span><span class="o">(</span> <span class="n">Libraries</span> <span class="n">lib</span> <span class="o">:</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="k">for</span><span class="o">(</span> <span class="n">Operation</span> <span class="n">op</span> <span class="o">:</span> <span class="n">lib</span><span class="o">.</span><span class="na">getOperations</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">performBenchmark</span><span class="o">(</span> <span class="nc">Libraries</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="k">for</span><span class="o">(</span> <span class="nc">Libraries</span> <span class="n">lib</span> <span class="o">:</span> <span class="n">libraries</span> <span class="o">)</span> <span class="o">{</span>
+        <span class="k">for</span><span class="o">(</span> <span class="nc">Operation</span> <span class="n">op</span> <span class="o">:</span> <span class="n">lib</span><span class="o">.</span><span class="na">getOperations</span><span class="o">()</span> <span class="o">)</span> <span class="o">{</span>
             <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">matrixSize</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">matrixSize</span> <span class="o">&lt;</span> <span class="n">maxSize</span><span class="o">;</span> <span class="n">matrixSize</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-                <span class="kt">long</span> <span class="n">timeBefore</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+                <span class="kt">long</span> <span class="n">timeBefore</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
                     
                 <span class="n">op</span><span class="o">.</span><span class="na">performTest</span><span class="o">(</span> <span class="n">matrixSize</span> <span class="o">,</span> <span class="n">numberOfTrials</span> <span class="o">);</span>
                     
-                <span class="kt">long</span> <span class="n">timeAfter</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+                <span class="kt">long</span> <span class="n">timeAfter</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
                     
                 <span class="n">saveResults</span><span class="o">(</span> <span class="n">lib</span> <span class="o">,</span> <span class="n">op</span> <span class="o">,</span> <span class="n">matrixSize</span> <span class="o">,</span> <span class="n">timeAfter</span><span class="o">-</span><span class="n">timeBefore</span> <span class="o">);</span>
             <span class="o">}</span>
@@ -118,12 +118,12 @@
 
 <p>A benchmark running too fast leads to inaccurate results because there is always noise in how the execution time measured.  Mathematically this can be viewed as a random process:</p>
 
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">t_m</span> <span class="o">=</span> <span class="n">t_0</span> <span class="o">+</span> <span class="n">N</span><span class="o">(</span><span class="n">t_0</span><span class="o">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">t_m</span> <span class="o">=</span> <span class="n">t_0</span> <span class="o">+</span> <span class="no">N</span><span class="o">(</span><span class="n">t_0</span><span class="o">)</span></code></pre></figure>
 
 <p>where ‘t_m’ is the measured time, ‘t_0’ is the true time, and N(t_0) is a noise process that may be dependent on when it is called.  This issue is exaggerated in Java due to the abstraction from the systems hardware, preventing very low level system calls from being called.</p>
 
 <p>In Java a common function to measure time is System.currentTimeMillis() and it has an unspecified accuracy that is assumed to be within milliseconds.  In practice its accuracy is variable depending on which operations/hardware it is run on.  System.nanoTime() returns a more precise time measurement, but its documentation explicitly states that its accuracy is not defined, see the excerpt from its documentation below:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This method can only be used to measure elapsed time and is not related to any other.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This method can only be used to measure elapsed time and is not related to any other.
 This method provides nanosecond precision, but not necessarily nanosecond accuracy. 
 </code></pre></div></div>
 
@@ -166,35 +166,35 @@ This method provides nanosecond precision, but not necessarily nanosecond accura
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BenchmarkMatrixMatrixMult</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">multSmall</span><span class="o">(</span> <span class="n">DenseMatrix64F</span> <span class="n">matA</span> <span class="o">,</span> <span class="n">DenseMatrix64F</span> <span class="n">matB</span> <span class="o">,</span>
-                             <span class="n">DenseMatrix64F</span> <span class="n">matResult</span> <span class="o">,</span> <span class="kt">int</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
-        <span class="kt">long</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">long</span> <span class="nf">multSmall</span><span class="o">(</span> <span class="nc">DenseMatrix64F</span> <span class="n">matA</span> <span class="o">,</span> <span class="nc">DenseMatrix64F</span> <span class="n">matB</span> <span class="o">,</span>
+                             <span class="nc">DenseMatrix64F</span> <span class="n">matResult</span> <span class="o">,</span> <span class="kt">int</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">long</span> <span class="n">prev</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
 
         <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTrials</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-            <span class="n">MatrixMatrixMult</span><span class="o">.</span><span class="na">mult_small</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">);</span>
+            <span class="nc">MatrixMatrixMult</span><span class="o">.</span><span class="na">mult_small</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">);</span>
         <span class="o">}</span>
 
-        <span class="k">return</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">prev</span><span class="o">;</span>
+        <span class="k">return</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">prev</span><span class="o">;</span>
     <span class="o">}</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="n">String</span> <span class="n">args</span><span class="o">[]</span> <span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span> <span class="nc">String</span> <span class="n">args</span><span class="o">[]</span> <span class="o">)</span> <span class="o">{</span>
         <span class="kt">int</span> <span class="n">size</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">10</span><span class="o">,</span><span class="mi">20</span><span class="o">,</span><span class="mi">50</span><span class="o">,</span><span class="mi">100</span><span class="o">,</span><span class="mi">200</span><span class="o">,</span><span class="mi">500</span><span class="o">,</span><span class="mi">1000</span><span class="o">};</span>
         <span class="kt">int</span> <span class="n">count</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[]{</span><span class="mi">30000000</span><span class="o">,</span><span class="mi">6000000</span><span class="o">,</span><span class="mi">600000</span><span class="o">,</span><span class="mi">140000</span><span class="o">,</span><span class="mi">15000</span><span class="o">,</span><span class="mi">1500</span><span class="o">,</span><span class="mi">150</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">};</span>
 
         <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
             <span class="kt">int</span> <span class="n">width</span> <span class="o">=</span> <span class="n">size</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
-            <span class="n">DenseMatrix64F</span> <span class="n">matA</span> <span class="o">=</span> <span class="n">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
-            <span class="n">DenseMatrix64F</span> <span class="n">matB</span> <span class="o">=</span> <span class="n">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
-            <span class="n">DenseMatrix64F</span> <span class="n">matResult</span> <span class="o">=</span> <span class="n">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
+            <span class="nc">DenseMatrix64F</span> <span class="n">matA</span> <span class="o">=</span> <span class="nc">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
+            <span class="nc">DenseMatrix64F</span> <span class="n">matB</span> <span class="o">=</span> <span class="nc">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
+            <span class="nc">DenseMatrix64F</span> <span class="n">matResult</span> <span class="o">=</span> <span class="nc">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">width</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span>
 
             <span class="kt">long</span> <span class="n">timeSmall</span> <span class="o">=</span> <span class="n">multSmall</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">,</span><span class="n">count</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
             <span class="kt">long</span> <span class="n">timeAux</span> <span class="o">=</span> <span class="n">multAux</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">,</span><span class="n">count</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
             <span class="kt">long</span> <span class="n">timeLarge</span> <span class="o">=</span> <span class="n">multLarge</span><span class="o">(</span><span class="n">matA</span><span class="o">,</span><span class="n">matB</span><span class="o">,</span><span class="n">matResult</span><span class="o">,</span><span class="n">count</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
 
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Size %4d elapsed time: %6d %6d %6d\n"</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">timeSmall</span><span class="o">,</span><span class="n">timeAux</span><span class="o">,</span><span class="n">timeLarge</span><span class="o">);</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">printf</span><span class="o">(</span><span class="s">"Size %4d elapsed time: %6d %6d %6d\n"</span><span class="o">,</span><span class="n">width</span><span class="o">,</span><span class="n">timeSmall</span><span class="o">,</span><span class="n">timeAux</span><span class="o">,</span><span class="n">timeLarge</span><span class="o">);</span>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span></code></pre></figure>
@@ -235,15 +235,15 @@ Size 1000 elapsed time:  13574   3562   3491
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kt">int</span> <span class="n">totalTrials</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         
-<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
-<span class="k">while</span><span class="o">(</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">startTime</span> <span class="o">&lt;</span> <span class="mi">5000</span> <span class="o">)</span> <span class="o">{</span>
+<span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<span class="k">while</span><span class="o">(</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">startTime</span> <span class="o">&lt;</span> <span class="mi">5000</span> <span class="o">)</span> <span class="o">{</span>
     <span class="k">for</span><span class="o">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTrials</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
-        <span class="n">DenseMatrix64F</span> <span class="n">A</span> <span class="o">=</span> <span class="n">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="n">N</span><span class="o">,</span><span class="n">N</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span> 
-        <span class="n">operationInterface</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span><span class="n">A</span><span class="o">);</span>
+        <span class="nc">DenseMatrix64F</span> <span class="no">A</span> <span class="o">=</span> <span class="nc">RandomMatrices</span><span class="o">.</span><span class="na">createRandom</span><span class="o">(</span><span class="no">N</span><span class="o">,</span><span class="no">N</span><span class="o">,</span><span class="n">rand</span><span class="o">);</span> 
+        <span class="n">operationInterface</span><span class="o">.</span><span class="na">perform</span><span class="o">(</span><span class="no">A</span><span class="o">);</span>
     <span class="o">}</span>
 <span class="o">}</span>
 
-<span class="k">return</span> <span class="o">(</span><span class="kt">double</span><span class="o">)(</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">startTime</span><span class="o">)/(</span><span class="kt">double</span><span class="o">)</span><span class="n">totalTrials</span><span class="o">;</span></code></pre></figure>
+<span class="k">return</span> <span class="o">(</span><span class="kt">double</span><span class="o">)(</span><span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">startTime</span><span class="o">)/(</span><span class="kt">double</span><span class="o">)</span><span class="n">totalTrials</span><span class="o">;</span></code></pre></figure>
 
 <p>It counts how many times a specific operation runs in approximately 5 seconds.  Is it really doing that?  What happens if ‘createRandom()’ takes longer to execute than performOperation()?  Then you are measuring the overhead of the benchmark and not operation itself.  The same is true for ‘System.currentTimeMillis()’ and for the overhead caused by the use of an interface instead of directly calling the function.</p>
 
@@ -253,16 +253,16 @@ Size 1000 elapsed time:  13574   3562   3491
 
 <p>A key design requirement of this benchmark was accurate results for small matrices.  All previously know Java benchmarks effectively ignored small matrices and/or had significant overhead in the benchmark.  This was handled by making direct calls to the library’s functions between the time samples:</p>
 
-<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">long</span> <span class="nf">process</span><span class="o">(</span><span class="n">DenseMatrix64F</span><span class="o">[]</span><span class="n">inputs</span><span class="o">,</span> <span class="kt">long</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">Matrix</span> <span class="n">matA</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
-    <span class="n">Matrix</span> <span class="n">matB</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
+<figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kt">long</span> <span class="nf">process</span><span class="o">(</span><span class="nc">DenseMatrix64F</span><span class="o">[]</span><span class="n">inputs</span><span class="o">,</span> <span class="kt">long</span> <span class="n">numTrials</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nc">Matrix</span> <span class="n">matA</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">0</span><span class="o">]);</span>
+    <span class="nc">Matrix</span> <span class="n">matB</span> <span class="o">=</span> <span class="n">convertToJama</span><span class="o">(</span><span class="n">inputs</span><span class="o">[</span><span class="mi">1</span><span class="o">]);</span>
 
-    <span class="kt">long</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+    <span class="kt">long</span> <span class="n">prev</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
 
     <span class="k">for</span><span class="o">(</span> <span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTrials</span><span class="o">;</span> <span class="n">i</span><span class="o">++</span> <span class="o">)</span> <span class="o">{</span>
         <span class="n">matA</span><span class="o">.</span><span class="na">plus</span><span class="o">(</span><span class="n">matB</span><span class="o">);</span>
     <span class="o">}</span>
-    <span class="k">return</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">prev</span><span class="o">;</span>
+    <span class="k">return</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()-</span><span class="n">prev</span><span class="o">;</span>
 <span class="o">}</span></code></pre></figure>
 
 <p>The above is the benchmark code is used to evaluate Jama’s addition operator.  Note the for loop is the only overhead that is included the elapsed time measurement.</p>
