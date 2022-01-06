@@ -58,27 +58,21 @@ public class MemoryTest extends EvaluationTest {
 
     @Override
     public void init() {
-        if( nameOperation == null )
+        if( nameFactory == null )
             return;
 
         try {
             factory = (RuntimePerformanceFactory)Class.forName(nameFactory).newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void setupTest() {
-    }
+    public void setupTest() {}
 
     @Override
-    public void printInfo() {
-    }
+    public void printInfo() {}
 
     @Override
     public long getInputMemorySize() {
@@ -91,7 +85,7 @@ public class MemoryTest extends EvaluationTest {
 
         BenchmarkMatrix []inputs = gen != null ? gen.createInputs(factory,rand, size) : null;
 
-        double mod[] = null;
+        double[] mod = null;
 
         if( gen != null ) {
             mod = new double[ inputs.length ];
@@ -122,10 +116,7 @@ public class MemoryTest extends EvaluationTest {
         // pause it for a bit so if its sampling the max it has a time to catch it before
         // the application exits
         synchronized (this){
-            try {
-                wait(300);
-            } catch (InterruptedException e) {
-            }
+            try { Thread.sleep(300);  } catch (InterruptedException ignore) {}
         }
 
         return new Results(stop-start);
@@ -153,7 +144,7 @@ public class MemoryTest extends EvaluationTest {
     }
 
     private MatrixProcessorInterface createAlgorithm() {
-        if( nameOperation == null ) {
+        if( nameFactory == null ) {
             return new OverheadProcess();
         }
 

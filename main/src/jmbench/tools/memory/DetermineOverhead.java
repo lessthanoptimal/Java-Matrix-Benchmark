@@ -60,7 +60,7 @@ public class DetermineOverhead {
         tool.setMemory(config.memoryMinMB,config.memoryMaxMB);
 
         MemoryTest test = new MemoryTest();
-        test.setup(null,null,null,1,0);
+        test.setup(null,null,"Overhead",1,0);
         test.setRandomSeed(config.seed);
 
         return tool.runTest(test);

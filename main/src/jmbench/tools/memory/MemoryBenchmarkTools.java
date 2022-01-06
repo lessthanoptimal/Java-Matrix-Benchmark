@@ -140,6 +140,15 @@ public class MemoryBenchmarkTools {
             Runtime rt = Runtime.getRuntime();
             Process pr = rt.exec(params);
 
+            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+            BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+
+            // Print just in case something went horribly wrong. Otherwise, debugging is very difficult
+            long endTime = System.currentTimeMillis() + 100;
+            while (System.currentTimeMillis() < endTime) {
+                printInputBuffer(input);
+            }
+
             long processID = getProcessID("EvaluatorSlave");
 
             if( processID < 0 ) {
@@ -148,18 +157,13 @@ public class MemoryBenchmarkTools {
                 return -1;
             }
 
-            BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-            BufferedReader error = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
-
             // print the output from the slave
             froze = monitorSlave2(test, pr, input, error,processID);
 
             cleanUp(froze, pr, input, error, test.getNameOperation());
 
             return memoryUsage;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -196,7 +200,10 @@ public class MemoryBenchmarkTools {
 
             try {
                 // exit value throws an exception is the process has yet to stop
-                pr.exitValue();
+                int value = pr.exitValue();
+                if (value != 0) {
+                    System.out.println("Non zero exit value: "+value);
+                }
                 break;
             } catch( IllegalThreadStateException e) {
                 // check to see if the process is frozen
@@ -335,11 +342,9 @@ public class MemoryBenchmarkTools {
      * @return The process PID or -1 if it wasn't found.
      */
     public static long getProcessID( String name ) {
-
-        String params[] = new String[]{"jps"};
+        String[] params = new String[]{"jps"};
 
         StringBuffer buff = new StringBuffer();
-
 
         long foundID = -1;
 
@@ -378,10 +383,7 @@ public class MemoryBenchmarkTools {
                 }
             }
             return foundID;
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -449,11 +451,11 @@ public class MemoryBenchmarkTools {
         params[1] = "-server";
         params[2] = "-Xms"+memoryMin+"M";
         params[3] = "-Xmx"+memoryMax+"M";
-        params[4] = "-classpath";
-        params[5] = classPath;
-        params[6] = "jmbench.tools.EvaluatorSlave";
-        params[7] = "case.xml";
-        params[8] = Integer.toString(1);
+        params[4] = "-Dname=EvaluatorSlave";
+        params[5] = "-classpath";
+        params[6] = classPath;
+        params[7] = "jmbench.tools.EvaluatorSlave";
+        params[8] = "case.xml";
         params[9] = Long.toString(requestID);
         return params;
     }
@@ -548,7 +550,7 @@ public class MemoryBenchmarkTools {
             System.out.println("Frozen slave is dead.");
             failed = true;
         }
-        
+
         // close the IO streams
         input.close();
         error.close();
