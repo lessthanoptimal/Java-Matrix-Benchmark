@@ -53,7 +53,7 @@ public class EvaluatorSlave {
 
     private static long requestID;
 
-    public static void main( String args[] ) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
         // catch control-c
 //        install("INT");
 //        install("TERM");

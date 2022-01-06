@@ -1,5 +1,5 @@
 dependencies {
-    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.13'
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.18'
     compile 'org.jfree:jfreechart:1.0.19'
     compile 'com.itextpdf:itextpdf:5.0.6'
     compile 'com.sun.mail:javax.mail:1.6.0'
