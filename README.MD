@@ -18,7 +18,7 @@ libraries "libs/" directory.  Instructions for where to download the latest jar 
     ``` 
 2. Manual download jars for libraries which haven't been posted on Maven central
     * jeigen: See its readme.md
-3. ./gradlew createRuntimeJars; /gradlew benchmarkJar
+3. ./gradlew createRuntimeJars; ./gradlew benchmarkJar
 4. java -jar benchmark.jar
 5. Follow printed instructions for the benchmark you wish to run
 
