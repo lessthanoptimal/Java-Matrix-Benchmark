@@ -23,31 +23,34 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import jmbench.tools.MiscTools;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * @author Peter Abeles
  */
 public class UtilXmlSerialization {
-    public static void serializeXml( Object o , String fileName ) {
+    public static void serializeXml(Object o, String fileName) {
         XStream xstream = MiscTools.createXStream(new DomDriver());
 
-        try {
-            xstream.toXML(o,new FileOutputStream(fileName));
-        } catch (FileNotFoundException e) {
+        try (FileOutputStream stream = new FileOutputStream(fileName)) {
+            xstream.toXML(o, stream);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static <T> T deserializeXml( String fileName ) {
+    public static <T> T deserializeXml(String fileName) {
         File file = new File(fileName);
         if (!file.exists())
             return null;
 
         XStream xstream = MiscTools.createXStream(new DomDriver());
 
-        try (FileReader reader = new FileReader(file)){
-            return (T)xstream.fromXML(reader);
+        try (FileReader reader = new FileReader(file)) {
+            return (T) xstream.fromXML(reader);
         } catch (IOException e) {
             return null;
         }
