@@ -23,9 +23,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import jmbench.tools.MiscTools;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.*;
 
 /**
  * @author Peter Abeles
@@ -42,11 +40,15 @@ public class UtilXmlSerialization {
     }
 
     public static <T> T deserializeXml( String fileName ) {
+        File file = new File(fileName);
+        if (!file.exists())
+            return null;
+
         XStream xstream = MiscTools.createXStream(new DomDriver());
 
-        try {
-            return (T)xstream.fromXML(new FileReader(fileName));
-        } catch (FileNotFoundException e) {
+        try (FileReader reader = new FileReader(file)){
+            return (T)xstream.fromXML(reader);
+        } catch (IOException e) {
             return null;
         }
     }
