@@ -2,7 +2,7 @@
 
 ----- Version 0.12
 
-2021/
+2022/Jan/
 
 - Runtime
   * Made total number of trials command line configurable
@@ -13,9 +13,19 @@
   * Simplified configuration and removed per operation maximum allowed time
   * Reduced verbosity of frozen log message and it logs the exit status now
   * Plots now have consistent library order and library color
-  * TODO Add ND4J
-- TODO Ensure stability works
-- TODO Ensure memory works
+- Memory
+  * Works again
+- Stability
+  * TODO Ensure stability works
+- Libraries
+  * Removing UJMP-N because spits out this error message
+    "libgfortran.so.3: cannot open shared object file: No such file or directory."
+    which can't be installed with the printed instructions
+    then throws an UnsatisfiedLinkError
+  * Removed MTJ-N since it's no longer supported and doesn't work anymore
+  * JBlas: Added solve for over determined systems
+
+TODO sort libraries in memory and stability using same approach as runtime
 
 ----- Version 0.11
 

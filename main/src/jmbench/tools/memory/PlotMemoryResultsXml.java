@@ -23,7 +23,10 @@ import jmbench.plots.MemoryRelativeBarPlot;
 import jmbench.tools.runtime.evaluation.PlotRuntimeResults;
 import jmbench.tools.stability.UtilXmlSerialization;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -73,8 +76,6 @@ public class PlotMemoryResultsXml {
             String s = reader.readLine();
             reader.close();
             return Integer.parseInt(s);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

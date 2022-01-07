@@ -7,8 +7,6 @@ Jama
 JBlas
 La4j
 MTJ
-MTJ-N
 ojAlgo
 PColt
 UJMP
-UJMP-N

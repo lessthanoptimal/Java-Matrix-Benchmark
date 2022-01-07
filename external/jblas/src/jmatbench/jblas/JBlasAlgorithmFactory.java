@@ -347,11 +347,6 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
         return new MySolve();
     }
 
-    @Override
-    public MatrixProcessorInterface solveOver() {
-        return null;
-    }
-
     public static class MySolve implements MatrixProcessorInterface {
         @Override
         public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
@@ -364,6 +359,33 @@ public class JBlasAlgorithmFactory implements RuntimePerformanceFactory {
 
             for( long i = 0; i < numTrials; i++ ) {
                 result = Solve.solve(matA,matB);
+            }
+
+            long elapsed = System.nanoTime()-prev;
+            if( outputs != null ) {
+                outputs[0] = new JBlasBenchmarkMatrix(result);
+            }
+            return elapsed;
+        }
+    }
+
+    @Override
+    public MatrixProcessorInterface solveOver() {
+        return new SolveLeastSquares();
+    }
+
+    public static class SolveLeastSquares implements MatrixProcessorInterface {
+        @Override
+        public long process(BenchmarkMatrix[] inputs, BenchmarkMatrix[] outputs, long numTrials) {
+            DoubleMatrix matA = inputs[0].getOriginal();
+            DoubleMatrix matB = inputs[1].getOriginal();
+
+            DoubleMatrix result = null;
+
+            long prev = System.nanoTime();
+
+            for( long i = 0; i < numTrials; i++ ) {
+                result = Solve.solveLeastSquares(matA,matB);
             }
 
             long elapsed = System.nanoTime()-prev;
