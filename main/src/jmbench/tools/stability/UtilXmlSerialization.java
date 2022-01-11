@@ -21,6 +21,7 @@ package jmbench.tools.stability;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 import jmbench.tools.MiscTools;
 
 import java.io.File;
@@ -48,6 +49,7 @@ public class UtilXmlSerialization {
             return null;
 
         XStream xstream = MiscTools.createXStream(new DomDriver());
+        xstream.addPermission(AnyTypePermission.ANY);
 
         try (FileReader reader = new FileReader(file)) {
             return (T) xstream.fromXML(reader);
