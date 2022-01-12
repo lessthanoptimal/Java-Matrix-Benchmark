@@ -36,18 +36,18 @@ public class GenerateHtmlTables extends TablesCommon {
 
     @Override
     protected void printTables(Map<String, List> opMap) {
-        System.out.println("== Linear Solve ==\n");
+        System.out.println("## Linear Solve\n");
         printSolvingLinear(opMap);
-        System.out.println("\n== Least Squares Solve ==");
+        System.out.println("\n## Least Squares Solve");
         System.out.println();
         printSolvingLeastSquares(opMap);
-        System.out.println("\n== Symmetric Positive Definite Inverse ==");
+        System.out.println("\n## Symmetric Positive Definite Inverse");
         System.out.println();
         printSymmInverse(opMap);
-        System.out.println("\n== Singular Value Decomposition ==");
+        System.out.println("\n## Singular Value Decomposition");
         System.out.println();
         printSvd(opMap);
-        System.out.println("\n== Symmetric Eigenvalue Decomposition ==");
+        System.out.println("\n## Symmetric Eigenvalue Decomposition");
         System.out.println();
         printSymmEig(opMap);
     }
