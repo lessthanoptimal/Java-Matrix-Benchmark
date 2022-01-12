@@ -1,5 +1,12 @@
 (year/month/day)
 
+----- Version 0.13
+
+TODO Stability: Classify RETURNED NULL
+TODO Stability: Change MISC to Exception or failed
+TODO Stability: Make chart easier to understand and provide way to list potential issues automatically
+
+
 ----- Version 0.12
 
 2022/Jan/12
