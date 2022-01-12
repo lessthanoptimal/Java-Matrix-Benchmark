@@ -62,13 +62,13 @@ public class StabilityBenchmarkLibrary {
 
     boolean spawnChild = true;
 
-    public StabilityBenchmarkLibrary(  String outputDir ,
-                                       StabilityBenchmarkConfig config ,
-                                       LibraryDescription target,
-                                       int sizeMin ,
-                                       int sizeMax ,
-                                       int numSolve ,
-                                       int numSvd ) {
+    public StabilityBenchmarkLibrary(String outputDir,
+                                     StabilityBenchmarkConfig config,
+                                     LibraryDescription target,
+                                     int sizeMin,
+                                     int sizeMax,
+                                     int numSolve,
+                                     int numSvd) {
 
         this.directorySave = outputDir;
 
@@ -77,14 +77,14 @@ public class StabilityBenchmarkLibrary {
         tools.setOverrideMemory(config.memory);
         tools.setFrozenTimeMS(config.maxProcessingTime);
 
-        if( directorySave != null ) {
+        if (directorySave != null) {
             setupOutputDirectory();
             setupLog();
         }
 
         this.config = config;
         this.libraryName = target.info.getNamePlot();
-        
+
         this.sizeMin = sizeMin;
         this.sizeMax = sizeMax;
 
@@ -92,8 +92,8 @@ public class StabilityBenchmarkLibrary {
         this.numSvd = numSvd;
 
         File runtimeInfoFile = new File(this.directorySave, BenchmarkConstants.RUNTIME_INFO_NAME);
-        if( !runtimeInfoFile.exists() )
-            tools.launch(LibraryRuntimeInfo.class,target.info.factory,runtimeInfoFile.getPath());
+        if (!runtimeInfoFile.exists())
+            tools.launch(LibraryRuntimeInfo.class, target.info.factory, runtimeInfoFile.getPath());
 
         createOperationsList(target.info.factory);
 
@@ -101,11 +101,11 @@ public class StabilityBenchmarkLibrary {
 
     private void setupOutputDirectory() {
         File d = new File(directorySave);
-        if( !d.exists() ) {
-            if( !d.mkdirs() ) {
+        if (!d.exists()) {
+            if (!d.mkdirs()) {
                 throw new IllegalArgumentException("Failed to make output directory");
             }
-        } else if( !d.isDirectory())
+        } else if (!d.isDirectory())
             throw new IllegalArgumentException("The output directory already exists and is not a directory");
     }
 
@@ -114,13 +114,13 @@ public class StabilityBenchmarkLibrary {
      */
     private void setupLog() {
         try {
-            logStream = new PrintStream(directorySave+"/log.txt");
+            logStream = new PrintStream(directorySave + "/log.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         // For debugging purposes output the slave's classpath
-        logStream.println("Current directory = "+new File(".").getAbsolutePath());
+        logStream.println("Current directory = " + new File(".").getAbsolutePath());
         logStream.println("Classpath:");
         logStream.println(tools.getClassPath());
     }
@@ -128,146 +128,146 @@ public class StabilityBenchmarkLibrary {
     private void createOperationsList(String library) {
         operations = new ArrayList<>();
 
-        if( config.checkOverflow ) {
-            if( config.checkLinear )
-                operations.add( new SolverOverflow(config.randomSeed,
+        if (config.checkOverflow) {
+            if (config.checkLinear)
+                operations.add(new SolverOverflow(config.randomSeed,
                         library,
                         "solveExact",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true,true) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true, true));
 
-            if( config.checkLS )
-                operations.add( new SolverOverflow(config.randomSeed,
+            if (config.checkLS)
+                operations.add(new SolverOverflow(config.randomSeed,
                         library,
                         "solveOver",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false,true) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false, true));
 
-            if( config.checkSVD )
-                operations.add( new SvdOverflow(config.randomSeed,
+            if (config.checkSVD)
+                operations.add(new SvdOverflow(config.randomSeed,
                         library,
                         "svd",
-                        numSvd/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true) );
+                        numSvd / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true));
 
-            if( config.checkEVD )
-                operations.add( new EigSymmOverflow(config.randomSeed,
+            if (config.checkEVD)
+                operations.add(new EigSymmOverflow(config.randomSeed,
                         library,
                         "eigSymm",
-                        numSvd/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true) );
+                        numSvd / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true));
 
-            if( config.checkSymInv )
-                operations.add( new InvSymmOverflow(config.randomSeed,
+            if (config.checkSymInv)
+                operations.add(new InvSymmOverflow(config.randomSeed,
                         library,
                         "invertSymmPosDef",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true));
         }
 
-        if( config.checkUnderflow ) {
-            if( config.checkLinear )
-                operations.add( new SolverOverflow(config.randomSeed,
+        if (config.checkUnderflow) {
+            if (config.checkLinear)
+                operations.add(new SolverOverflow(config.randomSeed,
                         library,
                         "solveExact",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true,false) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true, false));
 
-            if( config.checkLS )
-                operations.add( new SolverOverflow(config.randomSeed,
+            if (config.checkLS)
+                operations.add(new SolverOverflow(config.randomSeed,
                         library,
                         "solveOver",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false,false) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false, false));
 
-            if( config.checkSVD )
-                operations.add( new SvdOverflow(config.randomSeed,
+            if (config.checkSVD)
+                operations.add(new SvdOverflow(config.randomSeed,
                         library,
                         "svd",
-                        numSvd/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false) );
+                        numSvd / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false));
 
-            if( config.checkEVD )
-                operations.add( new EigSymmOverflow(config.randomSeed,
+            if (config.checkEVD)
+                operations.add(new EigSymmOverflow(config.randomSeed,
                         library,
                         "eigSymm",
-                        numSvd/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false) );
+                        numSvd / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false));
 
-            if( config.checkSymInv )
-                operations.add( new InvSymmOverflow(config.randomSeed,
+            if (config.checkSymInv)
+                operations.add(new InvSymmOverflow(config.randomSeed,
                         library,
                         "invertSymmPosDef",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false));
         }
 
-        if( config.checkNearlySingular ) {
-            if( config.checkLinear )
-                operations.add( new SolverSingular(config.randomSeed,
+        if (config.checkNearlySingular) {
+            if (config.checkLinear)
+                operations.add(new SolverSingular(config.randomSeed,
                         library,
                         "solveExact",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,true) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, true));
 
-            if( config.checkLS )
-                operations.add( new SolverSingular(config.randomSeed,
+            if (config.checkLS)
+                operations.add(new SolverSingular(config.randomSeed,
                         library,
                         "solveOver",
-                        numSolve/config.overFlowFactor,
-                        config.breakingPoint,sizeMin,sizeMax,false) );
+                        numSolve / config.overFlowFactor,
+                        config.breakingPoint, sizeMin, sizeMax, false));
         }
-        if( config.checkAccuracy ) {
-            if( config.checkLinear )
-                operations.add( new SolverAccuracy(config.randomSeed,
+        if (config.checkAccuracy) {
+            if (config.checkLinear)
+                operations.add(new SolverAccuracy(config.randomSeed,
                         library,
                         "solveExact",
                         numSolve,
-                        config.breakingPoint,sizeMin,sizeMax,true) );
+                        config.breakingPoint, sizeMin, sizeMax, true));
 
-            if( config.checkLS )
-                operations.add( new SolverAccuracy(config.randomSeed,
+            if (config.checkLS)
+                operations.add(new SolverAccuracy(config.randomSeed,
                         library,
                         "solveOver",
                         numSolve,
-                        config.breakingPoint,sizeMin,sizeMax,false) );
+                        config.breakingPoint, sizeMin, sizeMax, false));
 
-            if( config.checkSVD )
-                operations.add( new SvdAccuracy(config.randomSeed,
+            if (config.checkSVD)
+                operations.add(new SvdAccuracy(config.randomSeed,
                         library,
                         "svd",
                         numSvd,
-                        sizeMin,sizeMax) );
+                        sizeMin, sizeMax));
 
-            if( config.checkEVD )
-                operations.add( new EigSymmAccuracy(config.randomSeed,
+            if (config.checkEVD)
+                operations.add(new EigSymmAccuracy(config.randomSeed,
                         library,
                         "eigSymm",
                         numSvd,
-                        sizeMin,sizeMax) );
+                        sizeMin, sizeMax));
 
-            if( config.checkSymInv )
-                operations.add( new InvSymmAccuracy(config.randomSeed,
+            if (config.checkSymInv)
+                operations.add(new InvSymmAccuracy(config.randomSeed,
                         library,
                         "invertSymmPosDef",
                         numSolve,
-                        sizeMin,sizeMax) );
+                        sizeMin, sizeMax));
         }
     }
 
     public void process() {
 //        MatrixLibrary libInfo = library.getLibrary();
 
-        for( StabilityTestBase op : operations ) {
+        for (StabilityTestBase op : operations) {
 
-            System.out.println(libraryName+" :  Processing op: "+op.getTestName());
+            System.out.println(libraryName + " :  Processing op: " + op.getTestName());
 
             StabilityTrialResults results = evaluateOperation(op);
 
             // if a fatal error occurred create some results so that this is marked
-            if( fatalError != null ) {
+            if (fatalError != null) {
                 results = new StabilityTrialResults();
-                logStream.println("Had fatal error: "+op.getTestName()+" error = "+fatalError);
+                logStream.println("Had fatal error: " + op.getTestName() + " error = " + fatalError);
                 results.fatalError = fatalError;
             }
             // add environmental information for debugging later on
@@ -277,64 +277,65 @@ public class StabilityBenchmarkLibrary {
             results.memoryBytes = slaveMemoryMegaBytes;
 
             // save the results to a file
-            saveResults(results,op.getFileName());
+            saveResults(results, op.getFileName());
 
             // print the results to the screen
-            if( fatalError == null )
+            if (fatalError == null)
                 printResults(results);
         }
 
-        if( directorySave != null ) {
+        if (directorySave != null) {
             logStream.close();
         }
     }
 
-    private void printResults( StabilityTrialResults results ) {
-        System.out.println("    Median             = "+StabilityBenchmark.computePercent(results.breakingPoints,0.5));
-        System.out.println("    Finished           = "+results.getNumFinished());
-        System.out.println("    Bad Answer         = "+results.getNumUncountable());
-        System.out.println("    Large Error        = "+results.getNumLargeError());
-        System.out.println("    Detected           = "+results.getNumGraceful());
-        System.out.println("    Runtime Exception  = "+results.getNumUnexpectedException());
+    private void printResults(StabilityTrialResults results) {
+        System.out.println("    Median             = " + StabilityBenchmark.computePercent(results.breakingPoints, 0.5));
+        System.out.println("    Finished           = " + results.getNumFinished());
+        System.out.println("    Bad Answer         = " + results.getNumUncountable());
+        System.out.println("    Large Error        = " + results.getNumLargeError());
+        System.out.println("    Detected           = " + results.getNumGraceful());
+        System.out.println("    Runtime Exception  = " + results.getNumUnexpectedException());
     }
 
-    private void saveResults( StabilityTrialResults results , String opFileName ) {
-        if( directorySave == null )
+    private void saveResults(StabilityTrialResults results, String opFileName) {
+        if (directorySave == null)
             return;
 
-        UtilXmlSerialization.serializeXml(results,directorySave+"/"+opFileName+".xml");
+        UtilXmlSerialization.serializeXml(results, directorySave + "/" + opFileName + ".xml");
     }
 
-    public StabilityTrialResults evaluateOperation( StabilityTestBase e ) {
+    public StabilityTrialResults evaluateOperation(StabilityTestBase e) {
         fatalError = null;
         e.setRandomSeed(config.randomSeed);
 
         EvaluatorSlave.Results results = spawnChild ? tools.runTest(e) : tools.runTestNoSpawn(e);
         slaveMemoryMegaBytes = tools.getAllocatedMemoryInMB();
 
-        if( results == null ) {
-            logStream.println("*** WTF runTest returned null = "+e.getTestName());
+        if (results == null) {
+            logStream.println("*** WTF runTest returned null = " + e.getTestName());
             fatalError = FatalError.RETURNED_NULL;
-        } else if( results.failed == EvaluatorSlave.FailReason.USER_REQUESTED ) {
-            logStream.println("    Slave was killed by the user/OS.  Stopping the benchmark.  op = "+e.getTestName());
-            logStream.println("    error message: "+results.detailedError);
+        } else if (results.failed == EvaluatorSlave.FailReason.USER_REQUESTED) {
+            logStream.println("    Slave was killed by the user/OS.  Stopping the benchmark.  op = " + e.getTestName());
+            logStream.println("    error message: " + results.detailedError);
             System.out.println("  Slave was killed by the user/OS.  Stopping the benchmark.");
-            System.out.println("    error message: "+results.detailedError);
+            System.out.println("    error message: " + results.detailedError);
             System.exit(0);
-        } else if( results.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY ){
+        } else if (results.failed == EvaluatorSlave.FailReason.OUT_OF_MEMORY) {
             System.out.println("  Not enough memory given to slave. ");
-            logStream.println("Not enough memory for op.  "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
+            logStream.println("Not enough memory for op.  " + e.getTestName() + " memory " + tools.getAllocatedMemoryInMB());
+            fatalError = FatalError.OUT_OF_MEMORY;
         } else {
-            if( results.failed != null ) {
+            if (results.failed != null) {
                 fatalError = FatalError.MISC;
-                if( results.failed == EvaluatorSlave.FailReason.TOO_SLOW ) {
-                    logStream.println("    Slave: Case too slow = "+e.getTestName());
-                } else if( results.failed == EvaluatorSlave.FailReason.FROZEN ) {
-                    logStream.println("    Slave: Frozen = "+e.getTestName());
+                if (results.failed == EvaluatorSlave.FailReason.TOO_SLOW) {
+                    logStream.println("    Slave: Case too slow = " + e.getTestName());
+                } else if (results.failed == EvaluatorSlave.FailReason.FROZEN) {
+                    logStream.println("    Slave: Frozen = " + e.getTestName());
                     fatalError = FatalError.FROZE;
                 } else {
-                    logStream.println("    Slave: Case failed = "+results.failed+" op = "+e.getTestName()+" memory "+tools.getAllocatedMemoryInMB());
-                    if( results.detailedError != null ) {
+                    logStream.println("    Slave: Case failed = " + results.failed + " op = " + e.getTestName() + " memory " + tools.getAllocatedMemoryInMB());
+                    if (results.detailedError != null) {
                         logStream.println(results.detailedError);
                     }
                 }
@@ -342,13 +343,13 @@ public class StabilityBenchmarkLibrary {
         }
 
         // see if something very bad happened
-        if( fatalError != null )
+        if (fatalError != null)
             return null;
-            
+
         // collect all the results and return them
         StabilityTrialResults all = new StabilityTrialResults();
 
-        StabilityTrialResults r =  (StabilityTrialResults)results.getResults();
+        StabilityTrialResults r = (StabilityTrialResults) results.getResults();
         all.addResults(r);
 
         return all;
