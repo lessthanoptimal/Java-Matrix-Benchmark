@@ -1,15 +1,9 @@
 dependencies {
-    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.18'
-    compile 'org.jfree:jfreechart:1.0.19'
-    compile 'com.itextpdf:itextpdf:5.0.6'
-    compile 'com.sun.mail:javax.mail:1.6.0'
-    compile 'org.apache.commons:commons-lang3:3.7'
-}
-
-idea {
-    module {
-        name = "JMatBench Main"
-    }
+    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.18'
+    implementation 'org.jfree:jfreechart:1.0.19'
+    implementation 'com.itextpdf:itextpdf:5.0.6'
+    implementation 'com.sun.mail:javax.mail:1.6.0'
+    implementation 'org.apache.commons:commons-lang3:3.7'
 }
 
 // Create a jar which contains all the applications
@@ -22,10 +16,9 @@ task benchmarkJar(type: Jar) {
 
     outputs.upToDateWhen { false }
 
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-
-    exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }} {
+        exclude 'META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA', 'META-INF/LICENSE.txt'
+    } with jar
 
     doLast {
         archivePath.renameTo(file('../benchmark.jar'))

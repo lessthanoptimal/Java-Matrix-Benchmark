@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':main')
-    compile 'org.ojalgo:ojalgo:49.0.1'
+    implementation project(':main')
+    implementation 'org.ojalgo:ojalgo:49.0.1'
 }

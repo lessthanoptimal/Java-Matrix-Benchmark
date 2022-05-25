@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':main')
-    compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    implementation project(':main')
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 }

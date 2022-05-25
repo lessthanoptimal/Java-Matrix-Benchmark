@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':main')
-    compile group: 'org.jblas', name: 'jblas', version: '1.2.5'
+    implementation project(':main')
+    implementation group: 'org.jblas', name: 'jblas', version: '1.2.5'
 }

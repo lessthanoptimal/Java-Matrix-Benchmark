@@ -1,7 +1,7 @@
 subprojects {
     task createRuntimeJars( dependsOn: 'jar' ) {
         doLast {
-            ext.listExternal = files(project.configurations.compile)
+            ext.listExternal = files(project.configurations.runtimeClasspath)
             ext.listInternal = files(project.tasks.jar.archivePath)
 
             ext.listExternal = ext.listExternal - ext.listInternal

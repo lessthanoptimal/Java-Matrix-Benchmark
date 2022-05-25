@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':main')
-    compile group: 'org.la4j', name: 'la4j', version: '0.6.0'
+    implementation project(':main')
+    implementation group: 'org.la4j', name: 'la4j', version: '0.6.0'
 }

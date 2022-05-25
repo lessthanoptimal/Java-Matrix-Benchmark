@@ -1,13 +1,9 @@
-repositories {
-    maven {
-        url = "http://clojars.org/repo/"
-    }
-}
+repositories { maven { url = "https://clojars.org/repo/" } }
 
 dependencies {
-    compile project(':main')
+    implementation project(':main')
 
     // 0.9.4 appears to be the latest official version
     // 0.10.1 that was here before was broken
-    compile group: 'incanter', name: 'parallelcolt', version: '0.9.4'
+    implementation group: 'incanter', name: 'parallelcolt', version: '0.9.4'
 }
