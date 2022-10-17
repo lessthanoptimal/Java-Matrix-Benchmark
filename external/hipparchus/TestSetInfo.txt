@@ -1,0 +1,8 @@
+<list>
+  <jmbench.impl.LibraryStringInfo>
+    <factory>jmatbench.hipparchus.HipparchusAlgorithmFactory</factory>
+    <nameFull>Hipparchus</nameFull>
+    <nameShort>Hipparchus</nameShort>
+    <namePlot>Hipparchus</namePlot>
+  </jmbench.impl.LibraryStringInfo>
+</list>
