@@ -6,6 +6,9 @@ TODO Stability: Classify RETURNED NULL
 TODO Stability: Change MISC to Exception or failed
 TODO Stability: Make chart easier to understand and provide way to list potential issues automatically
 
+- Libraries
+  * Added Hipparchus
+
 
 ----- Version 0.12
 
