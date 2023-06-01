@@ -42,3 +42,6 @@ https://myaccount.google.com/security
 5. Add the library to "external/DefaultTestSet.txt" if you wish it to be included by default
 6. Add your library to settings.gradle so that Gradle will compile it
 
+# License
+
+This project and all its source code is released under the GNU GENERAL PUBLIC LICENSE version 3 license.
